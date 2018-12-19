@@ -2,14 +2,14 @@
 # The humans responsible & technology colophon
 
 # TEAM
-
-    <name> -- <role> -- <twitter>
+    Lorenzo Altamura
+    Paolo Mastrobuono Battisti
 
 # THANKS
 
-    <name>
+    threejs.org
 
 # TECHNOLOGY COLOPHON
 
-    CSS3, HTML5
+    CSS3, HTML5, THREEJS
     Apache Server Configs, jQuery, Modernizr, Normalize.css

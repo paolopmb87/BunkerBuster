@@ -67,3 +67,10 @@
   width: 100px;
 }
 
+canvas{
+  position: absolute;
+  height:63%;
+  width: 100%;
+  display: none;
+  background-color:white!important;
+}

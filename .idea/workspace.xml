@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="36ac78b1-1c90-4b75-8ad8-1657ec1b38ae" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BunkerBuster/src/img/Cm-logo-200x200.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BunkerBuster/src/html_struct/help.html" beforeDir="false" afterPath="$PROJECT_DIR$/BunkerBuster/src/html_struct/help.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BunkerBuster/src/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/BunkerBuster/src/index.html" afterDir="false" />
-    </list>
+    <list default="true" id="36ac78b1-1c90-4b75-8ad8-1657ec1b38ae" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -64,8 +58,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="227" />
-    <option name="y" value="49" />
+    <option name="x" value="-44" />
+    <option name="y" value="16" />
     <option name="width" value="1734" />
     <option name="height" value="957" />
   </component>
@@ -160,15 +154,15 @@
       <option name="presentableId" value="Default" />
       <updated>1545212542382</updated>
       <workItem from="1545212545727" duration="3528000" />
-      <workItem from="1545216193682" duration="3004000" />
+      <workItem from="1545216193682" duration="3604000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6532000" />
+    <option name="totallyTimeSpent" value="7132000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="227" y="49" width="1734" height="957" extended-state="0" />
+    <frame x="-44" y="16" width="1734" height="957" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.108490564" />

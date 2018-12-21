@@ -33,6 +33,9 @@ var planeMesh =null;
 var height, width, fov, aspect, near, far;
 var animation;
 
+var NUM_LOADED = 0;
+var TANK_LOADED = false;
+
 height = 600;
 width = 900;
 
@@ -72,6 +75,67 @@ function start_game() {
   document.getElementById("playBTN").style.display='none';
   document.getElementById("start_game").style.display='block';
   document.getElementById("game_ifrm").style.display='block';
+
+}
+
+function addTank(){
+  var loader = new THREE.ObjectLoader();
+  loader.load("models/tank/tank.json",
+    function (obj){
+      tank = obj;
+      TANK_LOADED = true;
+      NUM_LOADED++;
+      tank.position.z = -5.5;
+      tank.position.y = 0.58;
+      tank.scale.x = tank.scale.y = tank.scale.z =0.7;
+      car.is_ob = true;
+      scene.add(obj);
+
+      Box = scene.getObjectByName('Box');
+      Box1 = scene.getObjectByName('Box1');
+      Box2 = scene.getObjectByName('Box2');
+      Box5 = scene.getObjectByName('Box5');
+      Box6 = scene.getObjectByName('Box6');
+      Box7 = scene.getObjectByName('Box7');
+      Cylinder = scene.getObjectByName('Cylinder');
+      Cylinder1 = scene.getObjectByName('Cylinder1');
+      Cylinder2 = scene.getObjectByName('Cylinder2');
+      Cylinder3 = scene.getObjectByName('Cylinder3');
+      Cylinder4 = scene.getObjectByName('Cylinder4');
+      Cylinder5 = scene.getObjectByName('Cylinder5');
+      Cylinder6 = scene.getObjectByName('Cylinder6');
+      Cylinder7 = scene.getObjectByName('Cylinder7');
+      Cylinder8 = scene.getObjectByName('Cylinder8');
+      Cylinder9 = scene.getObjectByName('Cylinder9');
+      Cylinder10 = scene.getObjectByName('Cylinder10');
+      Cylinder11 = scene.getObjectByName('Cylinder11');
+      Cylinder12 = scene.getObjectByName('Cylinder12');
+      Cylinder13 = scene.getObjectByName('Cylinder13');
+      Cylinder14 = scene.getObjectByName('Cylinder14');
+      Cylinder15 = scene.getObjectByName('Cylinder15');
+      Cylinder16 = scene.getObjectByName('Cylinder16');
+      wheel = scene.getObjectByName('wheel');
+      wheel1 = scene.getObjectByName('wheel1');
+      wheel2 = scene.getObjectByName('wheel2');
+      wheel3 = scene.getObjectByName('wheel3');
+      wheel4 = scene.getObjectByName('wheel4');
+      wheel5 = scene.getObjectByName('wheel5');
+      wheel6 = scene.getObjectByName('wheel6');
+      wheel7 = scene.getObjectByName('wheel7');
+
+
+    },
+    // onProgress callback
+    function (xhr) {
+      console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+    },
+
+    // onError callback
+    function (err) {
+      console.error('An error happened');
+      TANK_LOADED = false;
+    }                );
+
 
 }
 

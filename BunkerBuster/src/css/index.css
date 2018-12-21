@@ -32,4 +32,13 @@
 
 #bd{
   background-image: url(../img/poster.jpg);
+
+#c {
+  width: 50%;
+}
+
+#controls {
+  float: right;
+  height: 100%;
+
 }

@@ -11,7 +11,7 @@
   display: inline-block;
 }
 
-#img{
+#HLP{
   height: 80px;
   width: 80px;
 }
@@ -55,10 +55,14 @@
   display: none;
 }
 
-#chartBTN{
+.chart{
   position: fixed;
-  height: 125px;
-  width: 125px;
   bottom: 5%;
   left: 90%;
+  display: inline-block;
+}
+
+#CHART{
+  height: 100px;
+  width: 100px;
 }

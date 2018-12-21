@@ -58,7 +58,7 @@ function init(){
   ambLight = new THREE.AmbientLight(0x404040);
   scene.add(ambLight);
 
-  document.querySelector('#c').appendChild(renderer.domElement)
+//  document.querySelector('#c').appendChild(renderer.domElement)
 }
 
 function loadScene(){

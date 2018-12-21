@@ -8,13 +8,11 @@
   bottom: 5%;
   left: 5%;
   display: inline-block;
-  height: 50px;
-  width: 50px;
 }
 
 #img{
-  height: 50px;
-  width: 50px;
+  height: 80px;
+  width: 80px;
 }
 
 #title{
@@ -32,7 +30,16 @@
 }
 
 #playBTN{
+  position: relative;
   top: 20%;
   left: 35%;
+}
+
+#chartBTN{
+  position: fixed;
+  height: 125px;
+  width: 125px;
+  bottom: 5%;
+  left: 90%;
 }
 

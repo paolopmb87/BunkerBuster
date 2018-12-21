@@ -41,16 +41,16 @@
   display: none;
 }
 
-#ifr{
+#game_ifrm{
   position: absolute;
-  height: 450px;
+  height: 64%;
   width: 100%;
   display: none;
 }
 
 .new_game_class{
   position: absolute;
-  height: 450px;
+  height:63%;
   width: 100%;
   display: none;
 }

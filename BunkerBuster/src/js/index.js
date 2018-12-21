@@ -32,6 +32,7 @@ var power_up = false;
 
 var height, width, fov, aspect, near, far;
 var animation;
+
 height = 600;
 width = 900;
 
@@ -58,7 +59,7 @@ function init(){
   ambLight = new THREE.AmbientLight(0x404040);
   scene.add(ambLight);
 
-//  document.querySelector('#c').appendChild(renderer.domElement)
+  // document.querySelector('#new_game_div_id').appendChild(renderer.domElement)
 }
 
 function loadScene(){
@@ -70,9 +71,15 @@ function loadScene(){
   //planeMesh.scale.set(5, 5)
   planeMesh.position.set(0,0,0)
   scene.add(planeMesh)
-
 }
 
-init();
-loadScene();
+function start_game() {
+  document.getElementById("playBTN").style.display='none';
+  document.getElementById("start_game").style.display='block';
+  document.getElementById("ifr").style.display='block';
+  init();
+  loadScene();
+}
+
+
 

@@ -5,6 +5,7 @@
 
 .help {
   position: fixed;
+  z-index:1;
   bottom: 5%;
   left: 5%;
   display: inline-block;
@@ -36,3 +37,22 @@
   left: 35%;
 }
 
+.play_game {
+  height: 500px;
+  width: 100%;
+  display: none;
+}
+
+#ifr{
+  position: absolute;
+  height: 450px;
+  width: 100%;
+  display: none;
+}
+
+.new_game_class{
+  position: absolute;
+  height: 450px;
+  width: 100%;
+  display: none;
+}

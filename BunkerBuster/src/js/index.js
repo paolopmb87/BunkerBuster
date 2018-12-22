@@ -42,7 +42,7 @@ function createScene(){
   console.log(sceneWidth)
   sceneHeight=window.innerHeight;
   //scene.fog = new THREE.Fog(0x00ff00, 50, 800);//enable fog
-  camera = new THREE.PerspectiveCamera( 60, sceneWidth / sceneHeight, 0.1, 1000 );//perspective camera
+  camera = new THREE.PerspectiveCamera( 45, sceneWidth / sceneHeight, 1, 1000 );//perspective camera
   renderer = new THREE.WebGLRenderer({alpha:true});//renderer with transparent backdrop
   renderer.shadowMap.enabled = true;//enable shadow
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -53,8 +53,8 @@ function createScene(){
     .document
     .getElementById('cicciopiccio');
   dom.appendChild(renderer.domElement);
-
-  var planeGeometry = new THREE.PlaneGeometry( 5, 5, 4, 4 );
+  //width, height, widthSegments, heightSegments
+  var planeGeometry = new THREE.PlaneGeometry( 700, 700, 7, 7 );
   var planeMaterial = new THREE.MeshStandardMaterial( { color: 0x00ff00 } )
   ground = new THREE.Mesh( planeGeometry, planeMaterial );
   ground.receiveShadow = true;
@@ -62,7 +62,7 @@ function createScene(){
   ground.rotation.x=-Math.PI/2;
   scene.add( ground );
 
-  camera.position.z = 5;
+  camera.position.z = 20;
   camera.position.y = 1;
 
   sun = new THREE.DirectionalLight( 0xffffff, 0.8);
@@ -112,7 +112,6 @@ function start_game() {
   document.getElementById("game_ifrm").style.display='block';
   init();
   addTank();
-
 }
 
 function addTank(){
@@ -122,11 +121,21 @@ function addTank(){
       tank = obj;
       TANK_LOADED = true;
       NUM_LOADED++;
-      tank.position.x = 0;
-      tank.position.z = 0;
-      tank.position.y = 0;
-      tank.scale.x = tank.scale.y = tank.scale.z =0.7;
+      // tank.position.x = 0;
+      // tank.position.z = 0;
+      // tank.position.y = 0;
+      tank.scale.set(0.5, 0.5, 0.5);
+      tank.scale.x = tank.scale.y = tank.scale.z =0.5;
+
+      // camera.position = tank.position;
+      // camera.position.z = 20;
+      // camera.position.y = 1;
+      // capera.position.x = -20;
+      camera.add(tank);
+      tank.position.set(0,0,15);
       scene.add(obj);
+
+      // scene.add(obj);
 
       Box = scene.getObjectByName('Box');
       Box1 = scene.getObjectByName('Box1');

@@ -25,6 +25,7 @@ var sun;
 var ground;
 var orbitControl;
 var tank;
+var delta = 1;  //movement
 var TANK_LOADED = false;
 var NUM_LOADED = 0;
 
@@ -59,11 +60,11 @@ function createScene(){
   ground = new THREE.Mesh( planeGeometry, planeMaterial );
   ground.receiveShadow = true;
   ground.castShadow=false;
-  ground.rotation.x=-Math.PI/2;
+  // ground.rotation.x=-Math.PI/2;
   scene.add( ground );
 
-  camera.position.z = 20;
-  camera.position.y = 1;
+ // camera.position.z = 60;
+  camera.position.y = 45;
 
   sun = new THREE.DirectionalLight( 0xffffff, 0.8);
   sun.position.set( 0,4,1 );
@@ -77,12 +78,12 @@ function createScene(){
 
   orbitControl = new THREE.OrbitControls( camera, renderer.domElement );//helper to rotate around in scene
   orbitControl.addEventListener( 'change', render );
-  //orbitControl.enableDamping = true;
-  //orbitControl.dampingFactor = 0.8;
+  orbitControl.enableDamping = true;
+  orbitControl.dampingFactor = 0.8;
   orbitControl.enableZoom = false;
 
-  //var helper = new THREE.CameraHelper( sun.shadow.camera );
-  //scene.add( helper );// enable to see the light cone
+  var helper = new THREE.CameraHelper( sun.shadow.camera );
+  scene.add( helper );// enable to see the light cone
 
   window.addEventListener('resize', onWindowResize, false);//resize callback
 }
@@ -95,7 +96,9 @@ function update(){
   requestAnimationFrame(update);//request next update
 }
 function render(){
+  //requestAnimationFrame(update);
   renderer.render(scene, camera);//draw
+//  move();
 }
 function onWindowResize() {
   //resize & align
@@ -113,6 +116,24 @@ function start_game() {
   init();
   addTank();
 }
+
+
+// movement
+document.addEventListener("keydown", move, false);
+function move(event){
+  var keyCode = event.which;
+  if (keyCode == 87) {    //W
+    tank.translateZ( 0.1 );
+  } else if (keyCode == 83) {  //S
+    tank.translateZ( -0.1 );
+  } else if (keyCode == 65) {  //A
+    tank.rotation.y += 0.1;
+  } else if (keyCode == 68) {   //D
+    tank.rotation.y -= 0.1;
+  } else if (keyCode == 32) {
+    tank.position.set(0, 0, 0);
+  }
+};
 
 function addTank(){
   var loader = new THREE.ObjectLoader();
@@ -132,7 +153,10 @@ function addTank(){
       // camera.position.y = 1;
       // capera.position.x = -20;
       camera.add(tank);
-      tank.position.set(0,0,15);
+      //tank.rotation.x = 20;
+
+      // tank.rotate.x = 10;
+      // tank.position.set(0,0,-5);
       scene.add(obj);
 
       // scene.add(obj);

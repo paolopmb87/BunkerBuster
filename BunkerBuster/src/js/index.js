@@ -137,38 +137,11 @@ function addTank(){
 
       // scene.add(obj);
 
-      Box = scene.getObjectByName('Box');
-      Box1 = scene.getObjectByName('Box1');
-      Box2 = scene.getObjectByName('Box2');
-      Box5 = scene.getObjectByName('Box5');
-      Box6 = scene.getObjectByName('Box6');
-      Box7 = scene.getObjectByName('Box7');
-      Cylinder = scene.getObjectByName('Cylinder');
-      Cylinder1 = scene.getObjectByName('Cylinder1');
-      Cylinder2 = scene.getObjectByName('Cylinder2');
-      Cylinder3 = scene.getObjectByName('Cylinder3');
-      Cylinder4 = scene.getObjectByName('Cylinder4');
-      Cylinder5 = scene.getObjectByName('Cylinder5');
-      Cylinder6 = scene.getObjectByName('Cylinder6');
-      Cylinder7 = scene.getObjectByName('Cylinder7');
-      Cylinder8 = scene.getObjectByName('Cylinder8');
-      Cylinder9 = scene.getObjectByName('Cylinder9');
-      Cylinder10 = scene.getObjectByName('Cylinder10');
-      Cylinder11 = scene.getObjectByName('Cylinder11');
-      Cylinder12 = scene.getObjectByName('Cylinder12');
-      Cylinder13 = scene.getObjectByName('Cylinder13');
-      Cylinder14 = scene.getObjectByName('Cylinder14');
-      Cylinder15 = scene.getObjectByName('Cylinder15');
-      Cylinder16 = scene.getObjectByName('Cylinder16');
-      wheel = scene.getObjectByName('wheel');
-      wheel1 = scene.getObjectByName('wheel1');
-      wheel2 = scene.getObjectByName('wheel2');
-      wheel3 = scene.getObjectByName('wheel3');
-      wheel4 = scene.getObjectByName('wheel4');
-      wheel5 = scene.getObjectByName('wheel5');
-      wheel6 = scene.getObjectByName('wheel6');
-      wheel7 = scene.getObjectByName('wheel7');
-
+      Body_1 = scene.getObjectByName('Body_1');
+      Body_2 = scene.getObjectByName('Body_2');
+      Track = scene.getObjectByName('Track');
+      Turret = scene.getObjectByName('Turret');
+      Turret_2 = scene.getObjectByName('Turret_2');
 
     },
     // onProgress callback

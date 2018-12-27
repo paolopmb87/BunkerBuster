@@ -31,6 +31,7 @@ var clock = new THREE.Clock()
 var delta = 1;  //movement
 var TANK_LOADED = false;
 var NUM_LOADED = 0;
+var VIEW_ANGLE = 90, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 1000;
 
 
 
@@ -55,7 +56,9 @@ function createScene(){
   console.log(sceneWidth)
   sceneHeight=window.innerHeight;
   //scene.fog = new THREE.Fog(0x00ff00, 50, 800);//enable fog
-  camera = new THREE.PerspectiveCamera( 90, sceneWidth / sceneHeight, 1, 1000 );//perspective camera
+  camera = new THREE.PerspectiveCamera( VIEW_ANGLE , sceneWidth / sceneHeight, NEAR, FAR );//perspective camera
+  scene.add(camera);
+  camera.lookAt(scene.position);
   renderer = new THREE.WebGLRenderer({alpha:true});//renderer with transparent backdrop
   renderer.shadowMap.enabled = true;//enable shadow
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -70,31 +73,32 @@ function createScene(){
 
   var floorTexture = new THREE.ImageUtils.loadTexture( 'img/rocky-ground.jpg' );
   floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
-  floorTexture.repeat.set( 10, 10 );
+  floorTexture.repeat.set( 15, 15 );
 
   var planeGeometry = new THREE.PlaneGeometry( 1000, 1000, 10, 10 );
-  var planeMaterial = new THREE.MeshStandardMaterial( {
+  var planeMaterial = new THREE.MeshLambertMaterial( {
     map: floorTexture,
     side: THREE.DoubleSide
   } );
   ground = new THREE.Mesh( planeGeometry, planeMaterial );
   ground.receiveShadow = true;
-  ground.castShadow=true;
   ground.position.y = -0.5;
   ground.rotation.x=Math.PI/2;
   scene.add( ground );
 
-  camera.position.set(0,60,0);
+  camera.position.set(0,250,0);
 
-  sun = new THREE.DirectionalLight( 0xffffff, 0.2);
-  sun.position.set( 0,60,0 );
+  var sun = new THREE.PointLight( 0xffffff, 1,1000 ,2 );
+  sun.position.set(200,200,200);
+  sun.shadowCameraVisible=true;
   sun.castShadow = true;
+  //sun.shadowDarkness = 0.95;
   scene.add(sun);
   //Set up shadow properties for the sun light
-  sun.shadow.mapSize.width = 256;
-  sun.shadow.mapSize.height = 256;
+  sun.shadow.mapSize.width = 1024;
+  sun.shadow.mapSize.height = 1024;
   sun.shadow.camera.near = 0.5;
-  sun.shadow.camera.far = 50 ;
+  sun.shadow.camera.far = 4000 ;
 
   orbitControl = new THREE.OrbitControls( camera, renderer.domElement );//helper to rotate around in scene
   orbitControl.addEventListener( 'change', render );
@@ -102,8 +106,11 @@ function createScene(){
   orbitControl.dampingFactor = 0.8;
   orbitControl.enableZoom = false;
 
-  var helper = new THREE.CameraHelper( sun.shadow.camera );
-  scene.add( helper );// enable to see the light cone
+
+
+
+/*  var helper = new THREE.CameraHelper( sun.shadow.camera );
+  scene.add( helper );// enable to see the light cone*/
 
   window.addEventListener('resize', onWindowResize, false);//resize callback
 }
@@ -117,7 +124,7 @@ function animate()
 
 function update(){
   var delta = clock.getDelta(); // seconds.
-  var moveDistance = 10 * delta; // 200 pixels per second
+  var moveDistance = 25 * delta; // 200 pixels per second
   var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
 
   if ( keyboard.pressed("W") )
@@ -221,15 +228,20 @@ function addTank(){
       TANK_LOADED = true;
       NUM_LOADED++;
 
-      tank.scale.set(5, 5, 5);
+      tank.scale.set(4.5, 4.5, 4.5);
       camera.add(tank);
-      scene.add(obj);
+      tank.castShadow = true;
+      scene.add(tank);
+
 
       Body_1 = scene.getObjectByName('Body_1');
       Body_2 = scene.getObjectByName('Body_2');
       Track = scene.getObjectByName('Track');
       Turret = scene.getObjectByName('Turret');
       Turret_2 = scene.getObjectByName('Turret_2');
+
+
+
 
     },
     // onProgress callback

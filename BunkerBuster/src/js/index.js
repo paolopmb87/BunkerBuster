@@ -55,7 +55,7 @@ function createScene(){
   console.log(sceneWidth)
   sceneHeight=window.innerHeight;
   //scene.fog = new THREE.Fog(0x00ff00, 50, 800);//enable fog
-  camera = new THREE.PerspectiveCamera( 45, sceneWidth / sceneHeight, 1, 1000 );//perspective camera
+  camera = new THREE.PerspectiveCamera( 90, sceneWidth / sceneHeight, 1, 1000 );//perspective camera
   renderer = new THREE.WebGLRenderer({alpha:true});//renderer with transparent backdrop
   renderer.shadowMap.enabled = true;//enable shadow
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -67,19 +67,27 @@ function createScene(){
     .getElementById('cicciopiccio');
   dom.appendChild(renderer.domElement);
   //width, height, widthSegments, heightSegments
-  var planeGeometry = new THREE.PlaneGeometry( 700, 700, 7, 7 );
-  var planeMaterial = new THREE.MeshStandardMaterial( { color: 0x00ff00 } )
+
+  var floorTexture = new THREE.ImageUtils.loadTexture( 'img/rocky-ground.jpg' );
+  floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+  floorTexture.repeat.set( 10, 10 );
+
+  var planeGeometry = new THREE.PlaneGeometry( 1000, 1000, 10, 10 );
+  var planeMaterial = new THREE.MeshStandardMaterial( {
+    map: floorTexture,
+    side: THREE.DoubleSide
+  } );
   ground = new THREE.Mesh( planeGeometry, planeMaterial );
   ground.receiveShadow = true;
-  ground.castShadow=false;
-  // ground.rotation.x=-Math.PI/2;
+  ground.castShadow=true;
+  ground.position.y = -0.5;
+  ground.rotation.x=Math.PI/2;
   scene.add( ground );
 
- // camera.position.z = 60;
   camera.position.set(0,60,0);
 
-  sun = new THREE.DirectionalLight( 0xffffff, 0.8);
-  sun.position.set( 0,4,1 );
+  sun = new THREE.DirectionalLight( 0xffffff, 0.2);
+  sun.position.set( 0,60,0 );
   sun.castShadow = true;
   scene.add(sun);
   //Set up shadow properties for the sun light
@@ -107,13 +115,7 @@ function animate()
   update();
 }
 
-
-
 function update(){
-  //animate
-  // hero.rotation.x += 0.01;
-  // hero.rotation.y += 0.01;
-
   var delta = clock.getDelta(); // seconds.
   var moveDistance = 10 * delta; // 200 pixels per second
   var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
@@ -157,9 +159,6 @@ function update(){
    controls.update();
    stats.update();
 };
-
-
-
 
 function render(){
   //requestAnimationFrame(update);
@@ -221,25 +220,10 @@ function addTank(){
       tank = obj;
       TANK_LOADED = true;
       NUM_LOADED++;
-      // tank.position.x = 0;
-      // tank.position.z = 0;
-      // tank.position.y = 0;
-      tank.scale.set(0.5, 0.5, 0.5);
-      tank.scale.x = tank.scale.y = tank.scale.z =0.5;
 
-      // camera.position = tank.position;
-      // camera.position.z = 20;
-      // camera.position.y = 1;
-      // capera.position.x = -20;
+      tank.scale.set(5, 5, 5);
       camera.add(tank);
-      //camera.position(tank.position);
-      //tank.rotation.x = 20;
-
-      // tank.rotate.x = 10;
-      // tank.position.set(0,0,-5);
       scene.add(obj);
-
-      // scene.add(obj);
 
       Body_1 = scene.getObjectByName('Body_1');
       Body_2 = scene.getObjectByName('Body_2');

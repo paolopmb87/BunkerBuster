@@ -20,20 +20,32 @@ var camera;
 var scene;
 var renderer;
 var dom;
-var hero;
+var keyboard = new THREEx.KeyboardState();
+var controls;
 var sun;
+var stats;
 var ground;
 var orbitControl;
 var tank;
+var clock = new THREE.Clock()
 var delta = 1;  //movement
 var TANK_LOADED = false;
 var NUM_LOADED = 0;
 
+
+
 function init() {
   // set up the scene
   createScene();
-  //call game loop
-  update();
+  // CONTROLS
+  controls = new THREE.OrbitControls( camera, renderer.domElement );
+  // STATS
+  stats = new Stats();
+  stats.domElement.style.position = 'absolute';
+  stats.domElement.style.bottom = '0px';
+  stats.domElement.style.zIndex = 100;
+  dom.appendChild(stats.domElement);
+
 }
 
 function createScene(){
@@ -64,7 +76,7 @@ function createScene(){
   scene.add( ground );
 
  // camera.position.z = 60;
-  camera.position.y = 45;
+  camera.position.set(0,60,0);
 
   sun = new THREE.DirectionalLight( 0xffffff, 0.8);
   sun.position.set( 0,4,1 );
@@ -88,13 +100,67 @@ function createScene(){
   window.addEventListener('resize', onWindowResize, false);//resize callback
 }
 
+function animate()
+{
+  requestAnimationFrame( animate );
+  render();
+  update();
+}
+
+
+
 function update(){
   //animate
   // hero.rotation.x += 0.01;
   // hero.rotation.y += 0.01;
-  render();
-  requestAnimationFrame(update);//request next update
-}
+
+  var delta = clock.getDelta(); // seconds.
+  var moveDistance = 10 * delta; // 200 pixels per second
+  var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
+
+  if ( keyboard.pressed("W") )
+    tank.translateZ( moveDistance );
+  if ( keyboard.pressed("S") )
+    tank.translateZ(  -moveDistance );
+  if ( keyboard.pressed("A") )
+    tank.rotateOnAxis( new THREE.Vector3(0,1,0), rotateAngle);
+  if ( keyboard.pressed("D") )
+    tank.rotateOnAxis( new THREE.Vector3(0,1,0), -rotateAngle);
+  if ( keyboard.pressed("Q") )
+    Turret_2.rotateOnAxis( new THREE.Vector3(0,0,1), rotateAngle);
+  if ( keyboard.pressed("E") )
+    Turret_2.rotateOnAxis( new THREE.Vector3(0,0,1), -rotateAngle);
+  // rotate left/right/up/down
+  var rotation_matrix = new THREE.Matrix4().identity();
+
+ /* if ( keyboard.pressed("R") )
+    MovingCube.rotateOnAxis( new THREE.Vector3(1,0,0), rotateAngle);
+  if ( keyboard.pressed("F") )
+    MovingCube.rotateOnAxis( new THREE.Vector3(1,0,0), -rotateAngle);
+
+  if ( keyboard.pressed("Z") )
+  {
+    MovingCube.position.set(0,25.1,0);
+    MovingCube.rotation.set(0,0,0);
+  }
+
+  // global coordinates
+  if ( keyboard.pressed("left") )
+    MovingCube.position.x -= moveDistance;
+  if ( keyboard.pressed("right") )
+    MovingCube.position.x += moveDistance;
+  if ( keyboard.pressed("up") )
+    MovingCube.position.z -= moveDistance;
+  if ( keyboard.pressed("down") )
+    MovingCube.position.z += moveDistance;*/
+
+   controls.update();
+   stats.update();
+};
+
+
+
+
 function render(){
   //requestAnimationFrame(update);
   renderer.render(scene, camera);//draw
@@ -114,10 +180,11 @@ function start_game() {
   document.getElementById("start_game").style.display='block';
   document.getElementById("game_ifrm").style.display='block';
   init();
+  animate();
   addTank();
 }
 
-
+/*
 // movement
 document.addEventListener("keydown", move, false);
 document.addEventListener("keydown", rotturret, false);
@@ -146,7 +213,7 @@ function rotturret(event){
     Turret_2.rotation.z -= 0.1;
   }
 }
-
+*/
 function addTank(){
   var loader = new THREE.ObjectLoader();
   loader.load("models/tank/tank.json",
@@ -165,6 +232,7 @@ function addTank(){
       // camera.position.y = 1;
       // capera.position.x = -20;
       camera.add(tank);
+      //camera.position(tank.position);
       //tank.rotation.x = 20;
 
       // tank.rotate.x = 10;

@@ -98,7 +98,7 @@ function update(){
 function render(){
   //requestAnimationFrame(update);
   renderer.render(scene, camera);//draw
-//  move();
+
 }
 function onWindowResize() {
   //resize & align
@@ -120,6 +120,7 @@ function start_game() {
 
 // movement
 document.addEventListener("keydown", move, false);
+document.addEventListener("keydown", rotturret, false);
 function move(event){
   var keyCode = event.which;
   if (keyCode == 87) {    //W
@@ -133,7 +134,18 @@ function move(event){
   } else if (keyCode == 32) {
     tank.position.set(0, 0, 0);
   }
+
 };
+
+
+function rotturret(event){
+  var keyCode= event.which;
+  if(keyCode == 81){   //Q
+    Turret_2.rotation.z +=0.1;
+  } else if (keyCode == 69){  //E
+    Turret_2.rotation.z -= 0.1;
+  }
+}
 
 function addTank(){
   var loader = new THREE.ObjectLoader();

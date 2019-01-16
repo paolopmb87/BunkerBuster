@@ -31,8 +31,8 @@ var clock = new THREE.Clock()
 var delta = 1;  //movement
 var TANK_LOADED = false;
 var NUM_LOADED = 0;
-var VIEW_ANGLE = 90, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 1000;
-
+var VIEW_ANGLE = 90, NEAR = 0.1, FAR = 1000;
+var mouse ={ x: 0, y: 0 };
 
 
 function init() {
@@ -40,12 +40,15 @@ function init() {
   createScene();
   // CONTROLS
   controls = new THREE.OrbitControls( camera, renderer.domElement );
+
   // STATS
   stats = new Stats();
   stats.domElement.style.position = 'absolute';
   stats.domElement.style.bottom = '0px';
   stats.domElement.style.zIndex = 100;
   dom.appendChild(stats.domElement);
+  dom.addEventListener( 'mousemove', onDocumentMouseMove, false );
+
 
 }
 
@@ -127,6 +130,7 @@ function update(){
   var moveDistance = 25 * delta; // 200 pixels per second
   var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
 
+
   if ( keyboard.pressed("W") )
     tank.translateZ( moveDistance );
   if ( keyboard.pressed("S") )
@@ -188,6 +192,12 @@ function start_game() {
   init();
   animate();
   addTank();
+}
+
+function onDocumentMouseMove(e) {
+  e.preventDefault();
+  mouse.x = (e.clientX / sceneWidth) * 2 - 1;
+  mouse.y = - (e.clientY / sceneHeight) * 2 + 1;
 }
 
 /*
@@ -255,4 +265,6 @@ function addTank(){
       TANK_LOADED = false;
     });
 }
+
+
 

@@ -33,6 +33,7 @@ var TANK_LOADED = false;
 var NUM_LOADED = 0;
 var VIEW_ANGLE = 90, NEAR = 0.1, FAR = 1000;
 var mouse ={ x: 0, y: 0 };
+var bullets=[];
 
 
 function init() {
@@ -146,27 +147,34 @@ function update(){
   // rotate left/right/up/down
   var rotation_matrix = new THREE.Matrix4().identity();
 
- /* if ( keyboard.pressed("R") )
-    MovingCube.rotateOnAxis( new THREE.Vector3(1,0,0), rotateAngle);
-  if ( keyboard.pressed("F") )
-    MovingCube.rotateOnAxis( new THREE.Vector3(1,0,0), -rotateAngle);
+  if(keyboard[32]){
+    var bullet = new THREE.Mesh(
+      new THREE.SphereGeometry(100,100,100),
+      new THREE.MeshBasicMaterial({color:0xffffff})
+    );
 
-  if ( keyboard.pressed("Z") )
-  {
-    MovingCube.position.set(0,25.1,0);
-    MovingCube.rotation.set(0,0,0);
-  }
+    bullet.position.set(
+      Turret_2.position.x,
+      Turret_2.position.y + 0.15,
+      Turret_2.position.z
+    );
 
-  // global coordinates
-  if ( keyboard.pressed("left") )
-    MovingCube.position.x -= moveDistance;
-  if ( keyboard.pressed("right") )
-    MovingCube.position.x += moveDistance;
-  if ( keyboard.pressed("up") )
-    MovingCube.position.z -= moveDistance;
-  if ( keyboard.pressed("down") )
-    MovingCube.position.z += moveDistance;*/
+    bullet.velocity = new THREE.Vector3(0,0,5);
 
+    bullet.alive = true;
+    setTimeout(function(){
+      bullet.alive = false;
+      scene.remove(bullet);
+    }, 1000);
+
+    bullets.push(bullet);
+    scene.add(bullet);
+
+
+
+
+
+}
    controls.update();
    stats.update();
 };

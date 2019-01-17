@@ -41,9 +41,9 @@ var sceneHeight;
 var renderer;
 var light;
 var ground;
-
+var rotationMatrix;
 var dom;
-var keyboard = new THREEx.KeyboardState();
+var keyboard;
 var controls;
 var stats;
 
@@ -83,6 +83,7 @@ function init() {
   createScene();
   // CONTROLS
   controls = new THREE.OrbitControls( camera, renderer.domElement );
+  controls.enabled = false;
   // STATS
   stats = new Stats();
   stats.domElement.style.position = 'absolute';
@@ -127,7 +128,7 @@ function createScene(){
   ground = new THREE.Mesh( groundGeometry, groundMaterial );
   ground.receiveShadow = true;
   ground.position.y = -0.5;
-  ground.rotation.x=Math.PI/2;
+  ground.rotation.x = Math.PI/2;
   scene.add( ground );
 
   camera.position.set(0,250,0);
@@ -145,7 +146,7 @@ function createScene(){
   light.shadow.camera.far = 4000 ;
 
   orbitControl = new THREE.OrbitControls( camera, renderer.domElement );//helper to rotate around in scene
-  orbitControl.addEventListener( 'change', render );
+  //orbitControl.addEventListener( 'change', render );
   orbitControl.enableDamping = true;
   orbitControl.dampingFactor = 0.8;
   orbitControl.enableZoom = false;
@@ -174,7 +175,6 @@ function addTank(){
       tank.castShadow = true;
       scene.add(tank);
 
-
       Body_1 = scene.getObjectByName('Body_1');
       Body_2 = scene.getObjectByName('Body_2');
       Track = scene.getObjectByName('Track');
@@ -197,19 +197,19 @@ function addTank(){
 /**
  * KEYBOARD - MOUSE
  */
-
 function update(){
   delta = clock.getDelta(); // seconds.
+  keyboard = new THREEx.KeyboardState();
+
   var moveDistance = 25 * delta; // 200 pixels per second
   var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
 
   for(var index=0; index<bullets.length; index+=1){
     if( bullets[index] === undefined ) continue;
-    if( bullets[index].alive == false ){
+    if( bullets[index].alive === false ){
       bullets.splice(index,1);
       continue;
     }
-
     bullets[index].position.add(bullets[index].velocity);
   }
 
@@ -230,7 +230,7 @@ function update(){
     Turret_2.rotateOnAxis( new THREE.Vector3(0,0,1), -rotateAngle);
     mesh.rotateOnAxis( new THREE.Vector3(0,0,1), -rotateAngle);}
   // rotate left/right/up/down
-  var rotation_matrix = new THREE.Matrix4().identity();
+  rotationMatrix = new THREE.Matrix4().identity();
 
   if( keyboard.pressed("V")){
 
@@ -265,9 +265,7 @@ function update(){
  * @param e = event
  */
 function onDocumentMouseMove(e) {
-  e.preventDefault();
-  mouse.x = (e.clientX / sceneWidth) * 2 - 1;
-  mouse.y = - (e.clientY / sceneHeight) * 2 + 1;
+  
 }
 
 /**

@@ -57,13 +57,14 @@ var mouse ={ x: 0, y: 0 };
  */
 var bullets=[];
 
-var mesh;
+var viewfinder;
 var tank;
 var Body_1;
 var Body_2;
 var Track;
 var Turret;
 var Turret_2;
+var p1fireRate = 60;
 
 /**
  * Function to start game with the play button
@@ -152,8 +153,8 @@ function createScene(){
 
   const meshGeometry = new THREE.BoxBufferGeometry( 0.1, 0.1, 0.1 );
   const meshMaterial = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
-  mesh = new THREE.Mesh( meshGeometry, meshMaterial );
-  scene.add( mesh );
+  viewfinder = new THREE.Mesh( meshGeometry, meshMaterial );
+  scene.add( viewfinder );
 
   window.addEventListener('resize', onWindowResize, false);//resize callback
 }
@@ -197,7 +198,7 @@ function addTank(){
  * KEYBOARD - MOUSE
  */
 function update(){
-  var delta = clock.getDelta(); // seconds.
+  var delta = 0.01; // seconds.
   var moveDistance = 25 * delta; // 200 pixels per second
   var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
 
@@ -216,32 +217,40 @@ function update(){
     tank.translateZ(  -moveDistance );
   if ( keyboard.pressed("A") ){
     tank.rotateOnAxis( new THREE.Vector3(0,1,0), rotateAngle);
-    mesh.rotateOnAxis( new THREE.Vector3(0,0,1), rotateAngle);}
+    viewfinder.rotateOnAxis( new THREE.Vector3(0,0,1), rotateAngle);}
   if ( keyboard.pressed("D") ){
     tank.rotateOnAxis( new THREE.Vector3(0,1,0), -rotateAngle);
-    mesh.rotateOnAxis( new THREE.Vector3(0,0,1), -rotateAngle);}
+    viewfinder.rotateOnAxis( new THREE.Vector3(0,0,1), -rotateAngle);}
   if ( keyboard.pressed("Q") ){
     Turret_2.rotateOnAxis( new THREE.Vector3(0,0,1), rotateAngle);
-    mesh.rotateOnAxis( new THREE.Vector3(0,0,1), rotateAngle);}
+    viewfinder.rotateOnAxis( new THREE.Vector3(0,0,1), rotateAngle);}
   if ( keyboard.pressed("E") ){
     Turret_2.rotateOnAxis( new THREE.Vector3(0,0,1), -rotateAngle);
-    mesh.rotateOnAxis( new THREE.Vector3(0,0,1), -rotateAngle);}
+    viewfinder.rotateOnAxis( new THREE.Vector3(0,0,1), -rotateAngle);}
   // rotate left/right/up/down
   rotationMatrix = new THREE.Matrix4().identity();
 
-  if( keyboard.pressed("V")){
+  if( p1fireRate == 60 && keyboard.pressed("V")){
 
-    var bullet = new THREE.Mesh(
-      new THREE.SphereGeometry(4,8,8),
-      new THREE.MeshBasicMaterial({color:0xffffff})
-    );
 
-    bullet.position.set(tank.position.x,tank.position.y, tank.position.z);
+
+    var bullet = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), new THREE.MeshLambertMaterial({color: 0x0000}));
+
+    //bullet.visible = false ;
+    bullet.visible = false;
+
+     setTimeout(function(){
+      bullet.visible = true ;
+    }, 120);
+
+    bullet.position.set(tank.position.x,tank.position.y+10, tank.position.z);
 
     bullet.velocity = new THREE.Vector3(
-      3*Math.sin(mesh.rotation.z),
+      4*Math.sin(viewfinder.rotation.z),
       0,
-      3*Math.cos(mesh.rotation.z));
+      4*Math.cos(viewfinder.rotation.z));
+
+
 
     bullet.alive = true;
     setTimeout(function(){
@@ -252,9 +261,12 @@ function update(){
     bullets.push(bullet);
     scene.add(bullet);
 
+
+    p1fireRate = 0;
   }
   controls.update();
   stats.update();
+
 };
 
 /**
@@ -272,6 +284,9 @@ function onDocumentMouseMove(e) {
 function render(){
   //requestAnimationFrame(update);
   renderer.render(scene, camera);//draw
+  if (p1fireRate < 60) {
+    p1fireRate++;
+  }
 }
 
 function animate()

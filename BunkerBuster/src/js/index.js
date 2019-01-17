@@ -1,3 +1,6 @@
+/**
+ * Fps management
+ */
 (function(){
   var fps=document.createElement('fps');
   fps.onload=function (){
@@ -12,31 +15,68 @@
   document.head.appendChild(fps);
 })()
 
-//THREEJS VAR
+/**
+ * Management of window size
+ */
+function onWindowResize() {
+  //resize & align
+  sceneHeight = window.innerHeight;
+  sceneWidth = window.innerWidth;
+  renderer.setSize(sceneWidth, sceneHeight);
+  camera.aspect = sceneWidth/sceneHeight;
+  camera.updateProjectionMatrix();
+}
 
-var sceneWidth;
-var sceneHeight;
+/**
+ * Variables declaration
+ */
+
+var VIEW_ANGLE = 90, NEAR = 0.1, FAR = 1000;
+
 var camera;
 var scene;
+var orbitControl;
+var sceneWidth;
+var sceneHeight;
 var renderer;
+var light;
+var ground;
+
 var dom;
 var keyboard = new THREEx.KeyboardState();
 var controls;
-var sun;
 var stats;
-var ground;
-var orbitControl;
-var tank;
+
 var clock = new THREE.Clock()
-var delta = 1;  //movement
 var TANK_LOADED = false;
 var NUM_LOADED = 0;
-var VIEW_ANGLE = 90, NEAR = 0.1, FAR = 1000;
 var mouse ={ x: 0, y: 0 };
+var delta;
+
+/**
+ * Variables for player tank
+ */
 var bullets=[];
+
 var mesh;
+var tank;
+var Body_1;
+var Body_2;
+var Track;
+var Turret;
+var Turret_2;
 
-
+/**
+ * Function to start game with the play button
+ */
+function start_game() {
+  document.getElementById("playBTN").style.display='none';
+  document.getElementById("start_game").style.display='block';
+  document.getElementById("game_ifrm").style.display='block';
+  init();
+  animate();
+  addTank();
+}
 
 function init() {
   // set up the scene
@@ -50,15 +90,15 @@ function init() {
   stats.domElement.style.zIndex = 100;
   dom.appendChild(stats.domElement);
   dom.addEventListener( 'mousemove', onDocumentMouseMove, false );
-
-
 }
 
+/**
+ * This function is to generate the scene light, shadow, ground
+ */
 function createScene(){
   scene = new THREE.Scene();//the 3d scene
 
   sceneWidth=window.innerWidth;
-  console.log(sceneWidth)
   sceneHeight=window.innerHeight;
   //scene.fog = new THREE.Fog(0x00ff00, 50, 800);//enable fog
   camera = new THREE.PerspectiveCamera( VIEW_ANGLE , sceneWidth / sceneHeight, NEAR, FAR );//perspective camera
@@ -72,20 +112,19 @@ function createScene(){
   dom = document.getElementById('game_ifrm')
     .contentWindow
     .document
-    .getElementById('cicciopiccio');
+    .getElementById('gameFrame');
   dom.appendChild(renderer.domElement);
-  //width, height, widthSegments, heightSegments
 
-  var floorTexture = new THREE.ImageUtils.loadTexture( 'img/rocky-ground.jpg' );
-  floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
-  floorTexture.repeat.set( 15, 15 );
+  const groundTexture = new THREE.ImageUtils.loadTexture( 'img/rocky-ground.jpg' );
+  groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
+  groundTexture.repeat.set( 15, 15 );
 
-  var planeGeometry = new THREE.PlaneGeometry( 1000, 1000, 10, 10 );
-  var planeMaterial = new THREE.MeshLambertMaterial( {
-    map: floorTexture,
+  const groundGeometry = new THREE.PlaneGeometry( 1000, 1000, 10, 10 );
+  const groundMaterial = new THREE.MeshLambertMaterial( {
+    map: groundTexture,
     side: THREE.DoubleSide
   } );
-  ground = new THREE.Mesh( planeGeometry, planeMaterial );
+  ground = new THREE.Mesh( groundGeometry, groundMaterial );
   ground.receiveShadow = true;
   ground.position.y = -0.5;
   ground.rotation.x=Math.PI/2;
@@ -93,17 +132,17 @@ function createScene(){
 
   camera.position.set(0,250,0);
 
-  var sun = new THREE.PointLight( 0xffffff, 1,1000 ,2 );
-  sun.position.set(200,200,200);
-  sun.shadowCameraVisible=true;
-  sun.castShadow = true;
-  //sun.shadowDarkness = 0.95;
-  scene.add(sun);
-  //Set up shadow properties for the sun light
-  sun.shadow.mapSize.width = 1024;
-  sun.shadow.mapSize.height = 1024;
-  sun.shadow.camera.near = 0.5;
-  sun.shadow.camera.far = 4000 ;
+  light = new THREE.PointLight( 0xffffff, 1,1000 ,2 );
+  light.position.set(200,200,200);
+  light.shadowCameraVisible=true;
+  light.castShadow = true;
+  //light.shadowDarkness = 0.95;
+  scene.add(light);
+  //Set up shadow properties for the light light
+  light.shadow.mapSize.width = 1024;
+  light.shadow.mapSize.height = 1024;
+  light.shadow.camera.near = 0.5;
+  light.shadow.camera.far = 4000 ;
 
   orbitControl = new THREE.OrbitControls( camera, renderer.domElement );//helper to rotate around in scene
   orbitControl.addEventListener( 'change', render );
@@ -111,33 +150,58 @@ function createScene(){
   orbitControl.dampingFactor = 0.8;
   orbitControl.enableZoom = false;
 
-  var geometry = new THREE.BoxBufferGeometry( 0.1, 0.1, 0.1 );
-  var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
-   mesh = new THREE.Mesh( geometry, material );
+  const meshGeometry = new THREE.BoxBufferGeometry( 0.1, 0.1, 0.1 );
+  const meshMaterial = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+  mesh = new THREE.Mesh( meshGeometry, meshMaterial );
   scene.add( mesh );
-
-
-
-
-
-  /*  var helper = new THREE.CameraHelper( sun.shadow.camera );
-    scene.add( helper );// enable to see the light cone*/
 
   window.addEventListener('resize', onWindowResize, false);//resize callback
 }
 
-function animate()
-{
-  requestAnimationFrame( animate );
-  render();
-  update();
+/**
+ * Tank Mesh added to the scene
+ */
+function addTank(){
+  const loader = new THREE.ObjectLoader();
+  loader.load("models/tank/tank.json",
+    function (obj){
+      tank = obj;
+      TANK_LOADED = true;
+      NUM_LOADED++;
+
+      tank.scale.set(4.5, 4.5, 4.5);
+      camera.add(tank);
+      tank.castShadow = true;
+      scene.add(tank);
+
+
+      Body_1 = scene.getObjectByName('Body_1');
+      Body_2 = scene.getObjectByName('Body_2');
+      Track = scene.getObjectByName('Track');
+      Turret = scene.getObjectByName('Turret');
+      Turret_2 = scene.getObjectByName('Turret_2');
+
+    },
+    // onProgress callback
+    function (xhr) {
+      console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+    },
+
+    // onError callback
+    function (err) {
+      console.error('An error happened');
+      TANK_LOADED = false;
+    });
 }
 
+/**
+ * KEYBOARD - MOUSE
+ */
+
 function update(){
-  var delta = clock.getDelta(); // seconds.
+  delta = clock.getDelta(); // seconds.
   var moveDistance = 25 * delta; // 200 pixels per second
   var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
-
 
   for(var index=0; index<bullets.length; index+=1){
     if( bullets[index] === undefined ) continue;
@@ -170,7 +234,7 @@ function update(){
 
   if( keyboard.pressed("V")){
 
-      var bullet = new THREE.Mesh(
+    var bullet = new THREE.Mesh(
       new THREE.SphereGeometry(4,8,8),
       new THREE.MeshBasicMaterial({color:0xffffff})
     );
@@ -191,103 +255,33 @@ function update(){
     bullets.push(bullet);
     scene.add(bullet);
 
-}
-   controls.update();
-   stats.update();
+  }
+  controls.update();
+  stats.update();
 };
 
-function render(){
-  //requestAnimationFrame(update);
-  renderer.render(scene, camera);//draw
-
-}
-function onWindowResize() {
-  //resize & align
-  sceneHeight = window.innerHeight;
-  sceneWidth = window.innerWidth;
-  renderer.setSize(sceneWidth, sceneHeight);
-  camera.aspect = sceneWidth/sceneHeight;
-  camera.updateProjectionMatrix();
-}
-
-function start_game() {
-  document.getElementById("playBTN").style.display='none';
-  document.getElementById("start_game").style.display='block';
-  document.getElementById("game_ifrm").style.display='block';
-  init();
-  animate();
-  addTank();
-}
-
+/**
+ * Prevent mouse default movement
+ * @param e = event
+ */
 function onDocumentMouseMove(e) {
   e.preventDefault();
   mouse.x = (e.clientX / sceneWidth) * 2 - 1;
   mouse.y = - (e.clientY / sceneHeight) * 2 + 1;
 }
 
-/*
-// movement
-document.addEventListener("keydown", move, false);
-document.addEventListener("keydown", rotturret, false);
-function move(event){
-  var keyCode = event.which;
-  if (keyCode == 87) {    //W
-    tank.translateZ( 0.1 );
-  } else if (keyCode == 83) {  //S
-    tank.translateZ( -0.1 );
-  } else if (keyCode == 65) {  //A
-    tank.rotation.y += 0.1;
-  } else if (keyCode == 68) {   //D
-    tank.rotation.y -= 0.1;
-  } else if (keyCode == 32) {
-    tank.position.set(0, 0, 0);
-  }
+/**
+ * RENDER AND ANIMATE Functions - Starts the animation on the frame and the render
+ */
 
-};
-
-
-function rotturret(event){
-  var keyCode= event.which;
-  if(keyCode == 81){   //Q
-    Turret_2.rotation.z +=0.1;
-  } else if (keyCode == 69){  //E
-    Turret_2.rotation.z -= 0.1;
-  }
-}
-*/
-function addTank(){
-  var loader = new THREE.ObjectLoader();
-  loader.load("models/tank/tank.json",
-    function (obj){
-      tank = obj;
-      TANK_LOADED = true;
-      NUM_LOADED++;
-
-      tank.scale.set(4.5, 4.5, 4.5);
-      camera.add(tank);
-      tank.castShadow = true;
-      scene.add(tank);
-
-
-      Body_1 = scene.getObjectByName('Body_1');
-      Body_2 = scene.getObjectByName('Body_2');
-      Track = scene.getObjectByName('Track');
-      Turret = scene.getObjectByName('Turret');
-      Turret_2 = scene.getObjectByName('Turret_2');
-
-
-
-
-    },
-    // onProgress callback
-    function (xhr) {
-      console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-    },
-
-    // onError callback
-    function (err) {
-      console.error('An error happened');
-      TANK_LOADED = false;
-    });
+function render(){
+  //requestAnimationFrame(update);
+  renderer.render(scene, camera);//draw
 }
 
+function animate()
+{
+  requestAnimationFrame( animate );
+  render();
+  update();
+}

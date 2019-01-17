@@ -43,7 +43,7 @@ var light;
 var ground;
 var rotationMatrix;
 var dom;
-var keyboard;
+var keyboard = new THREEx.KeyboardState();
 var controls;
 var stats;
 
@@ -51,7 +51,6 @@ var clock = new THREE.Clock()
 var TANK_LOADED = false;
 var NUM_LOADED = 0;
 var mouse ={ x: 0, y: 0 };
-var delta;
 
 /**
  * Variables for player tank
@@ -83,7 +82,7 @@ function init() {
   createScene();
   // CONTROLS
   controls = new THREE.OrbitControls( camera, renderer.domElement );
-  controls.enabled = false;
+  // controls.enabled = false;
   // STATS
   stats = new Stats();
   stats.domElement.style.position = 'absolute';
@@ -163,7 +162,7 @@ function createScene(){
  * Tank Mesh added to the scene
  */
 function addTank(){
-  const loader = new THREE.ObjectLoader();
+  var loader = new THREE.ObjectLoader();
   loader.load("models/tank/tank.json",
     function (obj){
       tank = obj;
@@ -198,9 +197,7 @@ function addTank(){
  * KEYBOARD - MOUSE
  */
 function update(){
-  delta = clock.getDelta(); // seconds.
-  keyboard = new THREEx.KeyboardState();
-
+  var delta = clock.getDelta(); // seconds.
   var moveDistance = 25 * delta; // 200 pixels per second
   var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
 
@@ -265,7 +262,7 @@ function update(){
  * @param e = event
  */
 function onDocumentMouseMove(e) {
-  
+
 }
 
 /**

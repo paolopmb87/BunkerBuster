@@ -64,7 +64,10 @@ var Body_2;
 var Track;
 var Turret;
 var Turret_2;
-var p1fireRate = 60;
+var p1fireRate = 60;   //FIRE RATE
+
+var soundPath = "sounds/";
+var sound_shot;
 
 /**
  * Function to start game with the play button
@@ -79,6 +82,10 @@ function start_game() {
 }
 
 function init() {
+
+  sound_shot = new sound(soundPath + "cannon_shot.mp3");
+
+
   // set up the scene
   createScene();
   // CONTROLS
@@ -157,6 +164,28 @@ function createScene(){
   scene.add( viewfinder );
 
   window.addEventListener('resize', onWindowResize, false);//resize callback
+}
+
+function sound(src) {
+  this.sound = document.createElement("audio");
+  this.sound.src = src;
+  this.sound.setAttribute("preload", "auto");
+  this.sound.setAttribute("controls", "none");
+  this.sound.style.display = "none";
+  document.body.appendChild(this.sound);
+  this.play = function(){
+    this.sound.play();
+  }
+  this.stop = function(){
+    this.sound.pause();
+    this.sound.currentTime = 0;
+  }
+  this.speedUp = function(){
+    this.sound.playbackRate= 3;
+  }
+  this.pause = function () {
+    this.sound.pause();
+  }
 }
 
 /**
@@ -238,6 +267,8 @@ function update(){
 
     //bullet.visible = false ;
     bullet.visible = false;
+    sound_shot.stop();
+    sound_shot.play();
 
      setTimeout(function(){
       bullet.visible = true ;
@@ -246,11 +277,9 @@ function update(){
     bullet.position.set(tank.position.x,tank.position.y+10, tank.position.z);
 
     bullet.velocity = new THREE.Vector3(
-      4*Math.sin(viewfinder.rotation.z),
+      4.5*Math.sin(viewfinder.rotation.z),
       0,
-      4*Math.cos(viewfinder.rotation.z));
-
-
+      4.5*Math.cos(viewfinder.rotation.z));
 
     bullet.alive = true;
     setTimeout(function(){

@@ -57,7 +57,7 @@ var mouse ={ x: 0, y: 0 };
  */
 var bullets=[];
 
-var viewfinder;
+
 var tank;
 var Body_1;
 var Body_2;
@@ -65,9 +65,13 @@ var Track;
 var Turret;
 var Turret_2;
 var p1fireRate = 60;   //FIRE RATE
+var viewfinder;
 
 var soundPath = "sounds/";
 var sound_shot;
+
+var cube, cubeX, cubeZ;
+
 
 /**
  * Function to start game with the play button
@@ -98,6 +102,15 @@ function init() {
   stats.domElement.style.zIndex = 100;
   dom.appendChild(stats.domElement);
   dom.addEventListener( 'mousemove', onDocumentMouseMove, false );
+
+  var cubegeometry = new THREE.BoxGeometry( 10, 10, 10 );
+  var cubematerial = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+  cube = new THREE.Mesh(cubegeometry, cubematerial );
+
+  //cube.scale.set(5,7,9);
+  cube.position.set(50,5,90);
+  scene.add(cube);
+
 }
 
 /**
@@ -158,7 +171,7 @@ function createScene(){
   orbitControl.dampingFactor = 0.8;
   orbitControl.enableZoom = false;
 
-  const meshGeometry = new THREE.BoxBufferGeometry( 0.1, 0.1, 0.1 );
+  const meshGeometry = new THREE.BoxBufferGeometry( 0.01, 0.01, 0.01 );
   const meshMaterial = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
   viewfinder = new THREE.Mesh( meshGeometry, meshMaterial );
   scene.add( viewfinder );
@@ -261,8 +274,6 @@ function update(){
 
   if( p1fireRate == 60 && keyboard.pressed("V")){
 
-
-
     var bullet = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), new THREE.MeshLambertMaterial({color: 0x0000}));
 
     //bullet.visible = false ;
@@ -293,6 +304,16 @@ function update(){
 
     p1fireRate = 0;
   }
+
+  for( var i=0;i<bullets.length;i++){
+  if (bullets[i].position.x>=cube.position.x-10 && bullets[i].position.x<=cube.position.x+10 && bullets[i].position.z>=cube.position.z-10 && bullets[i].position.z<=cube.position.z+10){
+    cube.visible=false;
+    bullets[i].visible=false;
+  }
+   }
+
+
+
   controls.update();
   stats.update();
 
@@ -311,11 +332,18 @@ function onDocumentMouseMove(e) {
  */
 
 function render(){
+
+
   //requestAnimationFrame(update);
   renderer.render(scene, camera);//draw
   if (p1fireRate < 60) {
     p1fireRate++;
   }
+
+
+
+
+
 }
 
 function animate()

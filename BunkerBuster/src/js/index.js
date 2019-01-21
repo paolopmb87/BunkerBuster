@@ -31,7 +31,7 @@ function onWindowResize() {
  * Variables declaration
  */
 
-var VIEW_ANGLE = 90, NEAR = 0.1, FAR = 1000;
+var VIEW_ANGLE = 90, NEAR = 0.1, FAR = 1000,CAMERA_HEIGHT = 400;
 
 var camera;
 var scene;
@@ -58,7 +58,7 @@ var mouse ={ x: 0, y: 0 };
 var bullets=[];
 
 
-var tank;
+var tank,tree,tree2,house;
 var Body_1;
 var Body_2;
 var Track;
@@ -83,6 +83,9 @@ function start_game() {
   init();
   animate();
   addTank();
+  addTree();
+  addTree2();
+  addHouse();
 }
 
 function init() {
@@ -124,7 +127,8 @@ function createScene(){
   //scene.fog = new THREE.Fog(0x00ff00, 50, 800);//enable fog
   camera = new THREE.PerspectiveCamera( VIEW_ANGLE , sceneWidth / sceneHeight, NEAR, FAR );//perspective camera
   scene.add(camera);
-  camera.lookAt(scene.position);
+  camera.lookAt(new THREE.Vector3(0,0,0));
+  camera.position.set(0,CAMERA_HEIGHT,0);
   renderer = new THREE.WebGLRenderer({alpha:true});//renderer with transparent backdrop
   renderer.shadowMap.enabled = true;//enable shadow
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -151,19 +155,19 @@ function createScene(){
   ground.rotation.x = Math.PI/2;
   scene.add( ground );
 
-  camera.position.set(0,250,0);
 
-  light = new THREE.PointLight( 0xffffff, 1,1000 ,2 );
-  light.position.set(200,200,200);
+
+  light = new THREE.PointLight( 0xffffff, 1.5,0 ,2 );
+  light.position.set(200,400,200);
   light.shadowCameraVisible=true;
   light.castShadow = true;
   //light.shadowDarkness = 0.95;
   scene.add(light);
-  //Set up shadow properties for the light light
+  //Set up shadow properties for the light
   light.shadow.mapSize.width = 1024;
   light.shadow.mapSize.height = 1024;
   light.shadow.camera.near = 0.5;
-  light.shadow.camera.far = 4000 ;
+  light.shadow.camera.far = 10000 ;
 
   orbitControl = new THREE.OrbitControls( camera, renderer.domElement );//helper to rotate around in scene
   //orbitControl.addEventListener( 'change', render );
@@ -171,11 +175,11 @@ function createScene(){
   orbitControl.dampingFactor = 0.8;
   orbitControl.enableZoom = false;
 
-  const meshGeometry = new THREE.BoxBufferGeometry( 0.01, 0.01, 0.01 );
-  const meshMaterial = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
-  viewfinder = new THREE.Mesh( meshGeometry, meshMaterial );
-  scene.add( viewfinder );
 
+  const viewfinderGeometry = new THREE.BoxBufferGeometry( 0.01, 0.01, 0.01 );
+  const viewfinderMaterial = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+  viewfinder = new THREE.Mesh( viewfinderGeometry, viewfinderMaterial );
+  scene.add( viewfinder );
   window.addEventListener('resize', onWindowResize, false);//resize callback
 }
 
@@ -213,8 +217,8 @@ function addTank(){
       NUM_LOADED++;
 
       tank.scale.set(4.5, 4.5, 4.5);
-      camera.add(tank);
-      tank.castShadow = true;
+     // camera.add(tank);
+     // tank.castShadow = true;
       scene.add(tank);
 
       Body_1 = scene.getObjectByName('Body_1');
@@ -236,10 +240,91 @@ function addTank(){
     });
 }
 
+function addTree(){
+  var loader = new THREE.ObjectLoader();
+  loader.load("models/trees/tree.json",
+    function (obj){
+      tree = obj;
+      // TANK_LOADED = true;
+      //NUM_LOADED++;
+
+      tree.scale.set(30, 30, 30);
+
+     // tree.castShadow = true;
+      scene.add(tree);
+      tree.position.set(20,5,40);
+     // camera.add(tree);
+    },
+    // onProgress callback
+    function (xhr) {
+      console.log((xhr.loaded / xhr.total * 100) + '% caricato');
+    },
+
+    // onError callback
+    function (err) {
+      console.error('An error happened');
+      TANK_LOADED = false;
+    });
+
+
+}
+
+function addTree2(){
+  var loader = new THREE.ObjectLoader();
+  loader.load("models/trees/tree2.json",
+    function (obj){
+      tree2 = obj;
+      tree2.scale.set(0.5, 0.5, 0.5);
+
+     // tree2.castShadow = true;
+      scene.add(tree2);
+      tree2.position.set(60,0,40);
+      // camera.add(tree);
+    },
+
+    function (xhr) {
+      console.log((xhr.loaded / xhr.total * 100) + '% caricato');
+    },
+
+
+    function (err) {
+      console.error('An error happened');
+      TANK_LOADED = false;
+    });
+
+
+}
+function addHouse(){
+  var loader = new THREE.ObjectLoader();
+  loader.load("models/house/old-house.json",
+    function (obj){
+      house = obj;
+      house.scale.set(10, 10, 10);
+
+      // tree2.castShadow = true;
+      scene.add(house);
+      house.position.set(200,0,350);
+      // camera.add(tree);
+    },
+
+    function (xhr) {
+      console.log((xhr.loaded / xhr.total * 100) + '% house_loaded');
+    },
+
+
+    function (err) {
+      console.error('An error happened with house');
+      TANK_LOADED = false;
+    });
+
+
+}
+
 /**
  * KEYBOARD - MOUSE
  */
 function update(){
+
   var delta = 0.01; // seconds.
   var moveDistance = 25 * delta; // 200 pixels per second
   var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
@@ -253,10 +338,15 @@ function update(){
     bullets[index].position.add(bullets[index].velocity);
   }
 
-  if ( keyboard.pressed("W") )
+  if ( keyboard.pressed("W") ){
     tank.translateZ( moveDistance );
-  if ( keyboard.pressed("S") )
-    tank.translateZ(  -moveDistance );
+    update_camera()
+  }
+
+  if ( keyboard.pressed("S") ){
+    tank.translateZ( -moveDistance );
+    update_camera()
+  }
   if ( keyboard.pressed("A") ){
     tank.rotateOnAxis( new THREE.Vector3(0,1,0), rotateAngle);
     viewfinder.rotateOnAxis( new THREE.Vector3(0,0,1), rotateAngle);}
@@ -272,6 +362,13 @@ function update(){
   // rotate left/right/up/down
   rotationMatrix = new THREE.Matrix4().identity();
 
+ /* if(keyboard.pressed("Z")){
+
+    camera.position.x = tank.position.x;
+    camera.position.z = tank.position.z ;
+    controls.target.set(tank.position.x,0,tank.position.z)
+  }*/
+
   if( p1fireRate == 60 && keyboard.pressed("V")){
 
     var bullet = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), new THREE.MeshLambertMaterial({color: 0x0000}));
@@ -286,6 +383,8 @@ function update(){
     }, 120);
 
     bullet.position.set(tank.position.x,tank.position.y+10, tank.position.z);
+
+
 
     bullet.velocity = new THREE.Vector3(
       4.5*Math.sin(viewfinder.rotation.z),
@@ -305,6 +404,7 @@ function update(){
     p1fireRate = 0;
   }
 
+
   for( var i=0;i<bullets.length;i++){
   if (bullets[i].position.x>=cube.position.x-10 && bullets[i].position.x<=cube.position.x+10 && bullets[i].position.z>=cube.position.z-10 && bullets[i].position.z<=cube.position.z+10){
     cube.visible=false;
@@ -318,6 +418,11 @@ function update(){
   stats.update();
 
 };
+
+function update_camera(){
+  camera.position.set(tank.position.x,CAMERA_HEIGHT,tank.position.z);
+  controls.target.set(tank.position.x,0,tank.position.z)
+}
 
 /**
  * Prevent mouse default movement

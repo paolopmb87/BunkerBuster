@@ -43,7 +43,7 @@ var light;
 var ground;
 var rotationMatrix;
 var dom;
-var keyboard = new THREEx.KeyboardState();
+
 var controls;
 var stats;
 
@@ -56,34 +56,34 @@ var mouse ={ x: 0, y: 0 };
  * Variables for player tank
  */
 var bullets=[];
+var cann_bullets=[];
 
 
-var tank,tree,tree2,house;
+var tank,tree,tree2,house,cannon;
+
 var Body_1;
 var Body_2;
 var Track;
 var Turret;
 var Turret_2;
 var p1fireRate = 60;   //FIRE RATE
+var cannonfireRate = 80;
 var viewfinder;
 
 var soundPath = "sounds/";
 var sound_shot;
 
-var cube, cubeX, cubeZ;
-
+var cube;
+var keyboard = new THREEx.KeyboardState();
 
 /**
  * Function to start game with the play button
  */
 function start_game() {
-  // document.getElementById("playBTN").style.display='none';
   init();
   animate();
-  addTank();
-  addTree();
-  addTree2();
-  addHouse();
+
+
 }
 
 function init() {
@@ -121,6 +121,11 @@ function init() {
  * This function is to generate the scene light, shadow, ground
  */
 function createScene(){
+  addTank();
+  addTree();
+  addTree2();
+  addHouse();
+  addCannon();
   scene = new THREE.Scene();//the 3d scene
 
   sceneWidth = $(play_game_id).width();
@@ -175,6 +180,8 @@ function createScene(){
   const viewfinderMaterial = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
   viewfinder = new THREE.Mesh( viewfinderGeometry, viewfinderMaterial );
   scene.add( viewfinder );
+  viewfinder2 = new THREE.Mesh( viewfinderGeometry, viewfinderMaterial );
+  scene.add( viewfinder2 );
   window.addEventListener('resize', onWindowResize, false);//resize callback
 }
 
@@ -312,16 +319,40 @@ function addHouse(){
       TANK_LOADED = false;
     });
 
-
 }
 
+function addCannon() {
+  var loader = new THREE.ObjectLoader();
+  loader.load("models/cannons/cannon.json",
+    function (obj) {
+      cannon = obj;
+      cannon.scale.set(10, 10, 10);
+
+      // tree2.castShadow = true;
+      scene.add(cannon);
+      cannon.position.set(-150,0,300);
+
+   //   cannon.lookAt(0,0,0);
+      // camera.add(tree);
+    },
+
+    function (xhr) {
+      console.log((xhr.loaded / xhr.total * 100) + '% cannon_loaded');
+    },
+
+
+    function (err) {
+      console.error('An error happened with house');
+      TANK_LOADED = false;
+    });
+}
 /**
  * KEYBOARD - MOUSE
  */
 function update(){
 
   var delta = 0.01; // seconds.
-  var moveDistance = 25 * delta; // 200 pixels per second
+  var moveDistance = 100 * delta; //25 default
   var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
 
   for(var index=0; index<bullets.length; index+=1){
@@ -333,29 +364,44 @@ function update(){
     bullets[index].position.add(bullets[index].velocity);
   }
 
-  if ( keyboard.pressed("W") ){
-    tank.translateZ( moveDistance );
-    update_camera()
+  for(var index=0; index<cann_bullets.length; index+=1){
+    if( cann_bullets[index] === undefined ) continue;
+    if( cann_bullets[index].alive === false ){
+      cann_bullets.splice(index,1);
+      continue;
+    }
+    cann_bullets[index].position.add(cann_bullets[index].velocity);
   }
+
+  if ( keyboard.pressed("W") ){
+    tank.translateZ( moveDistance );cannon_bullet;
+    cannon.lookAt(tank.position.x,0,tank.position.z);
+    update_camera();
+      }
 
   if ( keyboard.pressed("S") ){
     tank.translateZ( -moveDistance );
-    update_camera()
+    cannon.lookAt(tank.position.x,0,tank.position.z);
+    update_camera();
   }
   if ( keyboard.pressed("A") ){
     tank.rotateOnAxis( new THREE.Vector3(0,1,0), rotateAngle);
-    viewfinder.rotateOnAxis( new THREE.Vector3(0,0,1), rotateAngle);}
+    viewfinder.rotateOnAxis( new THREE.Vector3(0,0,1), rotateAngle);
+    }
   if ( keyboard.pressed("D") ){
     tank.rotateOnAxis( new THREE.Vector3(0,1,0), -rotateAngle);
-    viewfinder.rotateOnAxis( new THREE.Vector3(0,0,1), -rotateAngle);}
+    viewfinder.rotateOnAxis( new THREE.Vector3(0,0,1), -rotateAngle);
+     }
   if ( keyboard.pressed("Q") ){
     Turret_2.rotateOnAxis( new THREE.Vector3(0,0,1), rotateAngle);
-    viewfinder.rotateOnAxis( new THREE.Vector3(0,0,1), rotateAngle);}
+    viewfinder.rotateOnAxis( new THREE.Vector3(0,0,1), rotateAngle);
+    }
   if ( keyboard.pressed("E") ){
     Turret_2.rotateOnAxis( new THREE.Vector3(0,0,1), -rotateAngle);
     viewfinder.rotateOnAxis( new THREE.Vector3(0,0,1), -rotateAngle);}
   // rotate left/right/up/down
   rotationMatrix = new THREE.Matrix4().identity();
+  update_cannon();
 
  /* if(keyboard.pressed("Z")){
 
@@ -378,9 +424,6 @@ function update(){
     }, 120);
 
     bullet.position.set(tank.position.x,tank.position.y+10, tank.position.z);
-
-
-
     bullet.velocity = new THREE.Vector3(
       4.5*Math.sin(viewfinder.rotation.z),
       0,
@@ -399,6 +442,34 @@ function update(){
     p1fireRate = 0;
   }
 
+  if(cannonfireRate == 80 && keyboard.pressed("C")){
+
+    var cannon_bullet = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), new THREE.MeshLambertMaterial({color: 0x0000}));
+    cannon_bullet.position.set(-150,10,300);
+    cannon_bullet.velocity = new THREE.Vector3(
+      4.5*Math.sin(cannon.rotation.y),
+      0,
+      4.5*Math.cos(cannon.rotation.y));
+
+    cannon_bullet.visible = true ;
+    cannon_bullet.alive = true;
+
+
+
+    sound_shot.stop();
+    sound_shot.play();
+
+
+    setTimeout(function(){
+      cannon_bullet.alive = false;
+      scene.remove(cannon_bullet);
+    }, 4000);
+    cann_bullets.push(cannon_bullet);
+    scene.add(cannon_bullet);
+
+    cannonfireRate = 0;
+  }
+
 
   for( var i=0;i<bullets.length;i++){
   if (bullets[i].position.x>=cube.position.x-10 && bullets[i].position.x<=cube.position.x+10 && bullets[i].position.z>=cube.position.z-10 && bullets[i].position.z<=cube.position.z+10){
@@ -406,8 +477,6 @@ function update(){
     bullets[i].visible=false;
   }
    }
-
-
 
   controls.update();
   stats.update();
@@ -417,6 +486,37 @@ function update(){
 function update_camera(){
   camera.position.set(tank.position.x,CAMERA_HEIGHT,tank.position.z);
   controls.target.set(tank.position.x,0,tank.position.z)
+}
+
+function update_cannon(){
+
+  //
+  //cannon.rotate(180,0,0);
+
+}
+
+function cannon_shot(){
+
+  var cann_bullet = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), new THREE.MeshLambertMaterial({color: 0x0000}));
+
+  cann_bullet.visible = true ;
+  cann_bullet.position.set(-150,10,300);
+  cann_bullet.velocity = new THREE.Vector3(
+    4.5*Math.sin(cannon.rotation.x),
+    0,
+    4.5*Math.cos(cannon.rotation.x));
+  sound_shot.stop();
+  sound_shot.play();
+
+  cann_bullet.alive = true;
+  setTimeout(function(){
+    cann_bullet.alive = false;
+    scene.remove(cann_bullet);
+  }, 4000);
+  cann_bullets.push(cann_bullet);
+  scene.add(cann_bullet);
+
+  cannonfireRate = 0;
 }
 
 /**
@@ -438,6 +538,9 @@ function render(){
   renderer.render(scene, camera);//draw
   if (p1fireRate < 60) {
     p1fireRate++;
+  }
+  if (cannonfireRate < 80) {
+    cannonfireRate++;
   }
 
 

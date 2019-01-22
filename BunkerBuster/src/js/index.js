@@ -77,9 +77,7 @@ var cube, cubeX, cubeZ;
  * Function to start game with the play button
  */
 function start_game() {
-  document.getElementById("playBTN").style.display='none';
-  document.getElementById("start_game").style.display='block';
-  document.getElementById("game_ifrm").style.display='block';
+  // document.getElementById("playBTN").style.display='none';
   init();
   animate();
   addTank();
@@ -89,22 +87,26 @@ function start_game() {
 }
 
 function init() {
+  document.getElementById('play_btn_div_id').style.display='none';
+  document.getElementById('play_game_id').style.display='block';
+  document.getElementById('play_btn_div_id').innerHTML = document.getElementById("play_game_id").innerHTML;
 
   sound_shot = new sound(soundPath + "cannon_shot.mp3");
-
-
   // set up the scene
   createScene();
   // CONTROLS
   controls = new THREE.OrbitControls( camera, renderer.domElement );
-  // controls.enabled = false;
+  controls.enabled = false;
   // STATS
   stats = new Stats();
   stats.domElement.style.position = 'absolute';
   stats.domElement.style.bottom = '0px';
   stats.domElement.style.zIndex = 100;
+
+  dom = document.getElementById('play_game_id');
+  document.body.appendChild(dom);
+  dom.appendChild(renderer.domElement);
   dom.appendChild(stats.domElement);
-  dom.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
   var cubegeometry = new THREE.BoxGeometry( 10, 10, 10 );
   var cubematerial = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
@@ -133,12 +135,7 @@ function createScene(){
   renderer.shadowMap.enabled = true;//enable shadow
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.setSize( sceneWidth, sceneHeight );
-  // dom = document.getElementById('start_game');
-  dom = document.getElementById('game_ifrm')
-    .contentWindow
-    .document
-    .getElementById('gameFrame');
-  dom.appendChild(renderer.domElement);
+
 
   const groundTexture = new THREE.ImageUtils.loadTexture( 'img/rocky-ground.jpg' );
   groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;

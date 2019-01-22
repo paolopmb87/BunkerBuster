@@ -29,20 +29,23 @@
 </head>
 
 <body id="bd">
-  <div class="wrap">
-    <!--JAVASCRIPT FILES-->
-    <script src="js/index.js"></script>
 
+<script src="js/index.js"></script>
+
+  <div class="wrap" id="wrap_div">
+    <!--JAVASCRIPT FILES-->
     <!-- Add your site or application content here -->
-    <p id="title">Bunker Buster</p>
+    <div class="div_title" id="div_title_id">
+      <p id="title">Bunker Buster</p>
+    </div>
+
 
     <!--START GAME BUTTON-->
-    <img id="playBTN" src="img/PlayBTN.png" onclick="start_game()">
-
-    <div class="play_game" id="start_game">
-      <iframe id='game_ifrm' src='html_struct/start_game.html' frameborder="2" scrolling="no">
-      </iframe>
+    <div class="play_btn_div" id="play_btn_div_id">
+      <img id="playBTN" src="img/PlayBTN.png" onclick="start_game()">
     </div>
+
+    <div class="play_game" id="play_game_id"></div>
 
     <!--Modal for helper and Score-->
     <div class="modal fade text-center" id="theModal">

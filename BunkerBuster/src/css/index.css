@@ -12,7 +12,6 @@ body {
   background-size: 100% 100%;
   width: 100%;
   height: 85%;
-
 }
 
 .footer {
@@ -43,6 +42,13 @@ body {
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 
+.play_btn_div{
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  height: 85%;
+}
+
 #playBTN{
   display: block;
   margin-left: auto;
@@ -51,17 +57,27 @@ body {
 }
 
 .play_game {
-  height: 500px;
+  margin-left: auto;
+  margin-right: auto;
   width: 100%;
+  height: 85%;
   display: none;
 }
 
-#game_ifrm{
-  position: absolute;
-  height: 64%;
+#play_game_id {
+  margin-left: auto;
+  margin-right: auto;
   width: 100%;
+  height: 85%;
   display: none;
 }
+
+/*#game_ifrm{*/
+  /*position: absolute;*/
+  /*height: 64%;*/
+  /*width: 100%;*/
+  /*display: none;*/
+/*}*/
 
 .new_game_class{
   position: absolute;
@@ -98,12 +114,13 @@ body {
 
 }
 
-canvas{
-  position: absolute;
-  height:63%;
-  width: 100%;
-  display: none;
-  background-color:white!important;
-}
+/*canvas{*/
+  /*position: fixed;*/
+  /*margin-top:150px;*/
+  /*width: 100%;*/
+  /*height: 80%;*/
+  /*background: #000;*/
+  /*z-index: 100;*/
+/*}*/
 
 

@@ -30,7 +30,12 @@ body {
 }
 
 #title{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left:20px;
   text-align: center;
+  width: 22%;
   font-family: Font Title;
   font-size: 75px;
   color: crimson;
@@ -39,9 +44,10 @@ body {
 }
 
 #playBTN{
-  position: relative;
-  top: 20%;
-  left: 35%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 20%;
 }
 
 .play_game {

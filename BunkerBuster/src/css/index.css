@@ -72,12 +72,9 @@ body {
   display: none;
 }
 
-/*#game_ifrm{*/
-  /*position: absolute;*/
-  /*height: 64%;*/
-  /*width: 100%;*/
-  /*display: none;*/
-/*}*/
+.canvas{
+
+}
 
 .new_game_class{
   position: absolute;

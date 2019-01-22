@@ -30,7 +30,6 @@ function onWindowResize() {
 /**
  * Variables declaration
  */
-
 var VIEW_ANGLE = 90, NEAR = 0.1, FAR = 1000,CAMERA_HEIGHT = 400;
 
 var camera;
@@ -39,6 +38,7 @@ var orbitControl;
 var sceneWidth;
 var sceneHeight;
 var renderer;
+var play_game_id;
 var light;
 var ground;
 var rotationMatrix;
@@ -89,7 +89,8 @@ function start_game() {
 function init() {
   document.getElementById('play_btn_div_id').style.display='none';
   document.getElementById('play_game_id').style.display='block';
-  document.getElementById('play_btn_div_id').innerHTML = document.getElementById("play_game_id").innerHTML;
+
+  play_game_id = document.getElementById('play_game_id');
 
   sound_shot = new sound(soundPath + "cannon_shot.mp3");
   // set up the scene
@@ -103,10 +104,8 @@ function init() {
   stats.domElement.style.bottom = '0px';
   stats.domElement.style.zIndex = 100;
 
-  dom = document.getElementById('play_game_id');
-  document.body.appendChild(dom);
-  dom.appendChild(renderer.domElement);
-  dom.appendChild(stats.domElement);
+  play_game_id.appendChild(renderer.domElement);
+  play_game_id.appendChild(stats.domElement);
 
   var cubegeometry = new THREE.BoxGeometry( 10, 10, 10 );
   var cubematerial = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
@@ -124,8 +123,9 @@ function init() {
 function createScene(){
   scene = new THREE.Scene();//the 3d scene
 
-  sceneWidth=window.innerWidth;
-  sceneHeight=window.innerHeight;
+  sceneWidth = $(play_game_id).width();
+  sceneHeight = $(play_game_id).height();
+
   //scene.fog = new THREE.Fog(0x00ff00, 50, 800);//enable fog
   camera = new THREE.PerspectiveCamera( VIEW_ANGLE , sceneWidth / sceneHeight, NEAR, FAR );//perspective camera
   scene.add(camera);
@@ -134,14 +134,14 @@ function createScene(){
   renderer = new THREE.WebGLRenderer({alpha:true});//renderer with transparent backdrop
   renderer.shadowMap.enabled = true;//enable shadow
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.setSize( sceneWidth, sceneHeight );
 
+  renderer.setSize( sceneWidth, sceneHeight );
 
   const groundTexture = new THREE.ImageUtils.loadTexture( 'img/rocky-ground.jpg' );
   groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
   groundTexture.repeat.set( 15, 15 );
 
-  const groundGeometry = new THREE.PlaneGeometry( 1000, 1000, 10, 10 );
+  const groundGeometry = new THREE.PlaneGeometry(sceneWidth , sceneWidth, 10, 10 );
   const groundMaterial = new THREE.MeshLambertMaterial( {
     map: groundTexture,
     side: THREE.DoubleSide
@@ -151,8 +151,6 @@ function createScene(){
   ground.position.y = -0.5;
   ground.rotation.x = Math.PI/2;
   scene.add( ground );
-
-
 
   light = new THREE.PointLight( 0xffffff, 1.5,0 ,2 );
   light.position.set(200,400,200);

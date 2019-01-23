@@ -100,7 +100,7 @@ function init() {
   stats = new Stats();
   stats.domElement.style.position = 'absolute';
   stats.domElement.style.bottom = '0px';
-  stats.domElement.style.zIndex = 100;
+  // stats.domElement.style.zIndex = 100;
 
   play_game_id.appendChild(renderer.domElement);
   play_game_id.appendChild(stats.domElement);
@@ -483,6 +483,10 @@ function update(){
 function update_camera(){
   camera.position.set(tank.position.x,CAMERA_HEIGHT,tank.position.z);
   controls.target.set(tank.position.x,0,tank.position.z)
+  // console.log(tank.position.x);
+  // console.log(viewfinder.rotation);
+  console.log("rotation", viewfinder.rotation);
+
 }
 
 function update_cannon(){

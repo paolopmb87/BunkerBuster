@@ -20,8 +20,8 @@
  */
 function onWindowResize() {
   //resize & align
-  sceneHeight = window.innerHeight;
-  sceneWidth = window.innerWidth;
+  sceneWidth = $(play_game_id).width();
+  sceneHeight = $(play_game_id).height();
   renderer.setSize(sceneWidth, sceneHeight);
   camera.aspect = sceneWidth/sceneHeight;
   camera.updateProjectionMatrix();
@@ -69,7 +69,7 @@ var Turret_2;
 var p1fireRate = 60;   //FIRE RATE
 var cannonfireRate = 80;
 var viewfinder;
-
+var viewfinder2;
 var soundPath = "sounds/";
 var sound_shot;
 
@@ -82,8 +82,6 @@ var keyboard = new THREEx.KeyboardState();
 function start_game() {
   init();
   animate();
-
-
 }
 
 function init() {
@@ -147,7 +145,7 @@ function createScene(){
   groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
   groundTexture.repeat.set( 15, 15 );
 
-  const groundGeometry = new THREE.PlaneGeometry(sceneWidth , sceneWidth, 10, 10 );
+  const groundGeometry = new THREE.PlaneGeometry(sceneWidth*2 , sceneWidth*2, 40, 10 );
   const groundMaterial = new THREE.MeshLambertMaterial( {
     map: groundTexture,
     side: THREE.DoubleSide
@@ -175,7 +173,6 @@ function createScene(){
   orbitControl.enableDamping = true;
   orbitControl.dampingFactor = 0.8;
   orbitControl.enableZoom = false;
-
 
   const viewfinderGeometry = new THREE.BoxBufferGeometry( 0.01, 0.01, 0.01 );
   const viewfinderMaterial = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
@@ -341,7 +338,6 @@ function addCannon() {
       console.log((xhr.loaded / xhr.total * 100) + '% cannon_loaded');
     },
 
-
     function (err) {
       console.error('An error happened with house');
       TANK_LOADED = false;
@@ -375,7 +371,7 @@ function update(){
   }
 
   if ( keyboard.pressed("W") ){
-    tank.translateZ( moveDistance );cannon_bullet;
+    tank.translateZ( moveDistance );
     cannon.lookAt(tank.position.x,0,tank.position.z);
     update_camera();
       }
@@ -411,7 +407,7 @@ function update(){
     controls.target.set(tank.position.x,0,tank.position.z)
   }*/
 
-  if( p1fireRate == 60 && keyboard.pressed("V")){
+  if( p1fireRate === 60 && keyboard.pressed("V")){
 
     var bullet = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), new THREE.MeshLambertMaterial({color: 0x0000}));
 
@@ -443,7 +439,7 @@ function update(){
     p1fireRate = 0;
   }
 
-  if(cannonfireRate == 80 && keyboard.pressed("C")){
+  if(cannonfireRate === 80 && keyboard.pressed("C")){
 
     var cannon_bullet = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), new THREE.MeshLambertMaterial({color: 0x0000}));
     cannon_bullet.position.set(-150,10,300);
@@ -520,21 +516,12 @@ function cannon_shot(){
   cannonfireRate = 0;
 }
 
-/**
- * Prevent mouse default movement
- * @param e = event
- */
-function onDocumentMouseMove(e) {
-
-}
 
 /**
  * RENDER AND ANIMATE Functions - Starts the animation on the frame and the render
  */
 
 function render(){
-
-
   //requestAnimationFrame(update);
   renderer.render(scene, camera);//draw
   if (p1fireRate < 60) {
@@ -543,11 +530,6 @@ function render(){
   if (cannonfireRate < 80) {
     cannonfireRate++;
   }
-
-
-
-
-
 }
 
 function animate()

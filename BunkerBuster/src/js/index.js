@@ -30,7 +30,7 @@ function onWindowResize() {
 /**
  * Variables declaration
  */
-var VIEW_ANGLE = 90, NEAR = 0.1, FAR = 1000,CAMERA_HEIGHT = 400;
+var VIEW_ANGLE = 90, NEAR = 0.1, FAR = 1000,CAMERA_HEIGHT = 300;
 
 var camera;
 var scene;
@@ -69,7 +69,6 @@ var Turret_2;
 var p1fireRate = 60;   //FIRE RATE
 var cannonfireRate = 80;
 var viewfinder;
-var viewfinder2;
 var soundPath = "sounds/";
 var sound_shot;
 
@@ -119,11 +118,8 @@ function init() {
  * This function is to generate the scene light, shadow, ground
  */
 function createScene(){
-  addTank();
-  addTree();
-  addTree2();
-  addHouse();
-  addCannon();
+
+  addObjects();
 
   scene = new THREE.Scene();//the 3d scene
 
@@ -143,7 +139,7 @@ function createScene(){
 
   const groundTexture = new THREE.ImageUtils.loadTexture( 'img/rocky-ground.jpg' );
   groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
-  groundTexture.repeat.set( 15, 15 );
+  groundTexture.repeat.set( 30, 30 );
 
   const groundGeometry = new THREE.PlaneGeometry(sceneWidth*2 , sceneWidth*2, 40, 10 );
   const groundMaterial = new THREE.MeshLambertMaterial( {
@@ -178,9 +174,17 @@ function createScene(){
   const viewfinderMaterial = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
   viewfinder = new THREE.Mesh( viewfinderGeometry, viewfinderMaterial );
   scene.add( viewfinder );
-  viewfinder2 = new THREE.Mesh( viewfinderGeometry, viewfinderMaterial );
-  scene.add( viewfinder2 );
   window.addEventListener('resize', onWindowResize, false);//resize callback
+}
+
+function addObjects(){
+
+  addTank();
+ // addTree();
+ // addTree2();
+ // addHouse();
+  addCannon();
+
 }
 
 function sound(src) {
@@ -439,15 +443,22 @@ function update(){
     p1fireRate = 0;
   }
 
-  if(cannonfireRate === 80 && keyboard.pressed("C")){
+  if(cannonfireRate === 80){
 
     var cannon_bullet = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), new THREE.MeshLambertMaterial({color: 0x0000}));
     cannon_bullet.position.set(-150,10,300);
-    cannon_bullet.velocity = new THREE.Vector3(
-      4.5*Math.sin(cannon.rotation.y),
-      0,
-      4.5*Math.cos(cannon.rotation.y));
-
+    if(cannon.rotation.x!= -0){
+      cannon_bullet.velocity = new THREE.Vector3(
+        4.5*Math.sin(cannon.rotation.y),
+        0,
+        -4.5*Math.cos(cannon.rotation.y));
+    }
+    else {
+      cannon_bullet.velocity = new THREE.Vector3(
+        4.5 * Math.sin(cannon.rotation.y),
+        0,
+        4.5 * Math.cos(cannon.rotation.y));
+    }
     cannon_bullet.visible = true ;
     cannon_bullet.alive = true;
 

@@ -126,6 +126,7 @@ function createScene(){
   addTree2();
   addHouse();
   addCannon();
+
   scene = new THREE.Scene();//the 3d scene
 
   sceneWidth = $(play_game_id).width();

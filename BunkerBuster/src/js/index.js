@@ -83,11 +83,10 @@ var sound_shot;
 var cube;
 var keyboard = new THREEx.KeyboardState();
 
-let tree_loader="models/trees/tree.json";
-let house_loader="models/house/old-house.json";
-let cannon_loader="models/cannons/cannon.json";
+var tree_loader="models/trees/tree.json";
+var house_loader="models/house/old-house.json";
+var cannon_loader="models/cannons/cannon.json";
 
-scenario_mesh = [tree_loader, house_loader];
 enemy_mesh = [cannon_loader];
 
 /**
@@ -259,23 +258,31 @@ function addTank(){
 }
 
 function add_scenario_mesh(){
+  var loader = new THREE.ObjectLoader();
+  scenario_mesh = [tree_loader, house_loader];
+
   for(var i=0;i<scenario_mesh.length;i++) {
-    var loader = new THREE.ObjectLoader();
+    console.log("length", scenario_mesh.length);
+
     loader.load(scenario_mesh[i],
       function (obj) {
         scenario = obj;
+        console.log("scenario", scenario);
         MESH_LOADED = true;
         NUM_LOADED++;
 
-        scenario.scale.set(20, 20, 20);
-        scenario.position.x = Math.random() * 2 - 1;
-        scenario.position.y = 0 ;
-        scenario.position.z = Math.random() * 2 - 1;
-
-        scenario.position.normalize();
-        scenario.position.multiplyScalar( 200 );
-
-        scene.add(scenario);
+        for(var j=0;j<4;j++) {
+          var tempNew = scenario.clone();
+          tempNew.position.x = Math.random() * 2 - 1;
+          tempNew.position.y = 0 ;
+          tempNew.position.z = Math.random() * 2 - 1;
+          tempNew.position.normalize();
+          tempNew.position.multiplyScalar( 200 );
+          tempNew.scale.set(20, 20, 20);
+          multiple_scenario_mesh.push(tempNew);
+          scene.add(multiple_scenario_mesh[j]);
+          console.log(multiple_scenario_mesh)
+        }
       },
 
       // onProgress callback

@@ -30,7 +30,7 @@ function onWindowResize() {
 /**
  * Variables declaration
  */
-var VIEW_ANGLE = 90, NEAR = 0.1, FAR = 1000,CAMERA_HEIGHT = 400;
+var VIEW_ANGLE = 90, NEAR = 0.1, FAR = 1000,CAMERA_HEIGHT = 300;
 
 var camera;
 var scene;
@@ -44,6 +44,7 @@ var ground;
 var rotationMatrix;
 var dom;
 
+
 var controls;
 var stats;
 
@@ -56,10 +57,13 @@ var mouse ={ x: 0, y: 0 };
  * Variables for player tank
  */
 var bullets=[];
-var cann_bullets=[];
+var CANNON_BULLETS=[];
+var cannon_bullets=[];
 
 
-var tank,tree,tree2,house,cannon;
+var tank,tree,tree2,house;
+var cannon;
+var cannons=[];
 
 var Body_1;
 var Body_2;
@@ -69,7 +73,6 @@ var Turret_2;
 var p1fireRate = 60;   //FIRE RATE
 var cannonfireRate = 80;
 var viewfinder;
-var viewfinder2;
 var soundPath = "sounds/";
 var sound_shot;
 
@@ -119,11 +122,8 @@ function init() {
  * This function is to generate the scene light, shadow, ground
  */
 function createScene(){
-  addTank();
-  addTree();
-  addTree2();
-  addHouse();
-  addCannon();
+
+  addObjects();
 
   scene = new THREE.Scene();//the 3d scene
 
@@ -143,7 +143,7 @@ function createScene(){
 
   const groundTexture = new THREE.ImageUtils.loadTexture( 'img/rocky-ground.jpg' );
   groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
-  groundTexture.repeat.set( 15, 15 );
+  groundTexture.repeat.set( 30, 30 );
 
   const groundGeometry = new THREE.PlaneGeometry(sceneWidth*2 , sceneWidth*2, 40, 10 );
   const groundMaterial = new THREE.MeshLambertMaterial( {
@@ -178,9 +178,17 @@ function createScene(){
   const viewfinderMaterial = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
   viewfinder = new THREE.Mesh( viewfinderGeometry, viewfinderMaterial );
   scene.add( viewfinder );
-  viewfinder2 = new THREE.Mesh( viewfinderGeometry, viewfinderMaterial );
-  scene.add( viewfinder2 );
   window.addEventListener('resize', onWindowResize, false);//resize callback
+}
+
+function addObjects(){
+
+  addTank();
+ // addTree();
+ // addTree2();
+ // addHouse();
+  addCannon();
+
 }
 
 function sound(src) {
@@ -321,27 +329,17 @@ function addHouse(){
 
 function addCannon() {
   var loader = new THREE.ObjectLoader();
-  loader.load("models/cannons/cannon.json",
-    function (obj) {
-      cannon = obj;
-      cannon.scale.set(10, 10, 10);
+  loader.load("models/cannons/cannon.json", function (obj) {
+    cannon= obj;
+    for(var i=0;i<5;i++){
+      cannons[i] = cannon.clone();
+      cannons[i].scale.set(10, 10, 10);
 
-      // tree2.castShadow = true;
-      scene.add(cannon);
-      cannon.position.set(-150,0,300);
+      scene.add(cannons[i]);
+      cannons[i].position.set(-150+(i*10),0,100+(i*10));
 
-   //   cannon.lookAt(0,0,0);
-      // camera.add(tree);
-    },
+    }});
 
-    function (xhr) {
-      console.log((xhr.loaded / xhr.total * 100) + '% cannon_loaded');
-    },
-
-    function (err) {
-      console.error('An error happened with house');
-      TANK_LOADED = false;
-    });
 }
 /**
  * KEYBOARD - MOUSE
@@ -361,24 +359,24 @@ function update(){
     bullets[index].position.add(bullets[index].velocity);
   }
 
-  for(var index=0; index<cann_bullets.length; index+=1){
-    if( cann_bullets[index] === undefined ) continue;
-    if( cann_bullets[index].alive === false ){
-      cann_bullets.splice(index,1);
+  for(var index=0; index<CANNON_BULLETS.length; index+=1){
+    if( CANNON_BULLETS[index] === undefined ) continue;
+    if( CANNON_BULLETS[index].alive === false ){
+      CANNON_BULLETS.splice(index,1);
       continue;
     }
-    cann_bullets[index].position.add(cann_bullets[index].velocity);
+    CANNON_BULLETS[index].position.add(CANNON_BULLETS[index].velocity);
   }
 
   if ( keyboard.pressed("W") ){
     tank.translateZ( moveDistance );
-    cannon.lookAt(tank.position.x,0,tank.position.z);
+    update_cannons();
     update_camera();
       }
 
   if ( keyboard.pressed("S") ){
     tank.translateZ( -moveDistance );
-    cannon.lookAt(tank.position.x,0,tank.position.z);
+    update_cannons();
     update_camera();
   }
   if ( keyboard.pressed("A") ){
@@ -398,7 +396,7 @@ function update(){
     viewfinder.rotateOnAxis( new THREE.Vector3(0,0,1), -rotateAngle);}
   // rotate left/right/up/down
   rotationMatrix = new THREE.Matrix4().identity();
-  update_cannon();
+
 
  /* if(keyboard.pressed("Z")){
 
@@ -439,17 +437,25 @@ function update(){
     p1fireRate = 0;
   }
 
-  if(cannonfireRate === 80 && keyboard.pressed("C")){
-
+  if(cannonfireRate === 80){
     var cannon_bullet = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), new THREE.MeshLambertMaterial({color: 0x0000}));
-    cannon_bullet.position.set(-150,10,300);
-    cannon_bullet.velocity = new THREE.Vector3(
-      4.5*Math.sin(cannon.rotation.y),
-      0,
-      4.5*Math.cos(cannon.rotation.y));
-
-    cannon_bullet.visible = true ;
-    cannon_bullet.alive = true;
+    for( var i=0;i<cannons.length;i++){
+    cannon_bullets[i]=cannon_bullet.clone();
+      cannon_bullets[i].position.set(-150+(i*10),0,100+(i*10));
+    if(cannons[i].rotation.x!= -0){
+      cannon_bullets[i].velocity = new THREE.Vector3(
+        4.5*Math.sin(cannons[i].rotation.y),
+        0,
+        -4.5*Math.cos(cannons[i].rotation.y));
+    }
+    else {
+      cannon_bullets[i].velocity = new THREE.Vector3(
+        4.5 * Math.sin(cannons[i].rotation.y),
+        0,
+        4.5 * Math.cos(cannons[i].rotation.y));
+    }
+      cannon_bullets[i].visible = true ;
+      cannon_bullets[i].alive = true;
 
 
 
@@ -458,13 +464,15 @@ function update(){
 
 
     setTimeout(function(){
-      cannon_bullet.alive = false;
-      scene.remove(cannon_bullet);
+      cannon_bullets[i].alive = false;
+      scene.remove(cannon_bullets[i]);
     }, 4000);
-    cann_bullets.push(cannon_bullet);
-    scene.add(cannon_bullet);
+    CANNON_BULLETS.push(cannon_bullets[i]);
+    scene.add(cannon_bullets[i]);
+    }
 
     cannonfireRate = 0;
+
   }
 
 
@@ -489,35 +497,14 @@ function update_camera(){
 
 }
 
-function update_cannon(){
+function update_cannons(){
+
+  for(var i =0;i<cannons.length;i++)
+  cannons[i].lookAt(tank.position.x,0,tank.position.z);
 
   //
   //cannon.rotate(180,0,0);
 
-}
-
-function cannon_shot(){
-
-  var cann_bullet = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), new THREE.MeshLambertMaterial({color: 0x0000}));
-
-  cann_bullet.visible = true ;
-  cann_bullet.position.set(-150,10,300);
-  cann_bullet.velocity = new THREE.Vector3(
-    4.5*Math.sin(cannon.rotation.x),
-    0,
-    4.5*Math.cos(cannon.rotation.x));
-  sound_shot.stop();
-  sound_shot.play();
-
-  cann_bullet.alive = true;
-  setTimeout(function(){
-    cann_bullet.alive = false;
-    scene.remove(cann_bullet);
-  }, 4000);
-  cann_bullets.push(cann_bullet);
-  scene.add(cann_bullet);
-
-  cannonfireRate = 0;
 }
 
 

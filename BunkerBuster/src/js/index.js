@@ -30,7 +30,7 @@ function onWindowResize() {
 /**
  * Variables declaration
  */
-var VIEW_ANGLE = 90, NEAR = 0.1, FAR = 1000,CAMERA_HEIGHT = 300;
+var VIEW_ANGLE = 90, NEAR = 0.1, FAR = 1000,CAMERA_HEIGHT = 300,NUM_TURRETS = 5;
 
 var camera;
 var scene;
@@ -64,6 +64,7 @@ var cannon_bullets=[];
 var tank,tree,tree2,house;
 var cannon;
 var cannons=[];
+var cann_positions =[];
 
 var Body_1;
 var Body_2;
@@ -78,6 +79,7 @@ var sound_shot;
 
 var cube;
 var keyboard = new THREEx.KeyboardState();
+
 
 /**
  * Function to start game with the play button
@@ -115,6 +117,12 @@ function init() {
   //cube.scale.set(5,7,9);
   cube.position.set(50,5,90);
   scene.add(cube);
+  cann_positions[0] =  [300,0,150];
+  cann_positions[1] =  [-300,0,800];
+  cann_positions[2] =  [1000,0,350];
+  cann_positions[3] =  [-1000,0,-500];
+  cann_positions[4] =  [300,0,900];
+
 
 }
 
@@ -331,12 +339,11 @@ function addCannon() {
   var loader = new THREE.ObjectLoader();
   loader.load("models/cannons/cannon.json", function (obj) {
     cannon= obj;
-    for(var i=0;i<5;i++){
+    for(var i=0;i<NUM_TURRETS;i++){
       cannons[i] = cannon.clone();
       cannons[i].scale.set(10, 10, 10);
-
       scene.add(cannons[i]);
-      cannons[i].position.set(-150+(i*10),0,100+(i*10));
+      cannons[i].position.set(cann_positions[i][0],cann_positions[i][1],cann_positions[i][2]);
 
     }});
 
@@ -441,7 +448,7 @@ function update(){
     var cannon_bullet = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), new THREE.MeshLambertMaterial({color: 0x0000}));
     for( var i=0;i<cannons.length;i++){
     cannon_bullets[i]=cannon_bullet.clone();
-      cannon_bullets[i].position.set(-150+(i*10),0,100+(i*10));
+      cannon_bullets[i].position.set(cann_positions[i][0],cann_positions[i][1],cann_positions[i][2]);
     if(cannons[i].rotation.x!= -0){
       cannon_bullets[i].velocity = new THREE.Vector3(
         4.5*Math.sin(cannons[i].rotation.y),

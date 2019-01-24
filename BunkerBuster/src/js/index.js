@@ -76,6 +76,7 @@ var cannonfireRate = 80;
 var viewfinder;
 var soundPath = "sounds/";
 var sound_shot;
+var sound_tank_hit;
 
 var cube;
 var keyboard = new THREEx.KeyboardState();
@@ -96,6 +97,7 @@ function init() {
   play_game_id = document.getElementById('play_game_id');
 
   sound_shot = new sound(soundPath + "cannon_shot.mp3");
+  sound_tank_hit = new sound(soundPath + "tankhit.mp3")
   // set up the scene
   createScene();
   // CONTROLS
@@ -484,11 +486,20 @@ function update(){
 
 
   for( var i=0;i<bullets.length;i++){
-  if (bullets[i].position.x>=cube.position.x-10 && bullets[i].position.x<=cube.position.x+10 && bullets[i].position.z>=cube.position.z-10 && bullets[i].position.z<=cube.position.z+10){
+    if (bullets[i].position.x>=cube.position.x-10 && bullets[i].position.x<=cube.position.x+10 && bullets[i].position.z>=cube.position.z-10 && bullets[i].position.z<=cube.position.z+10){
     cube.visible=false;
     bullets[i].visible=false;
   }
    }
+
+  for(var y=0; y<CANNON_BULLETS.length;y++){
+    if (CANNON_BULLETS[y].position.x>=tank.position.x-10 && CANNON_BULLETS[y].position.x<=tank.position.x+10 && CANNON_BULLETS[y].position.z>=tank.position.z-10 && CANNON_BULLETS[y].position.z<=tank.position.z+10){
+      sound_tank_hit.stop();
+      sound_tank_hit.play();
+    }
+
+
+  }
 
   controls.update();
   stats.update();

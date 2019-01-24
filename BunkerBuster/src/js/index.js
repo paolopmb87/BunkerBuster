@@ -47,8 +47,7 @@ var controls;
 var stats;
 
 var scenario_mesh = [];
-var multiple_scenario_mesh = [];
-var enemy_mesh = [];
+var mesh = [];
 
 var TANK_LOADED = false;
 var MESH_LOADED = false;
@@ -65,7 +64,6 @@ var CANNON_BULLETS=[];
 var cannon_bullets=[];
 
 var tank,tree,tree2,house;
-var scenario;
 var cannon;
 var cannons=[];
 var cann_positions =[];
@@ -256,58 +254,51 @@ function addTank(){
       Turret = scene.getObjectByName('Turret');
       Turret_2 = scene.getObjectByName('Turret_2');
 
-    },
-    // onProgress callback
-    function (xhr) {
-      console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-    },
-
-    // onError callback
-    function (err) {
-      console.error('An error happened');
-      TANK_LOADED = false;
     });
 }
 
 function add_scenario_mesh(){
-  var loader = new THREE.ObjectLoader();
   scenario_mesh = [tree_loader, house_loader];
+  var loader =[];
+  var scenario;
+  var nTrees = 4;
+  var nHouses = 2;
 
-  // for(var i=0;i<scenario_mesh.length;i++) {
-  //   console.log("length", scenario_mesh.length);
-  //loader.load(scenario_mesh,
-    loader.load("models/trees/tree.json",
-      function (obj) {
+  for(var x = 0; x< scenario_mesh.length;x++){
+    loader.push(new THREE.ObjectLoader());
+  }
+
+//TREES
+  loader[0].load(scenario_mesh[0], function (obj) {
         scenario = obj;
-        console.log("scenario", scenario);
-        MESH_LOADED = true;
-        NUM_LOADED++;
 
-        for(var j=0;j<4;j++) {
-          var tempNew = scenario.clone();
-          tempNew.position.x = Math.random() * 2 - 1;
-          tempNew.position.y = 0 ;
-          tempNew.position.z = Math.random() * 2 - 1;
-          tempNew.position.normalize();
-          tempNew.position.multiplyScalar( 200 );
-          tempNew.scale.set(20, 20, 20);
-          multiple_scenario_mesh.push(tempNew);
-          scene.add(multiple_scenario_mesh[j]);
-          console.log(multiple_scenario_mesh)
+        for(var j=0;j<nTrees;j++) {
+          mesh[j] = scenario.clone();
+          mesh[j].position.x = Math.random() * 2 - 1;
+          mesh[j].position.y = 0 ;
+          mesh[j].position.z = Math.random() * 2 - 1;
+          mesh[j].position.normalize();
+          mesh[j].position.multiplyScalar( 200 );
+          mesh[j].scale.set(20, 20, 20);
+          scene.add(mesh[j]);
         }
-      },
-
-      // onProgress callback
-      function (xhr) {
-        console.log((xhr.loaded / xhr.total * 100) + '% caricato');
-      },
-
-      // onError callback
-      function (err) {
-        console.error('An error happened');
-        MESH_LOADED = false;
       });
-  //}
+//HOUSES
+  loader[1].load(scenario_mesh[1], function (obj) {
+        scenario = obj;
+
+        for(var j=nTrees;j<nTrees+nHouses;j++) {
+          mesh[j] = scenario.clone();
+          mesh[j].position.x = Math.random() * 2 - 1;
+          mesh[j].position.y = 0 ;
+          mesh[j].position.z = Math.random() * 2 - 1;
+          mesh[j].position.normalize();
+          mesh[j].position.multiplyScalar( 300 );
+          mesh[j].scale.set(8, 8, 8);
+          scene.add(mesh[j]);
+    }
+  });
+
 }
 
 
@@ -497,9 +488,7 @@ function update(){
 function update_camera(){
   camera.position.set(tank.position.x,CAMERA_HEIGHT,tank.position.z);
   controls.target.set(tank.position.x,0,tank.position.z)
-  // console.log(tank.position.x);
-  // console.log(viewfinder.rotation);
-  console.log("rotation", viewfinder.rotation);
+
 
 }
 

@@ -42,17 +42,21 @@ var play_game_id;
 var light;
 var ground;
 var rotationMatrix;
-var dom;
-
 
 var controls;
 var stats;
 
-var clock = new THREE.Clock()
-var TANK_LOADED = false;
-var NUM_LOADED = 0;
-var mouse ={ x: 0, y: 0 };
+var scenario_mesh = [];
+var multiple_scenario_mesh = [];
+var enemy_mesh = [];
 
+var TANK_LOADED = false;
+var MESH_LOADED = false;
+var NUM_LOADED = 0;
+
+// var dom;
+// var mouse ={ x: 0, y: 0 };
+// var clock = new THREE.Clock()
 /**
  * Variables for player tank
  */
@@ -60,8 +64,8 @@ var bullets=[];
 var CANNON_BULLETS=[];
 var cannon_bullets=[];
 
-
 var tank,tree,tree2,house;
+var scenario;
 var cannon;
 var cannons=[];
 
@@ -79,10 +83,18 @@ var sound_shot;
 var cube;
 var keyboard = new THREEx.KeyboardState();
 
+let tree_loader="models/trees/tree.json";
+let house_loader="models/house/old-house.json";
+let cannon_loader="models/cannons/cannon.json";
+
+scenario_mesh = [tree_loader, house_loader];
+enemy_mesh = [cannon_loader];
+
 /**
  * Function to start game with the play button
  */
 function start_game() {
+
   init();
   animate();
 }
@@ -98,7 +110,7 @@ function init() {
   createScene();
   // CONTROLS
   controls = new THREE.OrbitControls( camera, renderer.domElement );
-  controls.enabled = false;
+  //controls.enabled = false;
   // STATS
   stats = new Stats();
   stats.domElement.style.position = 'absolute';
@@ -184,11 +196,11 @@ function createScene(){
 function addObjects(){
 
   addTank();
- // addTree();
+  addCannon();
+  add_scenario_mesh();
+  // addTree();
  // addTree2();
  // addHouse();
-  addCannon();
-
 }
 
 function sound(src) {
@@ -225,8 +237,6 @@ function addTank(){
       NUM_LOADED++;
 
       tank.scale.set(4.5, 4.5, 4.5);
-     // camera.add(tank);
-     // tank.castShadow = true;
       scene.add(tank);
 
       Body_1 = scene.getObjectByName('Body_1');
@@ -248,7 +258,40 @@ function addTank(){
     });
 }
 
-function addTree(){
+function add_scenario_mesh(){
+  for(var i=0;i<scenario_mesh.length;i++) {
+    var loader = new THREE.ObjectLoader();
+    loader.load(scenario_mesh[i],
+      function (obj) {
+        scenario = obj;
+        MESH_LOADED = true;
+        NUM_LOADED++;
+
+        scenario.scale.set(20, 20, 20);
+        scenario.position.x = Math.random() * 2 - 1;
+        scenario.position.y = 0 ;
+        scenario.position.z = Math.random() * 2 - 1;
+
+        scenario.position.normalize();
+        scenario.position.multiplyScalar( 200 );
+
+        scene.add(scenario);
+      },
+
+      // onProgress callback
+      function (xhr) {
+        console.log((xhr.loaded / xhr.total * 100) + '% caricato');
+      },
+
+      // onError callback
+      function (err) {
+        console.error('An error happened');
+        MESH_LOADED = false;
+      });
+  }
+}
+
+function add_enemy_mesh(enemy_mesh){
   var loader = new THREE.ObjectLoader();
   loader.load("models/trees/tree.json",
     function (obj){
@@ -258,10 +301,10 @@ function addTree(){
 
       tree.scale.set(30, 30, 30);
 
-     // tree.castShadow = true;
+      // tree.castShadow = true;
       scene.add(tree);
       tree.position.set(20,5,40);
-     // camera.add(tree);
+      // camera.add(tree);
     },
     // onProgress callback
     function (xhr) {
@@ -273,74 +316,23 @@ function addTree(){
       console.error('An error happened');
       TANK_LOADED = false;
     });
-
-
 }
 
-function addTree2(){
-  var loader = new THREE.ObjectLoader();
-  loader.load("models/trees/tree2.json",
-    function (obj){
-      tree2 = obj;
-      tree2.scale.set(0.5, 0.5, 0.5);
-
-     // tree2.castShadow = true;
-      scene.add(tree2);
-      tree2.position.set(60,0,40);
-      // camera.add(tree);
-    },
-
-    function (xhr) {
-      console.log((xhr.loaded / xhr.total * 100) + '% caricato');
-    },
-
-
-    function (err) {
-      console.error('An error happened');
-      TANK_LOADED = false;
-    });
-
-
-}
-function addHouse(){
-  var loader = new THREE.ObjectLoader();
-  loader.load("models/house/old-house.json",
-    function (obj){
-      house = obj;
-      house.scale.set(10, 10, 10);
-
-      // tree2.castShadow = true;
-      scene.add(house);
-      house.position.set(200,0,350);
-      // camera.add(tree);
-    },
-
-    function (xhr) {
-      console.log((xhr.loaded / xhr.total * 100) + '% house_loaded');
-    },
-
-
-    function (err) {
-      console.error('An error happened with house');
-      TANK_LOADED = false;
-    });
-
-}
 
 function addCannon() {
   var loader = new THREE.ObjectLoader();
   loader.load("models/cannons/cannon.json", function (obj) {
-    cannon= obj;
+    cannon = obj;
     for(var i=0;i<5;i++){
       cannons[i] = cannon.clone();
       cannons[i].scale.set(10, 10, 10);
 
       scene.add(cannons[i]);
       cannons[i].position.set(-150+(i*10),0,100+(i*10));
-
-    }});
-
+    }
+  });
 }
+
 /**
  * KEYBOARD - MOUSE
  */
@@ -501,10 +493,6 @@ function update_cannons(){
 
   for(var i =0;i<cannons.length;i++)
   cannons[i].lookAt(tank.position.x,0,tank.position.z);
-
-  //
-  //cannon.rotate(180,0,0);
-
 }
 
 

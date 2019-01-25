@@ -344,16 +344,18 @@ function update(){
   }
 
   if ( keyboard.pressed("W") ){
-    if(check_collision()){
+    if(check_collision(0)){
     tank.translateZ( moveDistance );
     update_cannons();
     update_camera();}
       }
 
   if ( keyboard.pressed("S") ){
-    tank.translateZ( -moveDistance );
-    update_cannons();
-    update_camera();
+    if(check_collision(1)) {
+      tank.translateZ(-moveDistance);
+      update_cannons();
+      update_camera();
+    }
   }
   if ( keyboard.pressed("A") ){
     tank.rotateOnAxis( new THREE.Vector3(0,1,0), rotateAngle);
@@ -373,18 +375,7 @@ function update(){
   // rotate left/right/up/down
   rotationMatrix = new THREE.Matrix4().identity();
 
-  function check_collision() {
-    var tempX,tempZ;
-    tempX = tank.position.x + 1;
-    tempZ = tank.position.z + 1;
-    console.log('Tank.z: '+tempZ);
-    for (var i = 0; i < cann_positions.length; i++) {
-      if (tempX >= cann_positions[i][0]-15 && tempX <= cann_positions[i][0]+15&&tempZ >= cann_positions[i][2]-15 && tempZ <= cann_positions[i][2]+15) {
-        return false;
-      }
-    }
-    return true;
-  }
+
  /* if(keyboard.pressed("Z")){
 
     camera.position.x = tank.position.x;
@@ -495,13 +486,33 @@ function update(){
   controls.update();
   stats.update();
 
-};
+}
 
 function update_camera(){
   camera.position.set(tank.position.x,CAMERA_HEIGHT,tank.position.z);
-  controls.target.set(tank.position.x,0,tank.position.z)
+  controls.target.set(tank.position.x,0,tank.position.z);
 
+}
 
+function check_collision(par) {
+  var tempX,tempZ;
+
+  if(par ==0){
+  tempX = tank.position.x + 1;
+  tempZ = tank.position.z + 1;
+  }
+  else {
+  tempX = tank.position.x - 1;
+  tempZ = tank.position.z - 1;
+
+  }
+
+  for (var i = 0; i < cann_positions.length; i++) {
+    if (tempX >= cann_positions[i][0]-5 && tempX <= cann_positions[i][0]+5&&tempZ >= cann_positions[i][2]-5 && tempZ <= cann_positions[i][2]+5) {
+      return false;
+    }
+  }
+  return true;
 }
 
 function update_cannons(){

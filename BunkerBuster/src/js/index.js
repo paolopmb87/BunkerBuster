@@ -344,9 +344,10 @@ function update(){
   }
 
   if ( keyboard.pressed("W") ){
+    if(check_collision()){
     tank.translateZ( moveDistance );
     update_cannons();
-    update_camera();
+    update_camera();}
       }
 
   if ( keyboard.pressed("S") ){
@@ -372,7 +373,18 @@ function update(){
   // rotate left/right/up/down
   rotationMatrix = new THREE.Matrix4().identity();
 
-
+  function check_collision() {
+    var tempX,tempZ;
+    tempX = tank.position.x + 1;
+    tempZ = tank.position.z + 1;
+    console.log('Tank.z: '+tempZ);
+    for (var i = 0; i < cann_positions.length; i++) {
+      if (tempX >= cann_positions[i][0]-15 && tempX <= cann_positions[i][0]+15&&tempZ >= cann_positions[i][2]-15 && tempZ <= cann_positions[i][2]+15) {
+        return false;
+      }
+    }
+    return true;
+  }
  /* if(keyboard.pressed("Z")){
 
     camera.position.x = tank.position.x;

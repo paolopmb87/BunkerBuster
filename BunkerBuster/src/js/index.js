@@ -473,6 +473,9 @@ function update(){
       sound_tank_hit.play();
     if(tank_life>0) {
 
+      var health = document.getElementById("health");
+      health.value -= 10;
+      
       tank_life = tank_life - 10;
       console.log('VITA:' + tank_life);
     }

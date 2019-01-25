@@ -507,6 +507,7 @@ function check_collision(par) {
   }
 
   for (var i = 0; i < cann_positions.length; i++) {
+    if(cannons[i].visible==false) return true;
     if (clone.position.x >= cann_positions[i][0]-5 && clone.position.x <= cann_positions[i][0]+5 && clone.position.z >= cann_positions[i][2]-5 && clone.position.z <= cann_positions[i][2]+5) {
       return false;
     }

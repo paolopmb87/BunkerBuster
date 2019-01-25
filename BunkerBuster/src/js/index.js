@@ -497,11 +497,11 @@ function update_camera(){
 function check_collision(par) {
   var tempX,tempZ;
 
-  if(par ==0){
+  if(par ===0){
   tempX = tank.position.x + 1;
   tempZ = tank.position.z + 1;
   }
-  else {
+  else if (par===1) {
   tempX = tank.position.x - 1;
   tempZ = tank.position.z - 1;
 

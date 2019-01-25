@@ -347,8 +347,9 @@ function update(){
     if(check_collision(0)){
     tank.translateZ( moveDistance );
     update_cannons();
-    update_camera();}
-      }
+    update_camera();
+    }
+   }
 
   if ( keyboard.pressed("S") ){
     if(check_collision(1)) {
@@ -495,20 +496,18 @@ function update_camera(){
 }
 
 function check_collision(par) {
-  var tempX,tempZ;
+  //var tempX,tempZ;
+  var clone = tank.clone();
 
   if(par ===0){
-  tempX = tank.position.x + 1;
-  tempZ = tank.position.z + 1;
+    clone.translateZ( 1 )
   }
-  else if (par===1) {
-  tempX = tank.position.x - 1;
-  tempZ = tank.position.z - 1;
-
+  if (par===1) {
+    clone.translateZ( -1 )
   }
 
   for (var i = 0; i < cann_positions.length; i++) {
-    if (tempX >= cann_positions[i][0]-5 && tempX <= cann_positions[i][0]+5&&tempZ >= cann_positions[i][2]-5 && tempZ <= cann_positions[i][2]+5) {
+    if (clone.position.x >= cann_positions[i][0]-5 && clone.position.x <= cann_positions[i][0]+5 && clone.position.z >= cann_positions[i][2]-5 && clone.position.z <= cann_positions[i][2]+5) {
       return false;
     }
   }

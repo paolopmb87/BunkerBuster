@@ -85,9 +85,14 @@ var keyboard = new THREEx.KeyboardState();
 
 //temp
 var tree_loader="models/trees/tree.json";
-var house_loader="models/house/old-house.json";
+var house_loader="models/trees/tree2.json";
 var cannon_loader="models/cannons/cannon.json";
+var cactus_loader="models/trees/cactus.json";
+var dead_tree_loader="models/trees/dead_tree.json";
 //
+
+var healthcube;
+var healthcubes = [];
 
 
 /**
@@ -137,6 +142,8 @@ function init() {
 
   tank_life = 100;
 
+  add_healthcubes();
+
 }
 
 /**
@@ -164,7 +171,7 @@ function createScene(){
 
   const groundTexture = new THREE.ImageUtils.loadTexture( 'img/rocky-ground.jpg' );
   groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
-  groundTexture.repeat.set( 30, 30 );
+  groundTexture.repeat.set( 60, 60 );
 
   const groundGeometry = new THREE.PlaneGeometry(sceneWidth*2 , sceneWidth*2, 40, 10 );
   const groundMaterial = new THREE.MeshLambertMaterial( {
@@ -200,6 +207,8 @@ function createScene(){
   viewfinder = new THREE.Mesh( viewfinderGeometry, viewfinderMaterial );
   scene.add( viewfinder );
   window.addEventListener('resize', onWindowResize, false);//resize callback
+
+
 }
 
 function addObjects(){
@@ -221,14 +230,14 @@ function sound(src) {
   document.body.appendChild(this.sound);
   this.play = function(){
     this.sound.play();
-  }
+  },
   this.stop = function(){
     this.sound.pause();
     this.sound.currentTime = 0;
-  }
+  },
   this.speedUp = function(){
     this.sound.playbackRate= 3;
-  }
+  },
   this.pause = function () {
     this.sound.pause();
   }
@@ -258,28 +267,26 @@ function addTank(){
 }
 
 function add_scenario_mesh(){
-  scenario_mesh = [tree_loader, house_loader];
+  scenario_mesh = [dead_tree_loader, house_loader];
   var loader =[];
   var scenario;
-  var nTrees = 4;
-  var nHouses = 2;
+  var nDeadTrees = 30;
+  var nTrees2 = 30;
 
   for(var x = 0; x< scenario_mesh.length;x++){
     loader.push(new THREE.ObjectLoader());
   }
 
-//TREES
+//CACTUS
   loader[0].load(scenario_mesh[0], function (obj) {
         scenario = obj;
 
-        for(var j=0;j<nTrees;j++) {
+        for(var j=0;j<nDeadTrees;j++) {
           mesh[j] = scenario.clone();
-          mesh[j].position.x = Math.random() * 2 - 1;
+          mesh[j].position.x=(generate_random());
           mesh[j].position.y = 0 ;
-          mesh[j].position.z = Math.random() * 2 - 1;
-          mesh[j].position.normalize();
-          mesh[j].position.multiplyScalar( 200 );
-          mesh[j].scale.set(20, 20, 20);
+          mesh[j].position.z = (generate_random());
+          mesh[j].scale.set(5, 5, 5);
           scene.add(mesh[j]);
         }
       });
@@ -287,17 +294,36 @@ function add_scenario_mesh(){
   loader[1].load(scenario_mesh[1], function (obj) {
         scenario = obj;
 
-        for(var j=nTrees;j<nTrees+nHouses;j++) {
+        for(var j=nDeadTrees;j<nDeadTrees+nTrees2;j++) {
           mesh[j] = scenario.clone();
-          mesh[j].position.x = Math.random() * 2 - 1;
+          mesh[j].position.x = (generate_random());
           mesh[j].position.y = 0 ;
-          mesh[j].position.z = Math.random() * 2 - 1;
-          mesh[j].position.normalize();
-          mesh[j].position.multiplyScalar( 300 );
-          mesh[j].scale.set(8, 8, 8);
+          mesh[j].position.z = (generate_random());
+          mesh[j].scale.set(0.8, 0.8, 0.8);
           scene.add(mesh[j]);
     }
   });
+
+}
+
+function add_healthcubes(){
+
+  var random;
+  random = Math.random()*35;
+
+  var Texture = new THREE.TextureLoader().load( 'img/health.png');
+  const Material = new THREE.MeshBasicMaterial( { map: Texture } );
+  const Geometry = new THREE.CubeGeometry(30, 30, 30);
+  healthcube = new THREE.Mesh(Geometry,Material);
+
+
+  for(var i = 0; i<random; i++){
+  healthcubes[i] = healthcube.clone();
+  healthcubes[i].position.set(generate_random(),8,generate_random());
+  healthcubes[i].scale.set(0.4,0.4,0.4);
+  scene.add(healthcubes[i]);
+
+  }
 
 }
 
@@ -316,14 +342,24 @@ function addCannon() {
   });
 }
 
+function generate_random(){
+  var randomN = (Math.random() * 3801) - 1900;   //numbers between -1900 and 1900, the coordinates of the terrain
+  return randomN;
+}
+
+
+
 /**
  * KEYBOARD - MOUSE
  */
 function update(){
 
+  check_healtcube()
+
   var delta = 0.01; // seconds.
   var moveDistance = 100 * delta; //25 default
   var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
+
 
   for(var index=0; index<bullets.length; index+=1){
     if( bullets[index] === undefined ) continue;
@@ -344,7 +380,7 @@ function update(){
   }
 
   if ( keyboard.pressed("W") ){
-    if(check_collision(0)){
+    if(check_Turret_Collision(0)){
     tank.translateZ( moveDistance );
     update_cannons();
     update_camera();
@@ -352,7 +388,7 @@ function update(){
    }
 
   if ( keyboard.pressed("S") ){
-    if(check_collision(1)) {
+    if(check_Turret_Collision(1)) {
       tank.translateZ(-moveDistance);
       update_cannons();
       update_camera();
@@ -475,7 +511,7 @@ function update(){
 
       var health = document.getElementById("health");
       health.value -= 10;
-      
+
       tank_life = tank_life - 10;
       console.log('VITA:' + tank_life);
     }
@@ -498,7 +534,7 @@ function update_camera(){
 
 }
 
-function check_collision(par) {
+function check_Turret_Collision(par) {
   //var tempX,tempZ;
   var clone = tank.clone();
 
@@ -510,12 +546,25 @@ function check_collision(par) {
   }
 
   for (var i = 0; i < cann_positions.length; i++) {
-    if(cannons[i].visible==false) return true;
-    if (clone.position.x >= cann_positions[i][0]-5 && clone.position.x <= cann_positions[i][0]+5 && clone.position.z >= cann_positions[i][2]-5 && clone.position.z <= cann_positions[i][2]+5) {
+
+    if (cannons[i].visible==true&&clone.position.x >= cann_positions[i][0]-5 && clone.position.x <= cann_positions[i][0]+5 && clone.position.z >= cann_positions[i][2]-5 && clone.position.z <= cann_positions[i][2]+5) {
       return false;
     }
   }
   return true;
+}
+
+function check_healtcube(){
+  for(var i = 0; i< healthcubes.length;i++){
+    if (healthcubes[i].visible==true&&tank.position.x >= healthcubes[i].position.x-8 && tank.position.x <= healthcubes[i].position.x+8 && tank.position.z >= healthcubes[i].position.z-8 && tank.position.z <= healthcubes[i].position.z+8) {
+      healthcubes[i].visible = false;
+      tank_life += 20;
+      console.log ('HEAL-> VITA: '+ tank_life);
+    }
+
+  }
+
+
 }
 
 function update_cannons(){
@@ -531,6 +580,10 @@ function update_cannons(){
 
 function render(){
   //requestAnimationFrame(update);
+  for(var i = 0; i<healthcubes.length;i++){
+  healthcubes[i].rotation.x += 0.008;
+  healthcubes[i].rotation.y += 0.012;}
+
   renderer.render(scene, camera);//draw
   if (p1fireRate < 60) {
     p1fireRate++;

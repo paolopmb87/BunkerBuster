@@ -74,7 +74,8 @@ var Body_2;
 var Track;
 var Turret;
 var Turret_2;
-var p1fireRate = 60;   //FIRE RATE
+var rate = 90;
+var p1fireRate = rate;   //FIRE RATE
 var cannonfireRate = 80;
 var viewfinder;
 var soundPath = "sounds/";
@@ -93,6 +94,14 @@ var dead_tree_loader="models/trees/dead_tree.json";
 
 var healthcube;
 var healthcubes = [];
+var speedcube;
+var speedcubes = [];
+var berserkcube;
+var berserkcubes = [];
+
+var delta = 0.01; // seconds.
+var moveDistance = 100 * delta; //25 default
+var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
 
 
 /**
@@ -143,6 +152,8 @@ function init() {
   tank_life = 100;
 
   add_healthcubes();
+  add_speedcubes();
+  add_berserkcubes();
 
 }
 
@@ -309,7 +320,7 @@ function add_scenario_mesh(){
 function add_healthcubes(){
 
   var random;
-  random = Math.random()*35;
+  random = Math.random()*20;
 
   var Texture = new THREE.TextureLoader().load( 'img/health.png');
   const Material = new THREE.MeshBasicMaterial( { map: Texture } );
@@ -327,6 +338,49 @@ function add_healthcubes(){
 
 }
 
+
+function add_speedcubes(){
+
+  var random;
+  random = Math.random()*20;
+
+  var Texture = new THREE.TextureLoader().load( 'img/speed.png');
+  const Material = new THREE.MeshBasicMaterial( { map: Texture } );
+  const Geometry = new THREE.CubeGeometry(30, 30, 30);
+  speedcube = new THREE.Mesh(Geometry,Material);
+
+
+  for(var i = 0; i<random; i++){
+    speedcubes[i] = speedcube.clone();
+    speedcubes[i].position.set(generate_random(),8,generate_random());
+    speedcubes[i].scale.set(0.4,0.4,0.4);
+    scene.add(speedcubes[i]);
+
+  }
+
+}
+
+
+function add_berserkcubes(){
+
+  var random;
+  random = Math.random()*20;
+
+  var Texture = new THREE.TextureLoader().load( 'img/berserk.png');
+  const Material = new THREE.MeshBasicMaterial( { map: Texture } );
+  const Geometry = new THREE.CubeGeometry(30, 30, 30);
+  berserkcube = new THREE.Mesh(Geometry,Material);
+
+
+  for(var i = 0; i<random; i++){
+    berserkcubes[i] = berserkcube.clone();
+    berserkcubes[i].position.set(generate_random(),8,generate_random());
+    berserkcubes[i].scale.set(0.4,0.4,0.4);
+    scene.add(berserkcubes[i]);
+
+  }
+
+}
 
 function addCannon() {
   var loader = new THREE.ObjectLoader();
@@ -354,11 +408,7 @@ function generate_random(){
  */
 function update(){
 
-  check_healtcube()
-
-  var delta = 0.01; // seconds.
-  var moveDistance = 100 * delta; //25 default
-  var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
+  check_cubes();
 
 
   for(var index=0; index<bullets.length; index+=1){
@@ -389,7 +439,7 @@ function update(){
 
   if ( keyboard.pressed("S") ){
     if(check_Turret_Collision(1)) {
-      tank.translateZ(-moveDistance);
+      tank.translateZ(-moveDistance/2);
       update_cannons();
       update_camera();
     }
@@ -420,9 +470,9 @@ function update(){
     controls.target.set(tank.position.x,0,tank.position.z)
   }*/
 
-  if( p1fireRate === 60 && keyboard.pressed("V")){
+  if( p1fireRate === rate && keyboard.pressed("V")){
 
-    var bullet = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), new THREE.MeshLambertMaterial({color: 0x0000}));
+    var bullet = new THREE.Mesh(new THREE.SphereGeometry(2.5, 8, 6), new THREE.MeshLambertMaterial({color: 0x0000}));
 
     //bullet.visible = false ;
     bullet.visible = false;
@@ -435,9 +485,9 @@ function update(){
 
     bullet.position.set(tank.position.x,tank.position.y+10, tank.position.z);
     bullet.velocity = new THREE.Vector3(
-      4.5*Math.sin(viewfinder.rotation.z),
+      7*Math.sin(viewfinder.rotation.z),
       0,
-      4.5*Math.cos(viewfinder.rotation.z));
+      7*Math.cos(viewfinder.rotation.z));
 
     bullet.alive = true;
     setTimeout(function(){
@@ -453,11 +503,12 @@ function update(){
   }
 
   if(cannonfireRate === 80){
-    var cannon_bullet = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), new THREE.MeshLambertMaterial({color: 0x0000}));
+    var cannon_bullet = new THREE.Mesh(new THREE.SphereGeometry(2, 8, 6), new THREE.MeshLambertMaterial({color: 0xff0000}));
+    cannon_bullet.castShadow = false;
     for( var i=0;i<cannons.length;i++) {
       if (cannons[i].visible == true) {
         cannon_bullets[i] = cannon_bullet.clone();
-        cannon_bullets[i].position.set(cann_positions[i][0], cann_positions[i][1], cann_positions[i][2]);
+        cannon_bullets[i].position.set(cann_positions[i][0], 5, cann_positions[i][2]);
         if (cannons[i].rotation.x != -0) {
           cannon_bullets[i].velocity = new THREE.Vector3(
             4.5 * Math.sin(cannons[i].rotation.y),
@@ -551,20 +602,47 @@ function check_Turret_Collision(par) {
       return false;
     }
   }
+
+  if(clone.position.x>1900||clone.position.x<-1900||clone.position.z>1900||clone.position.z<-1900){
+    return false;
+  }
   return true;
 }
 
-function check_healtcube(){
-  for(var i = 0; i< healthcubes.length;i++){
-    if (healthcubes[i].visible==true&&tank.position.x >= healthcubes[i].position.x-8 && tank.position.x <= healthcubes[i].position.x+8 && tank.position.z >= healthcubes[i].position.z-8 && tank.position.z <= healthcubes[i].position.z+8) {
+function check_cubes() {
+  for (var i = 0; i < healthcubes.length; i++) {
+    if (healthcubes[i].visible == true && tank.position.x >= healthcubes[i].position.x - 8 && tank.position.x <= healthcubes[i].position.x + 8 && tank.position.z >= healthcubes[i].position.z - 8 && tank.position.z <= healthcubes[i].position.z + 8) {
       healthcubes[i].visible = false;
       tank_life += 20;
-      console.log ('HEAL-> VITA: '+ tank_life);
+      console.log('HEAL-> VITA: ' + tank_life);
     }
-
   }
 
+  for (var ii = 0; ii < speedcubes.length; ii++) {
+    if (speedcubes[ii].visible == true && tank.position.x >= speedcubes[ii].position.x - 8 && tank.position.x <= speedcubes[ii].position.x + 8 && tank.position.z >= speedcubes[ii].position.z - 8 && tank.position.z <= speedcubes[ii].position.z + 8) {
+      speedcubes[ii].visible = false;
+      console.log('SPEED UP');
+      moveDistance = moveDistance * 2;
+      setTimeout(function () {
+        moveDistance = moveDistance / 2;
+      }, 10000);
+      console.log('SPEED UP IS OVER');
+    }
+  }
 
+  for (var iii = 0; iii < berserkcubes.length; iii++) {
+    if (berserkcubes[iii].visible == true && tank.position.x >= berserkcubes[iii].position.x - 8 && tank.position.x <= berserkcubes[iii].position.x + 8 && tank.position.z >= berserkcubes[iii].position.z - 8 && tank.position.z <= berserkcubes[iii].position.z + 8) {
+      berserkcubes[iii].visible = false;
+      console.log('BERSERK UP');
+       rate = rate / 2;
+       p1fireRate = rate;
+      setTimeout(function () {
+        rate = rate * 2;
+        p1fireRate = rate;
+      }, 10000);
+      console.log('BERSERK UP IS OVER');
+    }
+  }
 }
 
 function update_cannons(){
@@ -582,10 +660,19 @@ function render(){
   //requestAnimationFrame(update);
   for(var i = 0; i<healthcubes.length;i++){
   healthcubes[i].rotation.x += 0.008;
-  healthcubes[i].rotation.y += 0.012;}
+  healthcubes[i].rotation.y += 0.012;
+  }
+  for(var ii = 0; ii<speedcubes.length;ii++){
+    speedcubes[ii].rotation.x += 0.008;
+    speedcubes[ii].rotation.y += 0.012;
+  }
+  for(var iii = 0; iii<berserkcubes.length;iii++){
+    berserkcubes[iii].rotation.x += 0.008;
+    berserkcubes[iii].rotation.y += 0.012;
+  }
 
   renderer.render(scene, camera);//draw
-  if (p1fireRate < 60) {
+  if (p1fireRate < rate) {
     p1fireRate++;
   }
   if (cannonfireRate < 80) {

@@ -86,7 +86,7 @@ var keyboard = new THREEx.KeyboardState();
 
 //temp
 var tree_loader="models/trees/tree.json";
-var house_loader="models/trees/tree2.json";
+var trees_loader="models/trees/tree2.json";
 var cannon_loader="models/cannons/cannon.json";
 var cactus_loader="models/trees/cactus.json";
 var dead_tree_loader="models/trees/dead_tree.json";
@@ -284,7 +284,7 @@ function addTank(){
 }
 
 function add_scenario_mesh(){
-  scenario_mesh = [dead_tree_loader];
+  scenario_mesh = [dead_tree_loader, trees_loader];
   var loader =[];
   var scenario;
   var nDeadTrees = 30;
@@ -406,7 +406,6 @@ function generate_random(){
 }
 
 
-
 /**
  * KEYBOARD - MOUSE
  */
@@ -474,78 +473,21 @@ function update(){
     controls.target.set(tank.position.x,0,tank.position.z)
   }*/
 
-  if( p1fireRate === rate && keyboard.pressed("V")){
-
-    var bullet = new THREE.Mesh(new THREE.SphereGeometry(2.5, 8, 6), new THREE.MeshLambertMaterial({color: 0x0000}));
-
-    //bullet.visible = false ;
-    bullet.visible = false;
-    sound_shot.stop();
-    sound_shot.play();
-
-     setTimeout(function(){
-      bullet.visible = true ;
-    }, 120);
-
-    bullet.position.set(tank.position.x,tank.position.y+10, tank.position.z);
-    bullet.velocity = new THREE.Vector3(
-      7*Math.sin(viewfinder.rotation.z),
-      0,
-      7*Math.cos(viewfinder.rotation.z));
-
-    bullet.alive = true;
-    setTimeout(function(){
-      bullet.alive = false;
-      scene.remove(bullet);
-    }, 4000);
-
-    bullets.push(bullet);
-    scene.add(bullet);
-
-
-    p1fireRate = 0;
+  if( p1fireRate === rate
+        && keyboard.pressed("V")){
+    tank_shoot();
   }
 
   if(cannonfireRate === 80){
-    var cannon_bullet = new THREE.Mesh(new THREE.SphereGeometry(2, 8, 6), new THREE.MeshLambertMaterial({color: 0xff0000}));
-    cannon_bullet.castShadow = false;
-    for( var i=0;i<cannons.length;i++) {
-      if (cannons[i].visible === true) {
-        cannon_bullets[i] = cannon_bullet.clone();
-        cannon_bullets[i].position.set(cann_positions[i][0], 5, cann_positions[i][2]);
-        if (cannons[i].rotation.x !== -0) {
-          cannon_bullets[i].velocity = new THREE.Vector3(
-            4.5 * Math.sin(cannons[i].rotation.y),
-            0,
-            -4.5 * Math.cos(cannons[i].rotation.y));
-        }
-        else {
-          cannon_bullets[i].velocity = new THREE.Vector3(
-            4.5 * Math.sin(cannons[i].rotation.y),
-            0,
-            4.5 * Math.cos(cannons[i].rotation.y));
-        }
-        cannon_bullets[i].visible = true;
-        cannon_bullets[i].alive = true;
-
-
-        sound_shot.stop();
-        sound_shot.play();
-
-
-        setTimeout(function () {
-          cannon_bullets[i].alive = false;
-          scene.remove(cannon_bullets[i]);
-        }, 4000);
-        CANNON_BULLETS.push(cannon_bullets[i]);
-        scene.add(cannon_bullets[i]);
-      }
-
-      cannonfireRate = 0;
-    }
+    cannon_shoot();
   }
 
+  controls.update();
+  stats.update();
 
+}
+
+function shoot_controls() {
   for( var j=0;j<bullets.length;j++){
     for(var z =0;z<cannons.length;z++) {
       if ( cannons[z].visible===true && bullets[j].position.x >= cannons[z].position.x - 10 && bullets[j].position.x <= cannons[z].position.x + 10 && bullets[j].position.z >= cannons[z].position.z - 10 && bullets[j].position.z <= cannons[z].position.z + 10) {
@@ -554,7 +496,7 @@ function update(){
         bullets[j].visible = false;
       }
     }
-   }
+  }
 
   for(var y=0; y<CANNON_BULLETS.length;y++){
     if (CANNON_BULLETS[y].position.x>=tank.position.x-10 && CANNON_BULLETS[y].position.x<=tank.position.x+10 && CANNON_BULLETS[y].position.z>=tank.position.z-10 && CANNON_BULLETS[y].position.z<=tank.position.z+10){
@@ -562,31 +504,94 @@ function update(){
       CANNON_BULLETS.splice(y,1);
       sound_tank_hit.stop();
       sound_tank_hit.play();
-    if(tank_life>0) {
+      if(tank_life>0) {
 
-      health -= 10;
+        health -= 10;
 
-      tank_life = tank_life - 10;
-      console.log('VITA:' + tank_life);
-    }
-   if (tank_life === 0){
+        tank_life = tank_life - 10;
+        console.log('VITA:' + tank_life);
+      }
+      if (tank_life === 0){
 
-     sound_game_over.stop();
-     sound_game_over.play();
-     }
+        sound_game_over.stop();
+        sound_game_over.play();
+      }
     }
   }
-
-  controls.update();
-  stats.update();
 
 }
 
 function tank_shoot() {
+  var bullet = new THREE.Mesh(new THREE.SphereGeometry(2.5, 8, 6), new THREE.MeshLambertMaterial({color: 0x0000}));
+
+  //bullet.visible = false ;
+  bullet.visible = false;
+  sound_shot.stop();
+  sound_shot.play();
+
+  setTimeout(function(){
+    bullet.visible = true ;
+  }, 120);
+
+  bullet.position.set(tank.position.x,tank.position.y+10, tank.position.z);
+  bullet.velocity = new THREE.Vector3(
+    7*Math.sin(viewfinder.rotation.z),
+    0,
+    7*Math.cos(viewfinder.rotation.z));
+
+  bullet.alive = true;
+  setTimeout(function(){
+    bullet.alive = false;
+    scene.remove(bullet);
+  }, 4000);
+
+  bullets.push(bullet);
+  scene.add(bullet);
+
+  p1fireRate = 0;
+
+  shoot_controls();
 
 }
 
 function cannon_shoot(){
+  var cannon_bullet = new THREE.Mesh(new THREE.SphereGeometry(2, 8, 6), new THREE.MeshLambertMaterial({color: 0xff0000}));
+  cannon_bullet.castShadow = false;
+  for( var i=0;i<cannons.length;i++) {
+    if (cannons[i].visible === true) {
+      cannon_bullets[i] = cannon_bullet.clone();
+      cannon_bullets[i].position.set(cann_positions[i][0], 5, cann_positions[i][2]);
+      if (cannons[i].rotation.x !== -0) {
+        cannon_bullets[i].velocity = new THREE.Vector3(
+          4.5 * Math.sin(cannons[i].rotation.y),
+          0,
+          -4.5 * Math.cos(cannons[i].rotation.y));
+      }
+      else {
+        cannon_bullets[i].velocity = new THREE.Vector3(
+          4.5 * Math.sin(cannons[i].rotation.y),
+          0,
+          4.5 * Math.cos(cannons[i].rotation.y));
+      }
+      cannon_bullets[i].visible = true;
+      cannon_bullets[i].alive = true;
+
+      sound_shot.stop();
+      sound_shot.play();
+
+
+      setTimeout(function () {
+        cannon_bullets[i].alive = false;
+        scene.remove(cannon_bullets[i]);
+      }, 4000);
+      CANNON_BULLETS.push(cannon_bullets[i]);
+      scene.add(cannon_bullets[i]);
+    }
+
+    cannonfireRate = 0;
+  }
+
+  shoot_controls();
 
 }
 

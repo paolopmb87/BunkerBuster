@@ -5,7 +5,6 @@
   var fps=document.createElement('fps');
   fps.onload=function (){
     var wp = new Stats();
-    document.body.appendChild(wp.dom);
     requestAnimationFrame(function loop() {
       wp.update();
       requestAnimationFrame(loop)
@@ -81,6 +80,7 @@ var viewfinder;
 var soundPath = "sounds/";
 var sound_shot, sound_tank_hit, sound_game_over;
 
+var health=0;
 var cube;
 var keyboard = new THREEx.KeyboardState();
 
@@ -94,6 +94,7 @@ var dead_tree_loader="models/trees/dead_tree.json";
 
 var healthcube;
 var healthcubes = [];
+
 var speedcube;
 var speedcubes = [];
 var berserkcube;
@@ -127,6 +128,7 @@ function init() {
   // CONTROLS
   controls = new THREE.OrbitControls( camera, renderer.domElement );
   //controls.enabled = false;
+
   // STATS
   stats = new Stats();
   stats.domElement.style.position = 'absolute';
@@ -172,6 +174,8 @@ function createScene(){
   //scene.fog = new THREE.Fog(0x00ff00, 50, 800);//enable fog
   camera = new THREE.PerspectiveCamera( VIEW_ANGLE , sceneWidth / sceneHeight, NEAR, FAR );//perspective camera
   scene.add(camera);
+
+
   camera.lookAt(new THREE.Vector3(0,0,0));
   camera.position.set(0,CAMERA_HEIGHT,0);
   renderer = new THREE.WebGLRenderer({alpha:true});//renderer with transparent backdrop
@@ -179,6 +183,7 @@ function createScene(){
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   renderer.setSize( sceneWidth, sceneHeight );
+
 
   const groundTexture = new THREE.ImageUtils.loadTexture( 'img/rocky-ground.jpg' );
   groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
@@ -217,8 +222,11 @@ function createScene(){
   const viewfinderMaterial = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
   viewfinder = new THREE.Mesh( viewfinderGeometry, viewfinderMaterial );
   scene.add( viewfinder );
+
+
   window.addEventListener('resize', onWindowResize, false);//resize callback
 
+  health = document.getElementById("health");
 
 }
 
@@ -227,9 +235,7 @@ function addObjects(){
   addTank();
   addCannon();
   add_scenario_mesh();
-  // addTree();
- // addTree2();
- // addHouse();
+
 }
 
 function sound(src) {
@@ -278,7 +284,7 @@ function addTank(){
 }
 
 function add_scenario_mesh(){
-  scenario_mesh = [dead_tree_loader, house_loader];
+  scenario_mesh = [dead_tree_loader];
   var loader =[];
   var scenario;
   var nDeadTrees = 30;
@@ -329,11 +335,10 @@ function add_healthcubes(){
 
 
   for(var i = 0; i<random; i++){
-  healthcubes[i] = healthcube.clone();
-  healthcubes[i].position.set(generate_random(),8,generate_random());
-  healthcubes[i].scale.set(0.4,0.4,0.4);
-  scene.add(healthcubes[i]);
-
+    healthcubes[i] = healthcube.clone();
+    healthcubes[i].position.set(generate_random(),8,generate_random());
+    healthcubes[i].scale.set(0.4,0.4,0.4);
+    scene.add(healthcubes[i]);
   }
 
 }
@@ -391,7 +396,6 @@ function addCannon() {
       cannons[i].scale.set(10, 10, 10);
       scene.add(cannons[i]);
       cannons[i].position.set(cann_positions[i][0],cann_positions[i][1],cann_positions[i][2]);
-
     }
   });
 }
@@ -506,10 +510,10 @@ function update(){
     var cannon_bullet = new THREE.Mesh(new THREE.SphereGeometry(2, 8, 6), new THREE.MeshLambertMaterial({color: 0xff0000}));
     cannon_bullet.castShadow = false;
     for( var i=0;i<cannons.length;i++) {
-      if (cannons[i].visible == true) {
+      if (cannons[i].visible === true) {
         cannon_bullets[i] = cannon_bullet.clone();
         cannon_bullets[i].position.set(cann_positions[i][0], 5, cann_positions[i][2]);
-        if (cannons[i].rotation.x != -0) {
+        if (cannons[i].rotation.x !== -0) {
           cannon_bullets[i].velocity = new THREE.Vector3(
             4.5 * Math.sin(cannons[i].rotation.y),
             0,
@@ -542,12 +546,12 @@ function update(){
   }
 
 
-  for( var i=0;i<bullets.length;i++){
+  for( var j=0;j<bullets.length;j++){
     for(var z =0;z<cannons.length;z++) {
-      if ( cannons[z].visible===true && bullets[i].position.x >= cannons[z].position.x - 10 && bullets[i].position.x <= cannons[z].position.x + 10 && bullets[i].position.z >= cannons[z].position.z - 10 && bullets[i].position.z <= cannons[z].position.z + 10) {
+      if ( cannons[z].visible===true && bullets[j].position.x >= cannons[z].position.x - 10 && bullets[j].position.x <= cannons[z].position.x + 10 && bullets[j].position.z >= cannons[z].position.z - 10 && bullets[j].position.z <= cannons[z].position.z + 10) {
         cannons[z].visible = false;
         console.log( 'CANNONE ' + (z+1) + ' INVISIBILE');
-        bullets[i].visible = false;
+        bullets[j].visible = false;
       }
     }
    }
@@ -560,13 +564,12 @@ function update(){
       sound_tank_hit.play();
     if(tank_life>0) {
 
-      var health = document.getElementById("health");
-      health.value -= 10;
+      health -= 10;
 
       tank_life = tank_life - 10;
       console.log('VITA:' + tank_life);
     }
-   if (tank_life == 0){
+   if (tank_life === 0){
 
      sound_game_over.stop();
      sound_game_over.play();
@@ -576,6 +579,14 @@ function update(){
 
   controls.update();
   stats.update();
+
+}
+
+function tank_shoot() {
+
+}
+
+function cannon_shoot(){
 
 }
 
@@ -598,7 +609,7 @@ function check_Turret_Collision(par) {
 
   for (var i = 0; i < cann_positions.length; i++) {
 
-    if (cannons[i].visible==true&&clone.position.x >= cann_positions[i][0]-5 && clone.position.x <= cann_positions[i][0]+5 && clone.position.z >= cann_positions[i][2]-5 && clone.position.z <= cann_positions[i][2]+5) {
+    if (cannons[i].visible === true&&clone.position.x >= cann_positions[i][0]-5 && clone.position.x <= cann_positions[i][0]+5 && clone.position.z >= cann_positions[i][2]-5 && clone.position.z <= cann_positions[i][2]+5) {
       return false;
     }
   }
@@ -611,15 +622,16 @@ function check_Turret_Collision(par) {
 
 function check_cubes() {
   for (var i = 0; i < healthcubes.length; i++) {
-    if (healthcubes[i].visible == true && tank.position.x >= healthcubes[i].position.x - 8 && tank.position.x <= healthcubes[i].position.x + 8 && tank.position.z >= healthcubes[i].position.z - 8 && tank.position.z <= healthcubes[i].position.z + 8) {
+    if (healthcubes[i].visible === true && tank.position.x >= healthcubes[i].position.x - 8 && tank.position.x <= healthcubes[i].position.x + 8 && tank.position.z >= healthcubes[i].position.z - 8 && tank.position.z <= healthcubes[i].position.z + 8) {
       healthcubes[i].visible = false;
       tank_life += 20;
+      health += 20;
       console.log('HEAL-> VITA: ' + tank_life);
     }
   }
 
   for (var ii = 0; ii < speedcubes.length; ii++) {
-    if (speedcubes[ii].visible == true && tank.position.x >= speedcubes[ii].position.x - 8 && tank.position.x <= speedcubes[ii].position.x + 8 && tank.position.z >= speedcubes[ii].position.z - 8 && tank.position.z <= speedcubes[ii].position.z + 8) {
+    if (speedcubes[ii].visible === true && tank.position.x >= speedcubes[ii].position.x - 8 && tank.position.x <= speedcubes[ii].position.x + 8 && tank.position.z >= speedcubes[ii].position.z - 8 && tank.position.z <= speedcubes[ii].position.z + 8) {
       speedcubes[ii].visible = false;
       console.log('SPEED UP');
       moveDistance = moveDistance * 2;
@@ -631,7 +643,7 @@ function check_cubes() {
   }
 
   for (var iii = 0; iii < berserkcubes.length; iii++) {
-    if (berserkcubes[iii].visible == true && tank.position.x >= berserkcubes[iii].position.x - 8 && tank.position.x <= berserkcubes[iii].position.x + 8 && tank.position.z >= berserkcubes[iii].position.z - 8 && tank.position.z <= berserkcubes[iii].position.z + 8) {
+    if (berserkcubes[iii].visible === true && tank.position.x >= berserkcubes[iii].position.x - 8 && tank.position.x <= berserkcubes[iii].position.x + 8 && tank.position.z >= berserkcubes[iii].position.z - 8 && tank.position.z <= berserkcubes[iii].position.z + 8) {
       berserkcubes[iii].visible = false;
       console.log('BERSERK UP');
        rate = rate / 2;
@@ -650,7 +662,6 @@ function update_cannons(){
   for(var i =0;i<cannons.length;i++)
   cannons[i].lookAt(tank.position.x,0,tank.position.z);
 }
-
 
 /**
  * RENDER AND ANIMATE Functions - Starts the animation on the frame and the render
@@ -672,6 +683,7 @@ function render(){
   }
 
   renderer.render(scene, camera);//draw
+
   if (p1fireRate < rate) {
     p1fireRate++;
   }
@@ -682,7 +694,12 @@ function render(){
 
 function animate()
 {
-  requestAnimationFrame( animate );
+  setTimeout( function() {
+
+    requestAnimationFrame( animate );
+
+  }, 1000 / 30 );
   render();
   update();
+
 }

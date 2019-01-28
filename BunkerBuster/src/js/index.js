@@ -5,6 +5,7 @@
   var fps=document.createElement('fps');
   fps.onload=function (){
     var wp = new Stats();
+    document.body.appendChild(wp.dom);
     requestAnimationFrame(function loop() {
       wp.update();
       requestAnimationFrame(loop)
@@ -202,7 +203,6 @@ function createScene(){
 
   renderer.setSize( sceneWidth, sceneHeight );
 
-
   const groundTexture = new THREE.ImageUtils.loadTexture( 'img/rocky-ground.jpg' );
   groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
   groundTexture.repeat.set( 60, 60 );
@@ -220,7 +220,7 @@ function createScene(){
 
   light = new THREE.PointLight( 0xffffff, 1.5,0 ,2 );
   light.position.set(200,400,200);
-  light.shadowCameraVisible=true;
+  light.shadowCameraVisible = true;
   light.castShadow = true;
   //light.shadowDarkness = 0.95;
   scene.add(light);
@@ -406,9 +406,16 @@ function addCannon() {
   loader.load("models/cannons/cannon.json", function (obj) {
     cannon= obj;
     for(var i=0;i<NUM_TURRETS;i++){
+      var lightArray=[];
+      light.castShadow = true;
+      lightArray.push(light);
+      scene.add( light );
+
       cannons[i] = cannon.clone();
       cannons[i].scale.set(10, 10, 10);
+
       scene.add(cannons[i]);
+
       cannons[i].position.set(cann_positions[i][0],cann_positions[i][1],cann_positions[i][2]);
     }
   });
@@ -426,7 +433,6 @@ function generate_random(){
 function update(){
 
   check_cubes();
-
 
   for(var index=0; index<bullets.length; index+=1){
     if( bullets[index] === undefined ) continue;
@@ -690,18 +696,18 @@ function update_cannons(){
 
 function render(){
   //requestAnimationFrame(update);
-  for(var i = 0; i<healthcubes.length;i++){
-  healthcubes[i].rotation.x += 0.008;
-  healthcubes[i].rotation.y += 0.012;
-  }
-  for(var ii = 0; ii<speedcubes.length;ii++){
-    speedcubes[ii].rotation.x += 0.008;
-    speedcubes[ii].rotation.y += 0.012;
-  }
-  for(var iii = 0; iii<berserkcubes.length;iii++){
-    berserkcubes[iii].rotation.x += 0.008;
-    berserkcubes[iii].rotation.y += 0.012;
-  }
+  // for(var i = 0; i<healthcubes.length;i++){
+  // healthcubes[i].rotation.x += 0.008;
+  // healthcubes[i].rotation.y += 0.012;
+  // }
+  // for(var ii = 0; ii<speedcubes.length;ii++){
+  //   speedcubes[ii].rotation.x += 0.008;
+  //   speedcubes[ii].rotation.y += 0.012;
+  // }
+  // for(var iii = 0; iii<berserkcubes.length;iii++){
+  //   berserkcubes[iii].rotation.x += 0.008;
+  //   berserkcubes[iii].rotation.y += 0.012;
+  // }
 
   renderer.render(scene, camera);//draw
 
@@ -713,14 +719,8 @@ function render(){
   }
 }
 
-function animate()
-{
-  setTimeout( function() {
-
-    requestAnimationFrame( animate );
-
-  }, 1000 / 30 );
+function animate() {
+  requestAnimationFrame( animate );
   render();
   update();
-
 }

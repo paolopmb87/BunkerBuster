@@ -758,8 +758,8 @@
       "visible": true,
       "type": "Mesh",
       "material": "E658F97A-4B79-3078-A376-637A38997D2C",
-      "castShadow": true,
-      "receiveShadow": true,
+      "castShadow": false,
+      "receiveShadow": false,
       "geometry": "15641190-4052-3871-BF5E-F046F6B1B496"
     },{
       "name": "Box1",
@@ -768,8 +768,8 @@
       "visible": true,
       "type": "Mesh",
       "material": "1AAF40D4-7337-3756-97B3-C2D9C67C3BC4",
-      "castShadow": true,
-      "receiveShadow": true,
+      "castShadow": false,
+      "receiveShadow": false,
       "geometry": "0813763B-3A95-3717-A405-7EEF112B324A"
     },{
       "name": "Box2",
@@ -778,8 +778,8 @@
       "visible": true,
       "type": "Mesh",
       "material": "8CDCFEFA-D8D9-3E6D-9826-32C91D36F67A",
-      "castShadow": true,
-      "receiveShadow": true,
+      "castShadow": false,
+      "receiveShadow": false,
       "geometry": "A3266DF7-EF8B-3835-B919-F2D9B9D10D07"
     },{
       "name": "Box3",
@@ -788,8 +788,8 @@
       "visible": true,
       "type": "Mesh",
       "material": "1AAF40D4-7337-3756-97B3-C2D9C67C3BC4",
-      "castShadow": true,
-      "receiveShadow": true,
+      "castShadow": false,
+      "receiveShadow": false,
       "geometry": "DAF26EED-E8A1-3597-94D1-E65246622C91"
     },{
       "name": "CameraPreset",
@@ -815,8 +815,8 @@
       "visible": true,
       "type": "Mesh",
       "material": "B92F5ACA-E24A-3A69-B2DD-69B8C9C5682C",
-      "castShadow": true,
-      "receiveShadow": true,
+      "castShadow": false,
+      "receiveShadow": false,
       "geometry": "6F819075-5DAE-3263-8E03-B58B1580326C"
     },{
       "name": "Cylinder",
@@ -825,8 +825,8 @@
       "visible": true,
       "type": "Mesh",
       "material": "52BC8384-D4B3-3CF4-915C-AAD1874B4E89",
-      "castShadow": true,
-      "receiveShadow": true,
+      "castShadow": false,
+      "receiveShadow": false,
       "geometry": "DCA24E96-9468-357E-AD01-3232BB5D898A"
     },{
       "name": "Cylinder1",
@@ -835,8 +835,8 @@
       "visible": true,
       "type": "Mesh",
       "material": "CE445A56-6155-3E45-894F-F99924FD7720",
-      "castShadow": true,
-      "receiveShadow": true,
+      "castShadow": false,
+      "receiveShadow": false,
       "geometry": "40FD5415-D3A8-3F56-A419-EBBBA72EC24E"
     },{
       "name": "Cylinder2",
@@ -845,8 +845,8 @@
       "visible": true,
       "type": "Mesh",
       "material": "4385125B-DD1E-3025-880F-3311517CC8D5",
-      "castShadow": true,
-      "receiveShadow": true,
+      "castShadow": false,
+      "receiveShadow": false,
       "geometry": "8E127FC4-BF6E-37B1-B4DB-0B79E5A7DC57"
     },{
       "name": "Cylinder3",
@@ -855,8 +855,8 @@
       "visible": true,
       "type": "Mesh",
       "material": "B92F5ACA-E24A-3A69-B2DD-69B8C9C5682C",
-      "castShadow": true,
-      "receiveShadow": true,
+      "castShadow": false,
+      "receiveShadow": false,
       "geometry": "1D034A2C-5779-3103-9F54-29E1B5BF9CB6"
     },{
       "name": "Cylinder4",
@@ -865,8 +865,8 @@
       "visible": true,
       "type": "Mesh",
       "material": "21D303D4-E02B-3FBE-9C8B-9A7D5B95803D",
-      "castShadow": true,
-      "receiveShadow": true,
+      "castShadow": false,
+      "receiveShadow": false,
       "geometry": "24EB02C1-E216-3D14-A07B-82FE26AF5172"
     },{
       "name": "Cylinder5",

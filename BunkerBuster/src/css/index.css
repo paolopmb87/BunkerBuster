@@ -111,29 +111,86 @@ body {
   width: 80px;
 }
 
-#health{
+/*#health{*/
+  /*position: absolute;*/
+  /*margin-left: 30px;*/
+/*}*/
+
+
+#hp{
+  height: 20px;
+  display: block;
   position: absolute;
   margin-left: 30px;
-}
-
-progress[value]{
-  height: 40px;
-  padding-top:20px;
-  width: 500px;
-  background-color: transparent;
-  border-radius: 9px;
-  margin-left: 100px;
-}
-
-.Progress-label {
-  background-color: aqua;
-  font-size: 16px;
+  margin-top:  10px;
+  background-color: green;
   font-family: Helvetica, sans-serif;
-  display: block;
-  height: 20px;
-  margin-top: 20px;
-  position: absolute;
+  font-size: 16px;
 }
+
+#speed{
+  height: 20px;
+  display: block;
+  position: absolute;
+  margin-left: 30px;
+  margin-top:  30px;
+  background-color: blue;
+  font-family: Helvetica, sans-serif;
+  font-size: 16px;
+}
+
+#berserk{
+  height: 20px;
+  display: block;
+  position: absolute;
+  margin-left: 30px;
+  margin-top: 50px;
+  background-color: red;
+  font-family: Helvetica, sans-serif;
+  font-size: 16px;
+}
+
+
+/*progress[value]{*/
+  /*height: 40px;*/
+  /*width: 500px;*/
+  /*border-radius: 9px;*/
+  /*margin-left: 100px;*/
+/*}*/
+
+#health{
+  position: absolute;
+  height: 20px;
+  width: 400px;
+  margin-left: 100px;
+  margin-top: 10px;
+  border-radius: 2px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+  background-color: green;
+}
+
+#speed_pb_id{
+  position: absolute;
+  height: 20px;
+  width: 400px;
+  margin-left: 100px;
+  margin-top: 30px;
+  border-radius: 2px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+  background-color: blue;
+}
+
+#berserk_pb_id{
+  position: absolute;
+  height: 20px;
+  width: 400px;
+  margin-left: 100px;
+  margin-top: 50px;
+  border-radius: 2px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+  background-color: red;
+}
+
 
 #canvas{
   position: relative;

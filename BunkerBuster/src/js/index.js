@@ -606,25 +606,36 @@ function update_camera(){
 
 }
 
+function check_distance_between_tank_turret() {
+
+}
+
 function check_Turret_Collision(par) {
   //var tempX,tempZ;
   var clone = tank.clone();
 
-  if(par ===0){
+  if(par === 0){
     clone.translateZ( 1 )
   }
-  if (par===1) {
+  if (par === 1) {
     clone.translateZ( -1 )
   }
 
   for (var i = 0; i < cann_positions.length; i++) {
 
-    if (cannons[i].visible === true&&clone.position.x >= cann_positions[i][0]-5 && clone.position.x <= cann_positions[i][0]+5 && clone.position.z >= cann_positions[i][2]-5 && clone.position.z <= cann_positions[i][2]+5) {
+    if (cannons[i].visible === true
+          && clone.position.x >= cann_positions[i][0]-5
+            && clone.position.x <= cann_positions[i][0]+5
+              && clone.position.z >= cann_positions[i][2]-5
+                && clone.position.z <= cann_positions[i][2]+5) {
       return false;
     }
   }
 
-  if(clone.position.x>1900||clone.position.x<-1900||clone.position.z>1900||clone.position.z<-1900){
+  if(clone.position.x>1900
+        ||clone.position.x<-1900
+          ||clone.position.z>1900
+            ||clone.position.z<-1900){
     return false;
   }
   return true;

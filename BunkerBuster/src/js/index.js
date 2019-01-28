@@ -475,19 +475,73 @@ function update(){
 
   if( p1fireRate === rate
         && keyboard.pressed("V")){
-    tank_shoot();
+    var bullet = new THREE.Mesh(new THREE.SphereGeometry(2.5, 8, 6), new THREE.MeshLambertMaterial({color: 0x0000}));
+
+    //bullet.visible = false ;
+    bullet.visible = false;
+    sound_shot.stop();
+    sound_shot.play();
+
+    setTimeout(function(){
+      bullet.visible = true ;
+    }, 120);
+
+    bullet.position.set(tank.position.x,tank.position.y+10, tank.position.z);
+    bullet.velocity = new THREE.Vector3(
+      7*Math.sin(viewfinder.rotation.z),
+      0,
+      7*Math.cos(viewfinder.rotation.z));
+
+    bullet.alive = true;
+    setTimeout(function(){
+      bullet.alive = false;
+      scene.remove(bullet);
+    }, 4000);
+
+    bullets.push(bullet);
+    scene.add(bullet);
+
+    p1fireRate = 0;
   }
 
   if(cannonfireRate === 80){
-    cannon_shoot();
+    var cannon_bullet = new THREE.Mesh(new THREE.SphereGeometry(2, 8, 6), new THREE.MeshLambertMaterial({color: 0xff0000}));
+    cannon_bullet.castShadow = false;
+    for( var i=0;i<cannons.length;i++) {
+      if (cannons[i].visible == true) {
+        cannon_bullets[i] = cannon_bullet.clone();
+        cannon_bullets[i].position.set(cann_positions[i][0], 5, cann_positions[i][2]);
+        if (cannons[i].rotation.x != -0) {
+          cannon_bullets[i].velocity = new THREE.Vector3(
+            4.5 * Math.sin(cannons[i].rotation.y),
+            0,
+            -4.5 * Math.cos(cannons[i].rotation.y));
+        }
+        else {
+          cannon_bullets[i].velocity = new THREE.Vector3(
+            4.5 * Math.sin(cannons[i].rotation.y),
+            0,
+            4.5 * Math.cos(cannons[i].rotation.y));
+        }
+        cannon_bullets[i].visible = true;
+        cannon_bullets[i].alive = true;
+
+        sound_shot.stop();
+        sound_shot.play();
+
+
+        setTimeout(function () {
+          cannon_bullets[i].alive = false;
+          scene.remove(cannon_bullets[i]);
+        }, 4000);
+        CANNON_BULLETS.push(cannon_bullets[i]);
+        scene.add(cannon_bullets[i]);
+      }
+
+      cannonfireRate = 0;
+    }
   }
 
-  controls.update();
-  stats.update();
-
-}
-
-function shoot_controls() {
   for( var j=0;j<bullets.length;j++){
     for(var z =0;z<cannons.length;z++) {
       if ( cannons[z].visible===true && bullets[j].position.x >= cannons[z].position.x - 10 && bullets[j].position.x <= cannons[z].position.x + 10 && bullets[j].position.z >= cannons[z].position.z - 10 && bullets[j].position.z <= cannons[z].position.z + 10) {
@@ -519,79 +573,20 @@ function shoot_controls() {
     }
   }
 
+  controls.update();
+  stats.update();
+
+}
+
+function shoot_controls() {
+
 }
 
 function tank_shoot() {
-  var bullet = new THREE.Mesh(new THREE.SphereGeometry(2.5, 8, 6), new THREE.MeshLambertMaterial({color: 0x0000}));
-
-  //bullet.visible = false ;
-  bullet.visible = false;
-  sound_shot.stop();
-  sound_shot.play();
-
-  setTimeout(function(){
-    bullet.visible = true ;
-  }, 120);
-
-  bullet.position.set(tank.position.x,tank.position.y+10, tank.position.z);
-  bullet.velocity = new THREE.Vector3(
-    7*Math.sin(viewfinder.rotation.z),
-    0,
-    7*Math.cos(viewfinder.rotation.z));
-
-  bullet.alive = true;
-  setTimeout(function(){
-    bullet.alive = false;
-    scene.remove(bullet);
-  }, 4000);
-
-  bullets.push(bullet);
-  scene.add(bullet);
-
-  p1fireRate = 0;
-
-  shoot_controls();
 
 }
 
 function cannon_shoot(){
-  var cannon_bullet = new THREE.Mesh(new THREE.SphereGeometry(2, 8, 6), new THREE.MeshLambertMaterial({color: 0xff0000}));
-  cannon_bullet.castShadow = false;
-  for( var i=0;i<cannons.length;i++) {
-    if (cannons[i].visible === true) {
-      cannon_bullets[i] = cannon_bullet.clone();
-      cannon_bullets[i].position.set(cann_positions[i][0], 5, cann_positions[i][2]);
-      if (cannons[i].rotation.x !== -0) {
-        cannon_bullets[i].velocity = new THREE.Vector3(
-          4.5 * Math.sin(cannons[i].rotation.y),
-          0,
-          -4.5 * Math.cos(cannons[i].rotation.y));
-      }
-      else {
-        cannon_bullets[i].velocity = new THREE.Vector3(
-          4.5 * Math.sin(cannons[i].rotation.y),
-          0,
-          4.5 * Math.cos(cannons[i].rotation.y));
-      }
-      cannon_bullets[i].visible = true;
-      cannon_bullets[i].alive = true;
-
-      sound_shot.stop();
-      sound_shot.play();
-
-
-      setTimeout(function () {
-        cannon_bullets[i].alive = false;
-        scene.remove(cannon_bullets[i]);
-      }, 4000);
-      CANNON_BULLETS.push(cannon_bullets[i]);
-      scene.add(cannon_bullets[i]);
-    }
-
-    cannonfireRate = 0;
-  }
-
-  shoot_controls();
 
 }
 

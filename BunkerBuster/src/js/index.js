@@ -207,7 +207,7 @@ function createScene(){
   groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
   groundTexture.repeat.set( 60, 60 );
 
-  const groundGeometry = new THREE.PlaneGeometry(sceneWidth*2 , sceneWidth*2, 40, 10 );
+  const groundGeometry = new THREE.PlaneGeometry(3800 , 3800, 40, 10 );
   const groundMaterial = new THREE.MeshLambertMaterial( {
     map: groundTexture,
     side: THREE.DoubleSide
@@ -317,7 +317,7 @@ function add_scenario_mesh(){
 
         for(var j=0;j<nDeadTrees;j++) {
           mesh[j] = scenario.clone();
-          mesh[j].position.x=(generate_random());
+          mesh[j].position.x = (generate_random());
           mesh[j].position.y = 0 ;
           mesh[j].position.z = (generate_random());
           mesh[j].scale.set(5, 5, 5);
@@ -695,19 +695,19 @@ function update_cannons(){
  */
 
 function render(){
-  //requestAnimationFrame(update);
-  // for(var i = 0; i<healthcubes.length;i++){
-  // healthcubes[i].rotation.x += 0.008;
-  // healthcubes[i].rotation.y += 0.012;
-  // }
-  // for(var ii = 0; ii<speedcubes.length;ii++){
-  //   speedcubes[ii].rotation.x += 0.008;
-  //   speedcubes[ii].rotation.y += 0.012;
-  // }
-  // for(var iii = 0; iii<berserkcubes.length;iii++){
-  //   berserkcubes[iii].rotation.x += 0.008;
-  //   berserkcubes[iii].rotation.y += 0.012;
-  // }
+  requestAnimationFrame(update);
+  for(var i = 0; i<healthcubes.length;i++){
+  healthcubes[i].rotation.x += 0.008;
+  healthcubes[i].rotation.y += 0.012;
+  }
+  for(var ii = 0; ii<speedcubes.length;ii++){
+    speedcubes[ii].rotation.x += 0.008;
+    speedcubes[ii].rotation.y += 0.012;
+  }
+  for(var iii = 0; iii<berserkcubes.length;iii++){
+    berserkcubes[iii].rotation.x += 0.008;
+    berserkcubes[iii].rotation.y += 0.012;
+  }
 
   renderer.render(scene, camera);//draw
 

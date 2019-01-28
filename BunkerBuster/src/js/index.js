@@ -81,6 +81,7 @@ var soundPath = "sounds/";
 var sound_shot, sound_tank_hit, sound_game_over;
 
 var health=0;
+var health_bar;
 var cube;
 var keyboard = new THREEx.KeyboardState();
 
@@ -104,7 +105,12 @@ var delta = 0.01; // seconds.
 var moveDistance = 100 * delta; //25 default
 var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
 
+var bullet;
+var cannon_bullet;
 
+var health_cube_texture;
+var speed_texture_cube;
+var berserk_texture_cube;
 /**
  * Function to start game with the play button
  */
@@ -112,6 +118,17 @@ function start_game() {
 
   init();
   animate();
+}
+
+function init_variables(){
+  bullet = new THREE.Mesh(new THREE.SphereGeometry(2.5, 8, 6), new THREE.MeshLambertMaterial({color: 0x0000}));
+  cannon_bullet = new THREE.Mesh(new THREE.SphereGeometry(2, 8, 6), new THREE.MeshLambertMaterial({color: 0xff0000}));
+  health_bar = document.getElementById("health");
+  health_cube_texture = new THREE.TextureLoader().load( 'img/health.png');
+  speed_texture_cube = new THREE.TextureLoader().load( 'img/speed.png');
+  berserk_texture_cube = new THREE.TextureLoader().load( 'img/berserk.png');
+
+
 }
 
 function init() {
@@ -153,6 +170,7 @@ function init() {
 
   tank_life = 100;
 
+  init_variables();
   add_healthcubes();
   add_speedcubes();
   add_berserkcubes();
@@ -222,7 +240,6 @@ function createScene(){
   const viewfinderMaterial = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
   viewfinder = new THREE.Mesh( viewfinderGeometry, viewfinderMaterial );
   scene.add( viewfinder );
-
 
   window.addEventListener('resize', onWindowResize, false);//resize callback
 
@@ -328,8 +345,7 @@ function add_healthcubes(){
   var random;
   random = Math.random()*20;
 
-  var Texture = new THREE.TextureLoader().load( 'img/health.png');
-  const Material = new THREE.MeshBasicMaterial( { map: Texture } );
+  const Material = new THREE.MeshBasicMaterial( { map: health_cube_texture } );
   const Geometry = new THREE.CubeGeometry(30, 30, 30);
   healthcube = new THREE.Mesh(Geometry,Material);
 
@@ -349,8 +365,7 @@ function add_speedcubes(){
   var random;
   random = Math.random()*20;
 
-  var Texture = new THREE.TextureLoader().load( 'img/speed.png');
-  const Material = new THREE.MeshBasicMaterial( { map: Texture } );
+  const Material = new THREE.MeshBasicMaterial( { map: speed_texture_cube } );
   const Geometry = new THREE.CubeGeometry(30, 30, 30);
   speedcube = new THREE.Mesh(Geometry,Material);
 
@@ -371,8 +386,7 @@ function add_berserkcubes(){
   var random;
   random = Math.random()*20;
 
-  var Texture = new THREE.TextureLoader().load( 'img/berserk.png');
-  const Material = new THREE.MeshBasicMaterial( { map: Texture } );
+  const Material = new THREE.MeshBasicMaterial( { map: berserk_texture_cube } );
   const Geometry = new THREE.CubeGeometry(30, 30, 30);
   berserkcube = new THREE.Mesh(Geometry,Material);
 
@@ -477,7 +491,7 @@ function update(){
         && keyboard.pressed("V")){
     tank_shoot();
   }
-  
+
   cannon_shoot();
   shoot_controls();
 
@@ -505,13 +519,11 @@ function shoot_controls() {
       sound_tank_hit.play();
       if(tank_life>0) {
 
-        var health = document.getElementById("health");
-        health.value -= 10;
-
+        health_bar.value -= 10;
         tank_life = tank_life - 10;
         console.log('VITA:' + tank_life);
       }
-      if (tank_life == 0){
+      if (tank_life === 0){
 
         sound_game_over.stop();
         sound_game_over.play();
@@ -521,9 +533,6 @@ function shoot_controls() {
 }
 
 function tank_shoot() {
-  var bullet = new THREE.Mesh(new THREE.SphereGeometry(2.5, 8, 6), new THREE.MeshLambertMaterial({color: 0x0000}));
-
-  //bullet.visible = false ;
   bullet.visible = false;
   sound_shot.stop();
   sound_shot.play();
@@ -553,13 +562,12 @@ function tank_shoot() {
 
 function cannon_shoot(){
   if(cannonfireRate === 80){
-    var cannon_bullet = new THREE.Mesh(new THREE.SphereGeometry(2, 8, 6), new THREE.MeshLambertMaterial({color: 0xff0000}));
     cannon_bullet.castShadow = false;
     for( var i=0;i<cannons.length;i++) {
-      if (cannons[i].visible == true) {
+      if (cannons[i].visible === true) {
         cannon_bullets[i] = cannon_bullet.clone();
         cannon_bullets[i].position.set(cann_positions[i][0], 5, cann_positions[i][2]);
-        if (cannons[i].rotation.x != -0) {
+        if (cannons[i].rotation.x !== -0) {
           cannon_bullets[i].velocity = new THREE.Vector3(
             4.5 * Math.sin(cannons[i].rotation.y),
             0,
@@ -627,7 +635,7 @@ function check_cubes() {
     if (healthcubes[i].visible === true && tank.position.x >= healthcubes[i].position.x - 8 && tank.position.x <= healthcubes[i].position.x + 8 && tank.position.z >= healthcubes[i].position.z - 8 && tank.position.z <= healthcubes[i].position.z + 8) {
       healthcubes[i].visible = false;
       tank_life += 20;
-      health += 20;
+      health_bar.value += 20;
       console.log('HEAL-> VITA: ' + tank_life);
     }
   }

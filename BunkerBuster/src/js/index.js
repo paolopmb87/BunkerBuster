@@ -475,35 +475,83 @@ function update(){
 
   if( p1fireRate === rate
         && keyboard.pressed("V")){
-    var bullet = new THREE.Mesh(new THREE.SphereGeometry(2.5, 8, 6), new THREE.MeshLambertMaterial({color: 0x0000}));
+    tank_shoot();
+  }
+  
+  cannon_shoot();
+  shoot_controls();
 
-    //bullet.visible = false ;
-    bullet.visible = false;
-    sound_shot.stop();
-    sound_shot.play();
+  controls.update();
+  stats.update();
 
-    setTimeout(function(){
-      bullet.visible = true ;
-    }, 120);
+}
 
-    bullet.position.set(tank.position.x,tank.position.y+10, tank.position.z);
-    bullet.velocity = new THREE.Vector3(
-      7*Math.sin(viewfinder.rotation.z),
-      0,
-      7*Math.cos(viewfinder.rotation.z));
-
-    bullet.alive = true;
-    setTimeout(function(){
-      bullet.alive = false;
-      scene.remove(bullet);
-    }, 4000);
-
-    bullets.push(bullet);
-    scene.add(bullet);
-
-    p1fireRate = 0;
+function shoot_controls() {
+  for( var i=0;i<bullets.length;i++){
+    for(var z =0;z<cannons.length;z++) {
+      if ( cannons[z].visible===true && bullets[i].position.x >= cannons[z].position.x - 10 && bullets[i].position.x <= cannons[z].position.x + 10 && bullets[i].position.z >= cannons[z].position.z - 10 && bullets[i].position.z <= cannons[z].position.z + 10) {
+        cannons[z].visible = false;
+        console.log( 'CANNONE ' + (z+1) + ' INVISIBILE');
+        bullets[i].visible = false;
+      }
+    }
   }
 
+  for(var y=0; y<CANNON_BULLETS.length;y++){
+    if (CANNON_BULLETS[y].position.x>=tank.position.x-10 && CANNON_BULLETS[y].position.x<=tank.position.x+10 && CANNON_BULLETS[y].position.z>=tank.position.z-10 && CANNON_BULLETS[y].position.z<=tank.position.z+10){
+      CANNON_BULLETS[y].visible=false;
+      CANNON_BULLETS.splice(y,1);
+      sound_tank_hit.stop();
+      sound_tank_hit.play();
+      if(tank_life>0) {
+
+        var health = document.getElementById("health");
+        health.value -= 10;
+
+        tank_life = tank_life - 10;
+        console.log('VITA:' + tank_life);
+      }
+      if (tank_life == 0){
+
+        sound_game_over.stop();
+        sound_game_over.play();
+      }
+    }
+  }
+}
+
+function tank_shoot() {
+  var bullet = new THREE.Mesh(new THREE.SphereGeometry(2.5, 8, 6), new THREE.MeshLambertMaterial({color: 0x0000}));
+
+  //bullet.visible = false ;
+  bullet.visible = false;
+  sound_shot.stop();
+  sound_shot.play();
+
+  setTimeout(function(){
+    bullet.visible = true ;
+  }, 120);
+
+  bullet.position.set(tank.position.x,tank.position.y+10, tank.position.z);
+  bullet.velocity = new THREE.Vector3(
+    7*Math.sin(viewfinder.rotation.z),
+    0,
+    7*Math.cos(viewfinder.rotation.z));
+
+  bullet.alive = true;
+  setTimeout(function(){
+    bullet.alive = false;
+    scene.remove(bullet);
+  }, 4000);
+
+  bullets.push(bullet);
+  scene.add(bullet);
+
+
+  p1fireRate = 0;
+}
+
+function cannon_shoot(){
   if(cannonfireRate === 80){
     var cannon_bullet = new THREE.Mesh(new THREE.SphereGeometry(2, 8, 6), new THREE.MeshLambertMaterial({color: 0xff0000}));
     cannon_bullet.castShadow = false;
@@ -526,6 +574,7 @@ function update(){
         cannon_bullets[i].visible = true;
         cannon_bullets[i].alive = true;
 
+
         sound_shot.stop();
         sound_shot.play();
 
@@ -541,53 +590,6 @@ function update(){
       cannonfireRate = 0;
     }
   }
-
-  for( var j=0;j<bullets.length;j++){
-    for(var z =0;z<cannons.length;z++) {
-      if ( cannons[z].visible===true && bullets[j].position.x >= cannons[z].position.x - 10 && bullets[j].position.x <= cannons[z].position.x + 10 && bullets[j].position.z >= cannons[z].position.z - 10 && bullets[j].position.z <= cannons[z].position.z + 10) {
-        cannons[z].visible = false;
-        console.log( 'CANNONE ' + (z+1) + ' INVISIBILE');
-        bullets[j].visible = false;
-      }
-    }
-  }
-
-  for(var y=0; y<CANNON_BULLETS.length;y++){
-    if (CANNON_BULLETS[y].position.x>=tank.position.x-10 && CANNON_BULLETS[y].position.x<=tank.position.x+10 && CANNON_BULLETS[y].position.z>=tank.position.z-10 && CANNON_BULLETS[y].position.z<=tank.position.z+10){
-      CANNON_BULLETS[y].visible=false;
-      CANNON_BULLETS.splice(y,1);
-      sound_tank_hit.stop();
-      sound_tank_hit.play();
-      if(tank_life>0) {
-
-        health -= 10;
-
-        tank_life = tank_life - 10;
-        console.log('VITA:' + tank_life);
-      }
-      if (tank_life === 0){
-
-        sound_game_over.stop();
-        sound_game_over.play();
-      }
-    }
-  }
-
-  controls.update();
-  stats.update();
-
-}
-
-function shoot_controls() {
-
-}
-
-function tank_shoot() {
-
-}
-
-function cannon_shoot(){
-
 }
 
 function update_camera(){

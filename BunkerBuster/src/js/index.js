@@ -83,6 +83,8 @@ var sound_shot, sound_tank_hit, sound_game_over;
 
 var health=0;
 var health_bar;
+var turret_health=0;
+var turret_life_bar;
 var cube;
 var keyboard = new THREEx.KeyboardState();
 
@@ -125,10 +127,10 @@ function init_variables(){
   bullet = new THREE.Mesh(new THREE.SphereGeometry(2.5, 8, 6), new THREE.MeshLambertMaterial({color: 0x0000}));
   cannon_bullet = new THREE.Mesh(new THREE.SphereGeometry(2, 8, 6), new THREE.MeshLambertMaterial({color: 0xff0000}));
   health_bar = document.getElementById("health");
+  // turret_life_bar = document.getElementById("turret-hp-id");
   health_cube_texture = new THREE.TextureLoader().load( 'img/health.png');
   speed_texture_cube = new THREE.TextureLoader().load( 'img/speed.png');
   berserk_texture_cube = new THREE.TextureLoader().load( 'img/berserk.png');
-
 
 }
 
@@ -170,6 +172,7 @@ function init() {
   cann_positions[4] =  [300,0,900];
 
   tank_life = 100;
+
 
   init_variables();
   add_healthcubes();
@@ -417,9 +420,55 @@ function addCannon() {
       scene.add(cannons[i]);
 
       cannons[i].position.set(cann_positions[i][0],cann_positions[i][1],cann_positions[i][2]);
+      addEnemyHPBar();
+
     }
   });
+
 }
+
+
+function addEnemyHPBar()
+{
+    var pos = getScreenTranslation(cannons[0]);
+    // var posx = cannons[i].position.x;
+    // var posy = cannons[i].position.y;
+    turret_life_bar = document.createElement("progress");
+    play_game_id.appendChild(turret_life_bar);
+    turret_life_bar.style.position = "absolute";
+    turret_life_bar.style.display = "block";
+    turret_life_bar.style.height = "30px";
+    turret_life_bar.style.width = "10px";
+    turret_life_bar.style.left = pos.x+"px";
+    turret_life_bar.style.top = pos.y+"px";
+
+}
+
+function getScreenTranslation (cannons) {
+
+  var vector = new THREE.Vector3();
+  var widthHalf = 0.5 * renderer.context.canvas.width;
+  var heightHalf = 0.5 * renderer.context.canvas.height;
+
+    var bbox = new THREE.BoundingBoxHelper(cannons[0], 0xB22222);
+
+    bbox.update();
+
+    bbox.updateMatrixWorld();
+    bbox.updateMatrix();
+
+    // vector.setFromMatrixPosition(bbox.matrixWorld);
+    // var projector = new THREE.Projector();
+    // projector.projectVector( vector.setFromMatrixPosition( cannons[i].matrixWorld ),  );
+    var direction = vector.applyQuaternion( cannons[0].quaternion );
+    direction.x = vector.x * widthHalf + widthHalf;
+    direction.y = -(vector.y * heightHalf) + heightHalf;
+    return {
+      x: direction.x,
+      y: direction.y
+    };
+
+};
 
 function generate_random(){
   var randomN = (Math.random() * 3801) - 1900;   //numbers between -1900 and 1900, the coordinates of the terrain
@@ -498,8 +547,8 @@ function update(){
     tank_shoot();
   }
 
-  cannon_shoot();
-  shoot_controls();
+  // cannon_shoot();
+  // shoot_controls();
 
   controls.update();
   stats.update();
@@ -696,6 +745,7 @@ function update_cannons(){
 
 function render(){
   requestAnimationFrame(update);
+
   for(var i = 0; i<healthcubes.length;i++){
   healthcubes[i].rotation.x += 0.008;
   healthcubes[i].rotation.y += 0.012;

@@ -116,7 +116,6 @@ body {
   /*margin-left: 30px;*/
 /*}*/
 
-
 #hp{
   height: 20px;
   display: block;
@@ -162,11 +161,13 @@ body {
   margin-top: 10px;
   border-radius: 2px;
   margin-bottom: 2px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+  padding-bottom: 2px;
 
 }
 progress#health::-webkit-progress-value {
   background: green;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+
 }
 
 #speed_pb_id{
@@ -177,11 +178,11 @@ progress#health::-webkit-progress-value {
   margin-top: 30px;
   border-radius: 2px;
   padding-bottom: 2px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
 }
 progress#speed_pb_id::-webkit-progress-value {
   background: deepskyblue;
   margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
 }
 
 #berserk_pb_id{
@@ -192,13 +193,27 @@ progress#speed_pb_id::-webkit-progress-value {
   margin-top: 50px;
   border-radius: 2px;
   padding-bottom: 2px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
 }
 progress#berserk_pb_id::-webkit-progress-value {
   background: red;
   margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
 }
 
+/*#turret-hp{*/
+  /*display: none;*/
+  /*height: 30px;*/
+  /*width: 30px;*/
+/*}*/
+
+/*progress#turret-hp-id::-webkit-progress-value {*/
+  /*background: red;*/
+  /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;*/
+/*}*/
+
+.progresses{
+  box-sizing: border-box;
+}
 
 #canvas{
   position: relative;

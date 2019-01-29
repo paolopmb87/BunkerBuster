@@ -126,6 +126,7 @@ body {
   background-color: green;
   font-family: Helvetica, sans-serif;
   font-size: 16px;
+  padding-bottom: 2px;
 }
 
 #speed{
@@ -137,6 +138,7 @@ body {
   background-color: blue;
   font-family: Helvetica, sans-serif;
   font-size: 16px;
+  margin-bottom: 2px;
 }
 
 #berserk{
@@ -148,15 +150,9 @@ body {
   background-color: red;
   font-family: Helvetica, sans-serif;
   font-size: 16px;
+  margin-bottom: 2px;
 }
 
-
-/*progress[value]{*/
-  /*height: 40px;*/
-  /*width: 500px;*/
-  /*border-radius: 9px;*/
-  /*margin-left: 100px;*/
-/*}*/
 
 #health{
   position: absolute;
@@ -165,8 +161,12 @@ body {
   margin-left: 100px;
   margin-top: 10px;
   border-radius: 2px;
+  margin-bottom: 2px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
-  background-color: green;
+
+}
+progress#health::-webkit-progress-value {
+  background: green;
 }
 
 #speed_pb_id{
@@ -176,8 +176,12 @@ body {
   margin-left: 100px;
   margin-top: 30px;
   border-radius: 2px;
+  padding-bottom: 2px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
-  background-color: blue;
+}
+progress#speed_pb_id::-webkit-progress-value {
+  background: deepskyblue;
+  margin-bottom: 10px;
 }
 
 #berserk_pb_id{
@@ -187,8 +191,12 @@ body {
   margin-left: 100px;
   margin-top: 50px;
   border-radius: 2px;
+  padding-bottom: 2px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
-  background-color: red;
+}
+progress#berserk_pb_id::-webkit-progress-value {
+  background: red;
+  margin-bottom: 10px;
 }
 
 

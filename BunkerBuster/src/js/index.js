@@ -61,7 +61,7 @@ var NUM_LOADED = 0;
  */
 var bullets=[];
 var CANNON_BULLETS=[];
-var cannon_bullets=[];
+var cannon_shells=[];
 
 var tank,tree,tree2,house;
 var cannon;
@@ -76,15 +76,13 @@ var Turret;
 var Turret_2;
 var rate = 90;
 var p1fireRate = rate;   //FIRE RATE
-var cannonfireRate = 80;
+var cannonsfireRate = 80;
 var viewfinder;
 var soundPath = "sounds/";
-var sound_shot, sound_tank_hit, sound_game_over;
+var sound_tank_hit, sound_game_over,sound_war, sound_cannon,backgroundMusic,sound_shot_tank;
 
 var health=0;
 var health_bar;
-var turret_health=0;
-var turret_life_bar;
 var cube;
 var keyboard = new THREEx.KeyboardState();
 
@@ -108,12 +106,14 @@ var delta = 0.01; // seconds.
 var moveDistance = 100 * delta; //25 default
 var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
 
-var bullet;
-var cannon_bullet;
+var shell;
+var cannon_shell;
 
+var nCubes;
 var health_cube_texture;
-var speed_texture_cube;
-var berserk_texture_cube;
+var speed_cube_texture;
+var berserk_cube_texture;
+
 /**
  * Function to start game with the play button
  */
@@ -124,13 +124,13 @@ function start_game() {
 }
 
 function init_variables(){
-  bullet = new THREE.Mesh(new THREE.SphereGeometry(2.5, 8, 6), new THREE.MeshLambertMaterial({color: 0x0000}));
-  cannon_bullet = new THREE.Mesh(new THREE.SphereGeometry(2, 8, 6), new THREE.MeshLambertMaterial({color: 0xff0000}));
+  shell = new THREE.Mesh(new THREE.SphereGeometry(2.5, 8, 6), new THREE.MeshLambertMaterial({color: 0x0000}));
+  cannon_shell = new THREE.Mesh(new THREE.SphereGeometry(2, 8, 6), new THREE.MeshLambertMaterial({color: 0xff0000}));
   health_bar = document.getElementById("health");
   // turret_life_bar = document.getElementById("turret-hp-id");
   health_cube_texture = new THREE.TextureLoader().load( 'img/health.png');
-  speed_texture_cube = new THREE.TextureLoader().load( 'img/speed.png');
-  berserk_texture_cube = new THREE.TextureLoader().load( 'img/berserk.png');
+  speed_cube_texture = new THREE.TextureLoader().load( 'img/speed.png');
+  berserk_cube_texture = new THREE.TextureLoader().load( 'img/berserk.png');
 
 }
 
@@ -140,9 +140,13 @@ function init() {
 
   play_game_id = document.getElementById('play_game_id');
 
-  sound_shot = new sound(soundPath + "cannon_shot.mp3");
+  sound_shot_tank = new sound(soundPath + "tank_shot.mp3");
   sound_tank_hit = new sound(soundPath + "tankhit.mp3");
-  sound_game_over = new sound(soundPath + "game_over.mp3")
+  sound_game_over = new sound(soundPath + "game_over.mp3");
+  backgroundMusic = new sound(soundPath + "background.mp3");
+  sound_war = new sound(soundPath + "sound_war.mp3");
+  sound_cannon = new sound(soundPath + "cannon_shot.mp3");
+  sound_cannon.set_volume(0.2);
   // set up the scene
   createScene();
   // CONTROLS
@@ -173,13 +177,12 @@ function init() {
 
   tank_life = 100;
 
-
   init_variables();
-  add_healthcubes();
-  add_speedcubes();
-  add_berserkcubes();
+  add_cubes();
 
 }
+
+
 
 /**
  * This function is to generate the scene light, shadow, ground
@@ -206,9 +209,10 @@ function createScene(){
 
   renderer.setSize( sceneWidth, sceneHeight );
 
-  const groundTexture = new THREE.ImageUtils.loadTexture( 'img/rocky-ground.jpg' );
+  const groundTexture = new THREE.ImageUtils.loadTexture( 'img/grass2.jpg' );
+
   groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
-  groundTexture.repeat.set( 60, 60 );
+  groundTexture.repeat.set( 10, 10 );
 
   const groundGeometry = new THREE.PlaneGeometry(3800 , 3800, 40, 10 );
   const groundMaterial = new THREE.MeshLambertMaterial( {
@@ -269,14 +273,18 @@ function sound(src) {
     this.sound.play();
   },
   this.stop = function(){
-    this.sound.pause();
-    this.sound.currentTime = 0;
-  },
+      this.sound.pause();
+      this.sound.currentTime = 0;
+    },
   this.speedUp = function(){
-    this.sound.playbackRate= 3;
-  },
+      this.sound.playbackRate= 3;
+    },
   this.pause = function () {
-    this.sound.pause();
+      this.sound.pause();
+    }
+  this.set_volume = function(vol){
+
+    this.sound.volume=vol;
   }
 }
 
@@ -307,53 +315,56 @@ function add_scenario_mesh(){
   scenario_mesh = [dead_tree_loader, trees_loader];
   var loader =[];
   var scenario;
-  var nDeadTrees = 30;
-  var nTrees2 = 30;
+  var nDeadTrees = 100;
+  var nTrees2 = 100;
 
   for(var x = 0; x< scenario_mesh.length;x++){
     loader.push(new THREE.ObjectLoader());
   }
 
-//CACTUS
+//DEAD TREES
   loader[0].load(scenario_mesh[0], function (obj) {
-        scenario = obj;
+    scenario = obj;
 
-        for(var j=0;j<nDeadTrees;j++) {
-          mesh[j] = scenario.clone();
-          mesh[j].position.x = (generate_random());
-          mesh[j].position.y = 0 ;
-          mesh[j].position.z = (generate_random());
-          mesh[j].scale.set(5, 5, 5);
-          scene.add(mesh[j]);
-        }
-      });
-//HOUSES
-  loader[1].load(scenario_mesh[1], function (obj) {
-        scenario = obj;
-
-        for(var j=nDeadTrees;j<nDeadTrees+nTrees2;j++) {
-          mesh[j] = scenario.clone();
-          mesh[j].position.x = (generate_random());
-          mesh[j].position.y = 0 ;
-          mesh[j].position.z = (generate_random());
-          mesh[j].scale.set(0.8, 0.8, 0.8);
-          scene.add(mesh[j]);
+    for(var j=0;j<nDeadTrees;j++) {
+      mesh[j] = scenario.clone();
+      mesh[j].position.x = (generate_random());
+      mesh[j].position.y = 0 ;
+      mesh[j].position.z = (generate_random());
+      mesh[j].scale.set(5, 5, 5);
+      scene.add(mesh[j]);
     }
   });
+//TREES
+  loader[1].load(scenario_mesh[1], function (obj) {
+    scenario = obj;
 
+    for(var j=nDeadTrees;j<nDeadTrees+nTrees2;j++) {
+      mesh[j] = scenario.clone();
+      mesh[j].position.x = (generate_random());
+      mesh[j].position.y = 0 ;
+      mesh[j].position.z = (generate_random());
+      mesh[j].scale.set(0.8, 0.8, 0.8);
+      scene.add(mesh[j]);
+    }
+  });
 }
 
-function add_healthcubes(){
+function add_cubes(){
+  nCubes = Math.random()*20;
+  add_healthcubes(nCubes);
+  add_speedcubes(nCubes);
+  add_berserkcubes(nCubes);
+}
 
-  var random;
-  random = Math.random()*20;
+function add_healthcubes(nCubes){
 
   const Material = new THREE.MeshBasicMaterial( { map: health_cube_texture } );
   const Geometry = new THREE.CubeGeometry(30, 30, 30);
   healthcube = new THREE.Mesh(Geometry,Material);
 
 
-  for(var i = 0; i<random; i++){
+  for(var i = 0; i<nCubes; i++){
     healthcubes[i] = healthcube.clone();
     healthcubes[i].position.set(generate_random(),8,generate_random());
     healthcubes[i].scale.set(0.4,0.4,0.4);
@@ -363,17 +374,14 @@ function add_healthcubes(){
 }
 
 
-function add_speedcubes(){
+function add_speedcubes(nCubes){
 
-  var random;
-  random = Math.random()*20;
-
-  const Material = new THREE.MeshBasicMaterial( { map: speed_texture_cube } );
+  const Material = new THREE.MeshBasicMaterial( { map: speed_cube_texture } );
   const Geometry = new THREE.CubeGeometry(30, 30, 30);
   speedcube = new THREE.Mesh(Geometry,Material);
 
 
-  for(var i = 0; i<random; i++){
+  for(var i = 0; i<nCubes; i++){
     speedcubes[i] = speedcube.clone();
     speedcubes[i].position.set(generate_random(),8,generate_random());
     speedcubes[i].scale.set(0.4,0.4,0.4);
@@ -384,24 +392,18 @@ function add_speedcubes(){
 }
 
 
-function add_berserkcubes(){
-
-  var random;
-  random = Math.random()*20;
-
-  const Material = new THREE.MeshBasicMaterial( { map: berserk_texture_cube } );
+function add_berserkcubes(nCubes){
+  const Material = new THREE.MeshBasicMaterial( { map: berserk_cube_texture } );
   const Geometry = new THREE.CubeGeometry(30, 30, 30);
   berserkcube = new THREE.Mesh(Geometry,Material);
 
 
-  for(var i = 0; i<random; i++){
+  for(var i = 0; i<nCubes; i++){
     berserkcubes[i] = berserkcube.clone();
     berserkcubes[i].position.set(generate_random(),8,generate_random());
     berserkcubes[i].scale.set(0.4,0.4,0.4);
     scene.add(berserkcubes[i]);
-
   }
-
 }
 
 function addCannon() {
@@ -420,55 +422,53 @@ function addCannon() {
       scene.add(cannons[i]);
 
       cannons[i].position.set(cann_positions[i][0],cann_positions[i][1],cann_positions[i][2]);
-      addEnemyHPBar();
-
     }
   });
-
 }
 
 
-function addEnemyHPBar()
-{
-    var pos = getScreenTranslation(cannons[0]);
-    // var posx = cannons[i].position.x;
-    // var posy = cannons[i].position.y;
-    turret_life_bar = document.createElement("progress");
-    play_game_id.appendChild(turret_life_bar);
-    turret_life_bar.style.position = "absolute";
-    turret_life_bar.style.display = "block";
-    turret_life_bar.style.height = "30px";
-    turret_life_bar.style.width = "10px";
-    turret_life_bar.style.left = pos.x+"px";
-    turret_life_bar.style.top = pos.y+"px";
 
-}
+// function addEnemyHPBar()
+// {
+//     var pos = getScreenTranslation(cannons[0]);
+//     // var posx = cannons[i].position.x;
+//     // var posy = cannons[i].position.y;
+//     turret_life_bar = document.createElement("progress");
+//     play_game_id.appendChild(turret_life_bar);
+//     turret_life_bar.style.position = "absolute";
+//     turret_life_bar.style.display = "block";
+//     turret_life_bar.style.height = "30px";
+//     turret_life_bar.style.width = "10px";
+//     turret_life_bar.style.left = pos.x+"px";
+//     turret_life_bar.style.top = pos.y+"px";
+//
+// }
 
-function getScreenTranslation (cannons) {
-
-  var vector = new THREE.Vector3();
-  var widthHalf = 0.5 * renderer.context.canvas.width;
-  var heightHalf = 0.5 * renderer.context.canvas.height;
-
-    var bbox = new THREE.BoundingBoxHelper(cannons[0], 0xB22222);
-
-    bbox.update();
-
-    bbox.updateMatrixWorld();
-    bbox.updateMatrix();
-
-    // vector.setFromMatrixPosition(bbox.matrixWorld);
-    // var projector = new THREE.Projector();
-    // projector.projectVector( vector.setFromMatrixPosition( cannons[i].matrixWorld ),  );
-    var direction = vector.applyQuaternion( cannons[0].quaternion );
-    direction.x = vector.x * widthHalf + widthHalf;
-    direction.y = -(vector.y * heightHalf) + heightHalf;
-    return {
-      x: direction.x,
-      y: direction.y
-    };
-
-};
+// function getScreenTranslation (cannons) {
+//
+//   var vector = new THREE.Vector3();
+//   var widthHalf = 0.5 * renderer.context.canvas.width;
+//   var heightHalf = 0.5 * renderer.context.canvas.height;
+//
+//     var bbox = new THREE.BoundingBoxHelper(cannons[0], 0xB22222);
+//
+//     bbox.update();
+//
+//     bbox.updateMatrixWorld();
+//     bbox.updateMatrix();
+//
+//     // vector.setFromMatrixPosition(bbox.matrixWorld);
+//     // var projector = new THREE.Projector();
+//     // projector.projectVector( vector.setFromMatrixPosition( cannons[i].matrixWorld ),  );
+//     var direction = vector.applyQuaternion( cannons[0].quaternion );
+//     direction.x = vector.x * widthHalf + widthHalf;
+//     direction.y = -(vector.y * heightHalf) + heightHalf;
+//     return {
+//       x: direction.x,
+//       y: direction.y
+//     };
+//
+// };
 
 function generate_random(){
   var randomN = (Math.random() * 3801) - 1900;   //numbers between -1900 and 1900, the coordinates of the terrain
@@ -503,11 +503,11 @@ function update(){
 
   if ( keyboard.pressed("W") ){
     if(check_Turret_Collision(0)){
-    tank.translateZ( moveDistance );
-    update_cannons();
-    update_camera();
+      tank.translateZ( moveDistance );
+      update_cannons();
+      update_camera();
     }
-   }
+  }
 
   if ( keyboard.pressed("S") ){
     if(check_Turret_Collision(1)) {
@@ -519,15 +519,15 @@ function update(){
   if ( keyboard.pressed("A") ){
     tank.rotateOnAxis( new THREE.Vector3(0,1,0), rotateAngle);
     viewfinder.rotateOnAxis( new THREE.Vector3(0,0,1), rotateAngle);
-    }
+  }
   if ( keyboard.pressed("D") ){
     tank.rotateOnAxis( new THREE.Vector3(0,1,0), -rotateAngle);
     viewfinder.rotateOnAxis( new THREE.Vector3(0,0,1), -rotateAngle);
-     }
+  }
   if ( keyboard.pressed("Q") ){
     Turret_2.rotateOnAxis( new THREE.Vector3(0,0,1), rotateAngle);
     viewfinder.rotateOnAxis( new THREE.Vector3(0,0,1), rotateAngle);
-    }
+  }
   if ( keyboard.pressed("E") ){
     Turret_2.rotateOnAxis( new THREE.Vector3(0,0,1), -rotateAngle);
     viewfinder.rotateOnAxis( new THREE.Vector3(0,0,1), -rotateAngle);}
@@ -535,21 +535,21 @@ function update(){
   rotationMatrix = new THREE.Matrix4().identity();
 
 
- /* if(keyboard.pressed("Z")){
+  /* if(keyboard.pressed("Z")){
 
-    camera.position.x = tank.position.x;
-    camera.position.z = tank.position.z ;
-    controls.target.set(tank.position.x,0,tank.position.z)
-  }*/
+     camera.position.x = tank.position.x;
+     camera.position.z = tank.position.z ;
+     controls.target.set(tank.position.x,0,tank.position.z)
+   }*/
 
-  if( p1fireRate === rate
-        && keyboard.pressed("V")){
+  if( p1fireRate === rate  && keyboard.pressed("V")){
     tank_shoot();
   }
 
-  // cannon_shoot();
-  // shoot_controls();
-
+  if(cannonsfireRate === 80){
+    cannon_shoot();
+  }
+  shoot_controls();
   controls.update();
   stats.update();
 
@@ -588,80 +588,89 @@ function shoot_controls() {
 }
 
 function tank_shoot() {
-  bullet.visible = false;
-  sound_shot.stop();
-  sound_shot.play();
+  var temp_shell = shell.clone();
+  temp_shell.visible = false;
 
   setTimeout(function(){
-    bullet.visible = true ;
+    temp_shell.visible = true ;
   }, 120);
 
-  bullet.position.set(tank.position.x,tank.position.y+10, tank.position.z);
-  bullet.velocity = new THREE.Vector3(
-    7*Math.sin(viewfinder.rotation.z),
+  temp_shell.position.set(tank.position.x,tank.position.y+10, tank.position.z);
+
+  temp_shell.velocity = new THREE.Vector3(
+    4.5*Math.sin(viewfinder.rotation.z),
     0,
-    7*Math.cos(viewfinder.rotation.z));
+    4.5*Math.cos(viewfinder.rotation.z));
 
-  bullet.alive = true;
+  console.log(temp_shell.velocity.x);
+  console.log(temp_shell.velocity.z);
+
+  temp_shell.alive = true;
+
+  sound_shot_tank.stop();
+  sound_shot_tank.play();
+
+
+  bullets.push(temp_shell);
+  scene.add(temp_shell);
+
   setTimeout(function(){
-    bullet.alive = false;
-    scene.remove(bullet);
-  }, 4000);
-
-  bullets.push(bullet);
-  scene.add(bullet);
-
+    temp_shell.alive = false;
+    scene.remove(temp_shell);
+  }, 5000);
 
   p1fireRate = 0;
 }
 
 function cannon_shoot(){
-  if(cannonfireRate === 80){
-    cannon_bullet.castShadow = false;
-    for( var i=0;i<cannons.length;i++) {
-      if (cannons[i].visible === true) {
-        cannon_bullets[i] = cannon_bullet.clone();
-        cannon_bullets[i].position.set(cann_positions[i][0], 5, cann_positions[i][2]);
-        if (cannons[i].rotation.x !== -0) {
-          cannon_bullets[i].velocity = new THREE.Vector3(
-            4.5 * Math.sin(cannons[i].rotation.y),
-            0,
-            -4.5 * Math.cos(cannons[i].rotation.y));
-        }
-        else {
-          cannon_bullets[i].velocity = new THREE.Vector3(
-            4.5 * Math.sin(cannons[i].rotation.y),
-            0,
-            4.5 * Math.cos(cannons[i].rotation.y));
-        }
-        cannon_bullets[i].visible = true;
-        cannon_bullets[i].alive = true;
 
+  cannon_shell.castShadow = false;
 
-        sound_shot.stop();
-        sound_shot.play();
-
-
-        setTimeout(function () {
-          cannon_bullets[i].alive = false;
-          scene.remove(cannon_bullets[i]);
-        }, 4000);
-        CANNON_BULLETS.push(cannon_bullets[i]);
-        scene.add(cannon_bullets[i]);
+  for( var i=0;i<cannons.length;i++) {
+    if (cannons[i].visible === true) {
+      cannon_shells[i] = cannon_shell.clone();
+      cannon_shells[i].visible = true;
+      cannon_shells[i].position.set(cann_positions[i][0], 5, cann_positions[i][2]);
+      if (cannons[i].rotation.x !== -0) {
+        cannon_shells[i].velocity = new THREE.Vector3(
+          4.5 * Math.sin(cannons[i].rotation.y),
+          0,
+          -4.5 * Math.cos(cannons[i].rotation.y));
+      }
+      else {
+        cannon_shells[i].velocity = new THREE.Vector3(
+          4.5 * Math.sin(cannons[i].rotation.y),
+          0,
+          4.5 * Math.cos(cannons[i].rotation.y));
       }
 
-      cannonfireRate = 0;
+      cannon_shells[i].alive = true;
+
+      sound_cannon.stop();
+      sound_cannon.play();
+
+      CANNON_BULLETS.push(cannon_shells[i]);
+      scene.add(cannon_shells[i]);
+      timeout(cannon_shells[i],10);   //time to die in secs
+
     }
   }
+  cannonsfireRate = 0;
+}
+
+
+function timeout(shell, time){
+  time = time*1000;
+  setTimeout(function () {
+    shell.alive = false;
+    scene.remove(shell);
+  }, time);
+
 }
 
 function update_camera(){
   camera.position.set(tank.position.x,CAMERA_HEIGHT,tank.position.z);
   controls.target.set(tank.position.x,0,tank.position.z);
-
-}
-
-function check_distance_between_tank_turret() {
 
 }
 
@@ -679,36 +688,35 @@ function check_Turret_Collision(par) {
   for (var i = 0; i < cann_positions.length; i++) {
 
     if (cannons[i].visible === true
-          && clone.position.x >= cann_positions[i][0]-5
-            && clone.position.x <= cann_positions[i][0]+5
-              && clone.position.z >= cann_positions[i][2]-5
-                && clone.position.z <= cann_positions[i][2]+5) {
+      && clone.position.x >= cann_positions[i][0]-5
+      && clone.position.x <= cann_positions[i][0]+5
+      && clone.position.z >= cann_positions[i][2]-5
+      && clone.position.z <= cann_positions[i][2]+5) {
       return false;
     }
   }
 
   if(clone.position.x>1900
-        ||clone.position.x<-1900
-          ||clone.position.z>1900
-            ||clone.position.z<-1900){
+    ||clone.position.x<-1900
+    ||clone.position.z>1900
+    ||clone.position.z<-1900){
     return false;
   }
   return true;
 }
 
 function check_cubes() {
-  for (var i = 0; i < healthcubes.length; i++) {
-    if (healthcubes[i].visible === true && tank.position.x >= healthcubes[i].position.x - 8 && tank.position.x <= healthcubes[i].position.x + 8 && tank.position.z >= healthcubes[i].position.z - 8 && tank.position.z <= healthcubes[i].position.z + 8) {
+
+  for (var i = 0; i < nCubes; i++) {
+    if (healthcubes[i].visible === true && tank.position.x >= healthcubes[i].position.x - 10 && tank.position.x <= healthcubes[i].position.x + 10 && tank.position.z >= healthcubes[i].position.z - 10 && tank.position.z <= healthcubes[i].position.z + 10) {
       healthcubes[i].visible = false;
       tank_life += 20;
       health_bar.value += 20;
       console.log('HEAL-> VITA: ' + tank_life);
     }
-  }
 
-  for (var ii = 0; ii < speedcubes.length; ii++) {
-    if (speedcubes[ii].visible === true && tank.position.x >= speedcubes[ii].position.x - 8 && tank.position.x <= speedcubes[ii].position.x + 8 && tank.position.z >= speedcubes[ii].position.z - 8 && tank.position.z <= speedcubes[ii].position.z + 8) {
-      speedcubes[ii].visible = false;
+    if (speedcubes[i].visible === true && tank.position.x >= speedcubes[i].position.x - 10 && tank.position.x <= speedcubes[i].position.x + 10 && tank.position.z >= speedcubes[i].position.z - 10 && tank.position.z <= speedcubes[i].position.z + 10) {
+      speedcubes[i].visible = false;
       console.log('SPEED UP');
       moveDistance = moveDistance * 2;
       setTimeout(function () {
@@ -716,14 +724,12 @@ function check_cubes() {
       }, 10000);
       console.log('SPEED UP IS OVER');
     }
-  }
 
-  for (var iii = 0; iii < berserkcubes.length; iii++) {
-    if (berserkcubes[iii].visible === true && tank.position.x >= berserkcubes[iii].position.x - 8 && tank.position.x <= berserkcubes[iii].position.x + 8 && tank.position.z >= berserkcubes[iii].position.z - 8 && tank.position.z <= berserkcubes[iii].position.z + 8) {
-      berserkcubes[iii].visible = false;
+    if (berserkcubes[i].visible === true && tank.position.x >= berserkcubes[i].position.x - 10 && tank.position.x <= berserkcubes[i].position.x + 10 && tank.position.z >= berserkcubes[i].position.z - 10 && tank.position.z <= berserkcubes[i].position.z + 10) {
+      berserkcubes[i].visible = false;
       console.log('BERSERK UP');
-       rate = rate / 2;
-       p1fireRate = rate;
+      rate = rate / 2;
+      p1fireRate = rate;
       setTimeout(function () {
         rate = rate * 2;
         p1fireRate = rate;
@@ -734,9 +740,8 @@ function check_cubes() {
 }
 
 function update_cannons(){
-
   for(var i =0;i<cannons.length;i++)
-  cannons[i].lookAt(tank.position.x,0,tank.position.z);
+    cannons[i].lookAt(tank.position.x,0,tank.position.z);
 }
 
 /**
@@ -744,19 +749,16 @@ function update_cannons(){
  */
 
 function render(){
+  backgroundMusic.play();
+  sound_war.play();
   requestAnimationFrame(update);
-
-  for(var i = 0; i<healthcubes.length;i++){
-  healthcubes[i].rotation.x += 0.008;
-  healthcubes[i].rotation.y += 0.012;
-  }
-  for(var ii = 0; ii<speedcubes.length;ii++){
-    speedcubes[ii].rotation.x += 0.008;
-    speedcubes[ii].rotation.y += 0.012;
-  }
-  for(var iii = 0; iii<berserkcubes.length;iii++){
-    berserkcubes[iii].rotation.x += 0.008;
-    berserkcubes[iii].rotation.y += 0.012;
+  for(var i = 0; i< nCubes;i++){
+    healthcubes[i].rotation.x += 0.008;
+    healthcubes[i].rotation.y += 0.012;
+    speedcubes[i].rotation.x += 0.008;
+    speedcubes[i].rotation.y += 0.012;
+    berserkcubes[i].rotation.x += 0.008;
+    berserkcubes[i].rotation.y += 0.012;
   }
 
   renderer.render(scene, camera);//draw
@@ -764,13 +766,17 @@ function render(){
   if (p1fireRate < rate) {
     p1fireRate++;
   }
-  if (cannonfireRate < 80) {
-    cannonfireRate++;
+  if (cannonsfireRate < 80) {
+    cannonsfireRate++;
   }
 }
 
 function animate() {
-  requestAnimationFrame( animate );
+  setTimeout( function() {
+
+    requestAnimationFrame( animate );
+
+  }, 100 / 4 );   //FPS CAPPED TO 60
   render();
   update();
 }

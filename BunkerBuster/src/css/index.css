@@ -194,6 +194,7 @@ progress#speed_pb_id::-webkit-progress-value {
   border-radius: 2px;
   padding-bottom: 2px;
 }
+
 progress#berserk_pb_id::-webkit-progress-value {
   background: red;
   margin-bottom: 10px;

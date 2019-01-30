@@ -429,44 +429,14 @@ function addCannon() {
   });
 }
 
-function addEnemyHPBar()
-{
-    var pos = getScreenTranslation(cannons[0]);
-    // var posx = cannons[i].position.x;
-    // var posy = cannons[i].position.y;
-    turret_life_bar = document.createElement("progress");
-    play_game_id.appendChild(turret_life_bar);
-    turret_life_bar.style.position = "absolute";
-    turret_life_bar.style.display = "block";
-    turret_life_bar.style.height = "30px";
-    turret_life_bar.style.width = "10px";
-    turret_life_bar.style.left = pos.x+"px";
-    turret_life_bar.style.top = pos.y+"px";
+function addEnemyHPBar() {
+  var geometry = new THREE.BoxBufferGeometry( 50, 2, 5 );
+  var material = new THREE.MeshBasicMaterial( { color: 0xff6347 } );
+  var enemy_health_bar = new THREE.Mesh( geometry, material );
+  scene.add( enemy_health_bar );
+  enemy_health_bar.position.set(260, 20, 150);
 
 }
-
-function getScreenTranslation (cannons) {
-
-  var vector = new THREE.Vector3();
-  var widthHalf = 0.5 * renderer.context.canvas.width;
-  var heightHalf = 0.5 * renderer.context.canvas.height;
-
-    var bbox = new THREE.BoundingBoxHelper(cannons[0], 0xB22222);
-
-  bbox.update();
-
-  bbox.updateMatrixWorld();
-  bbox.updateMatrix();
-
-  vector.setFromMatrixPosition(bbox.matrixWorld);
-  vector.project(camera);
-  vector.x = vector.x * widthHalf + widthHalf;
-  vector.y = -(vector.y * heightHalf) + heightHalf;
-  return {
-    x: vector.x,
-    y: vector.y
-  };
-};
 
 function generate_random(){
   var randomN = (Math.random() * 3801) - 1900;   //numbers between -1900 and 1900, the coordinates of the terrain
@@ -550,7 +520,6 @@ function update(){
   shoot_controls();
   controls.update();
   stats.update();
-
 }
 
 function shoot_controls() {
@@ -778,3 +747,6 @@ function animate() {
   render();
   update();
 }
+
+
+

@@ -63,9 +63,9 @@ var bullets=[];
 var CANNON_BULLETS=[];
 var cannon_shells=[];
 
-var tank,tree,tree2,house;
+var tank,house;
 var cannon;
-var cannons=[];
+var cannons = [];
 var cann_positions =[];
 var tank_life; //DA DECIDERE
 
@@ -83,16 +83,12 @@ var sound_tank_hit, sound_game_over,sound_war, sound_cannon,backgroundMusic,soun
 
 var health=0;
 var health_bar;
-var turret_health=0;
-var turret_life_bar;
+var enemy_health_bar = [];
 var cube;
 var keyboard = new THREEx.KeyboardState();
 
 //temp
-var tree_loader="models/trees/tree.json";
 var trees_loader="models/trees/tree2.json";
-var cannon_loader="models/cannons/cannon.json";
-var cactus_loader="models/trees/cactus.json";
 var dead_tree_loader="models/trees/dead_tree.json";
 //
 
@@ -424,17 +420,17 @@ function addCannon() {
       scene.add(cannons[i]);
 
       cannons[i].position.set(cann_positions[i][0],cann_positions[i][1],cann_positions[i][2]);
-      addEnemyHPBar();
+      addEnemyHPBar(cannons[i]);
     }
   });
 }
 
-function addEnemyHPBar() {
-  var geometry = new THREE.BoxBufferGeometry( 50, 2, 5 );
+function addEnemyHPBar(i) {
+  var geometry = new THREE.BoxBufferGeometry( 40, 2, 5 );
   var material = new THREE.MeshBasicMaterial( { color: 0xff6347 } );
-  var enemy_health_bar = new THREE.Mesh( geometry, material );
-  scene.add( enemy_health_bar );
-  enemy_health_bar.position.set(260, 20, 150);
+  enemy_health_bar[i] = new THREE.Mesh( geometry, material );
+  scene.add( enemy_health_bar[i] );
+  enemy_health_bar[i].position.set(i.position.x, 1, i.position.z - 20);
 
 }
 

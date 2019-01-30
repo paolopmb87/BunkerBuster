@@ -116,6 +116,9 @@ var health_cube_texture;
 var speed_cube_texture;
 var berserk_cube_texture;
 
+var enemy_health_bar = [];
+var enemy_health_life = [];
+
 /**
  * Function to start game with the play button
  */
@@ -424,17 +427,18 @@ function addCannon() {
       scene.add(cannons[i]);
 
       cannons[i].position.set(cann_positions[i][0],cann_positions[i][1],cann_positions[i][2]);
-      addEnemyHPBar();
+      enemy_health_life[i] = 2;   //FULL LIFE
+      addEnemyHPBar(i);
     }
   });
 }
 
-function addEnemyHPBar() {
-  var geometry = new THREE.BoxBufferGeometry( 50, 2, 5 );
-  var material = new THREE.MeshBasicMaterial( { color: 0xff6347 } );
-  var enemy_health_bar = new THREE.Mesh( geometry, material );
-  scene.add( enemy_health_bar );
-  enemy_health_bar.position.set(260, 20, 150);
+function addEnemyHPBar(pos) {
+  var geometry = new THREE.BoxBufferGeometry( 40, 2, 5 );
+  var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } ); //GREEN
+  enemy_health_bar[pos] = new THREE.Mesh( geometry, material );
+  scene.add( enemy_health_bar[pos] );
+  enemy_health_bar[pos].position.set(cannons[pos].position.x, 1, cannons[pos].position.z-20);
 
 }
 
@@ -522,18 +526,35 @@ function update(){
   stats.update();
 }
 
+var permission;
+
 function shoot_controls() {
-  for( var i=0;i<bullets.length;i++){
-    for(var z =0;z<cannons.length;z++) {
-      if ( cannons[z].visible===true && bullets[i].position.x >= cannons[z].position.x - 10 && bullets[i].position.x <= cannons[z].position.x + 10 && bullets[i].position.z >= cannons[z].position.z - 10 && bullets[i].position.z <= cannons[z].position.z + 10) {
-        cannons[z].visible = false;
-        console.log( 'CANNONE ' + (z+1) + ' INVISIBILE');
+
+  for( var i=0;i<bullets.length;i++) {
+    for (var z = 0; z < cannons.length; z++) {
+      if (bullets[i].visible === true &&  cannons[z].visible && bullets[i].position.x >= cannons[z].position.x - 10 && bullets[i].position.x <= cannons[z].position.x + 10 && bullets[i].position.z >= cannons[z].position.z - 10 && bullets[i].position.z <= cannons[z].position.z + 10) {
         bullets[i].visible = false;
+        if (  enemy_health_life[z] === 2) {
+          enemy_health_bar[z].material.color.setHex(0xffff00);   //INSERIRE GIALLO
+        }
+
+        if (  enemy_health_life[z] === 1) {
+          enemy_health_bar[z].material.color.setHex(0xff471a);   //INSERIRE ROSSO
+        }
+        if ( enemy_health_life[z] === 0) {
+         // enemy_health_life[z].remove();
+          scene.remove(enemy_health_bar[z]);
+          enemy_health_bar[z].geometry.dispose();
+          enemy_health_bar[z].material.dispose();
+          enemy_health_bar[z] = undefined;
+          cannons[z].visible = false;
+        }
+        enemy_health_life[z] -= 1;
       }
     }
   }
 
-  for(var y=0; y<CANNON_BULLETS.length;y++){
+  for(var y=0; y<CANNON_BULLETS.length;y++){     //TANK
     if (CANNON_BULLETS[y].position.x>=tank.position.x-10 && CANNON_BULLETS[y].position.x<=tank.position.x+10 && CANNON_BULLETS[y].position.z>=tank.position.z-10 && CANNON_BULLETS[y].position.z<=tank.position.z+10){
       CANNON_BULLETS[y].visible=false;
       CANNON_BULLETS.splice(y,1);

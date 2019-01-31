@@ -128,8 +128,9 @@ body {
   float: left;
   height: 25px;
   width: 70px;
-  margin-right: 20%;
+  left: 40%;
   margin-top: 0.6%;
+  margin-left: 40%;
 }
 
 #pause_div_id{

@@ -693,14 +693,15 @@ function check_Turret_Collision(par) {
   return true;
 }
 
-// function progress_left(progress_bar_left, timeleft) {
-//   var downloadTimer = setInterval(function(){
-//     progress_bar_left.value = timeleft;
-//     timeleft -= 1;
-//     if(timeleft <= 0)
-//       clearInterval(downloadTimer);
-//   }, 1000);
-// };
+function progress_left(progress_bar_left, timeleft) {
+  var downloadTimer = setInterval(function(){
+    progress_bar_left.value -= 10;
+    timeleft = progress_bar_left.value;
+    timeleft -= 1;
+    if(timeleft <= 0)
+      clearInterval(downloadTimer);
+  }, 1000);
+};
 
 function check_cubes() {
 
@@ -716,13 +717,11 @@ function check_cubes() {
       speedcubes[i].visible = false;
       console.log('SPEED UP');
       moveDistance = moveDistance * 2;
-      timeleft +=10;
-
+      speed_bar.value = 100;
+      progress_left(speed_bar,timeleft);
       setTimeout(function () {
-        speed_bar.value = timeleft;
-        timeleft -= 1;
         if(timeleft <= 0)
-          clearInterval(downloadTimer);
+          moveDistance = moveDistance / 2;
       }, 1000);
 
       console.log('SPEED UP IS OVER');
@@ -822,6 +821,5 @@ function changeImage(){
   else {
     document.getElementById("play_pause").src = "img/ResumeBTN.png";
   }
-
 
 }

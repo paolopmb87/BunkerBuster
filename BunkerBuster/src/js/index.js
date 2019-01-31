@@ -517,14 +517,6 @@ function update(){
   // rotate left/right/up/down
   rotationMatrix = new THREE.Matrix4().identity();
 
-
-  /* if(keyboard.pressed("Z")){
-
-     camera.position.x = tank.position.x;
-     camera.position.z = tank.position.z ;
-     controls.target.set(tank.position.x,0,tank.position.z)
-   }*/
-
   if( p1fireRate === rate  && keyboard.pressed("V")){
     tank_shoot();
   }
@@ -701,7 +693,7 @@ function check_Turret_Collision(par) {
   }
   return true;
 }
-
+//
 // function progress_left(progress_bar_left) {
 //   var i = progress_bar_left.value;
 //
@@ -808,12 +800,13 @@ function play_pause_game() {
   if (!isPlay) {
     document.getElementById('play_pause').innerHTML = "Pause";
     isPlay = true;
-    sound_shot_tank.play();
     backgroundMusic.play();
     sound_war.play();
     sound_cannon.play();
     animate();
+
   } else {
+
     document.getElementById('play_pause').innerHTML = "Play";
     isPlay = false;
     var id = requestAnimationFrame(animate);
@@ -824,15 +817,3 @@ function play_pause_game() {
     cancelAnimationFrame(id);
   }
 }
-
-// function restart_game() {
-//   // Boolean for Stop Animation
-//   initAnim = true;
-//   runAnim = false;
-//   theta = 0;
-//   isPlay = false;
-//   render();
-// }
-
-
-

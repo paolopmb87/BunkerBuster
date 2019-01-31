@@ -804,11 +804,24 @@ function play_pause_game() {
     document.getElementById('play_pause').innerHTML = "Play";
     isPlay = false;
     var id = requestAnimationFrame(animate);
-    sound_shot_tank.stop();
-    backgroundMusic.stop();
-    sound_war.stop();
-    sound_cannon.stop();
+    sound_shot_tank.pause();
+    backgroundMusic.pause();
+    sound_war.pause();
+    sound_cannon.pause();
     cancelAnimationFrame(id);
 
   }
+}
+
+function changeImage(){
+  if (document.getElementById("play_pause").src === "img/ResumeBTN.png"){
+    console.log('sono qui');
+    document.getElementById("play_pause").src = "img/PauseBTN.png";
+
+  }
+  else {
+    document.getElementById("play_pause").src = "img/ResumeBTN.png";
+  }
+
+
 }

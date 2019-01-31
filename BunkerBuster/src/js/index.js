@@ -83,7 +83,6 @@ var sound_tank_hit, sound_game_over,sound_war, sound_cannon,backgroundMusic,soun
 
 var health=0;
 var health_bar;
-var enemy_health_bar = [];
 var cube;
 var keyboard = new THREEx.KeyboardState();
 
@@ -97,9 +96,13 @@ var healthcubes = [];
 
 var speedcube;
 var speedcubes = [];
+var speed_bar;
 var berserkcube;
 var berserkcubes = [];
+var berserk_bar;
 
+var timeleft = 0;
+var timetotal = 0;
 var delta = 0.01; // seconds.
 var moveDistance = 100 * delta; //25 default
 var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
@@ -115,12 +118,19 @@ var berserk_cube_texture;
 var enemy_health_bar = [];
 var enemy_health_life = [];
 
+
+/**
+ * var to pause/play game
+ */
+
+var isPlay = false;
 /**
  * Function to start game with the play button
  */
 function start_game() {
 
   init();
+  isPlay = true;
   animate();
 }
 
@@ -128,6 +138,9 @@ function init_variables(){
   shell = new THREE.Mesh(new THREE.SphereGeometry(2.5, 8, 6), new THREE.MeshLambertMaterial({color: 0x0000}));
   cannon_shell = new THREE.Mesh(new THREE.SphereGeometry(2, 8, 6), new THREE.MeshLambertMaterial({color: 0xff0000}));
   health_bar = document.getElementById("health");
+  speed_bar = document.getElementById("speed_pb_id");
+  berserk_bar = document.getElementById("berserk_pb_bar");
+
   // turret_life_bar = document.getElementById("turret-hp-id");
   health_cube_texture = new THREE.TextureLoader().load( 'img/health.png');
   speed_cube_texture = new THREE.TextureLoader().load( 'img/speed.png');
@@ -137,6 +150,8 @@ function init_variables(){
 
 function init() {
   document.getElementById('play_btn_div_id').style.display='none';
+  document.getElementById('play_pause').style.display='inline-block';
+
   document.getElementById('play_game_id').style.display='block';
 
   play_game_id = document.getElementById('play_game_id');
@@ -359,7 +374,6 @@ function add_cubes(){
 }
 
 function add_healthcubes(nCubes){
-
   const Material = new THREE.MeshBasicMaterial( { map: health_cube_texture } );
   const Geometry = new THREE.CubeGeometry(30, 30, 30);
   healthcube = new THREE.Mesh(Geometry,Material);
@@ -376,7 +390,6 @@ function add_healthcubes(nCubes){
 
 
 function add_speedcubes(nCubes){
-
   const Material = new THREE.MeshBasicMaterial( { map: speed_cube_texture } );
   const Geometry = new THREE.CubeGeometry(30, 30, 30);
   speedcube = new THREE.Mesh(Geometry,Material);
@@ -391,7 +404,6 @@ function add_speedcubes(nCubes){
   }
 
 }
-
 
 function add_berserkcubes(nCubes){
   const Material = new THREE.MeshBasicMaterial( { map: berserk_cube_texture } );
@@ -524,8 +536,6 @@ function update(){
   controls.update();
   stats.update();
 }
-
-var permission;
 
 function shoot_controls() {
 
@@ -692,6 +702,20 @@ function check_Turret_Collision(par) {
   return true;
 }
 
+// function progress_left(progress_bar_left) {
+//   var i = progress_bar_left.value;
+//
+//   var counterBack = setInterval(function(){
+//     i--;
+//     if (i > 0){
+//       progress_bar_left.value = i-100;
+//     } else {
+//       clearInterval(counterBack);
+//     }
+//
+//   }, 1000);
+// };
+
 function check_cubes() {
 
   for (var i = 0; i < nCubes; i++) {
@@ -706,9 +730,15 @@ function check_cubes() {
       speedcubes[i].visible = false;
       console.log('SPEED UP');
       moveDistance = moveDistance * 2;
+
+      // progress_left(speed_bar);
+
+      // speed_bar.value += 10000;
+
       setTimeout(function () {
         moveDistance = moveDistance / 2;
       }, 10000);
+
       console.log('SPEED UP IS OVER');
     }
 
@@ -720,8 +750,10 @@ function check_cubes() {
       setTimeout(function () {
         rate = rate * 2;
         p1fireRate = rate;
+        berserk_bar.value += 20;
       }, 10000);
       console.log('BERSERK UP IS OVER');
+      berserk_bar.value -=20;
     }
   }
 }
@@ -759,14 +791,48 @@ function render(){
 }
 
 function animate() {
-  setTimeout( function() {
+  if (!isPlay) return;
 
-    requestAnimationFrame( animate );
+    setTimeout( function() {
 
-  }, 100 / 4 );   //FPS CAPPED TO 60
-  render();
-  update();
+      requestAnimationFrame( animate );
+
+    }, 100 / 4 );   //FPS CAPPED TO 60
+    render();
+    update();
+
 }
+
+function play_pause_game() {
+  // Start and Pause
+  if (!isPlay) {
+    document.getElementById('play_pause').innerHTML = "Pause";
+    isPlay = true;
+    sound_shot_tank.play();
+    backgroundMusic.play();
+    sound_war.play();
+    sound_cannon.play();
+    animate();
+  } else {
+    document.getElementById('play_pause').innerHTML = "Play";
+    isPlay = false;
+    var id = requestAnimationFrame(animate);
+    sound_shot_tank.stop();
+    backgroundMusic.stop();
+    sound_war.stop();
+    sound_cannon.stop();
+    cancelAnimationFrame(id);
+  }
+}
+
+// function restart_game() {
+//   // Boolean for Stop Animation
+//   initAnim = true;
+//   runAnim = false;
+//   theta = 0;
+//   isPlay = false;
+//   render();
+// }
 
 
 

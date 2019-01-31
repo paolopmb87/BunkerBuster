@@ -200,8 +200,6 @@ function init() {
 
 }
 
-
-
 /**
  * This function is to generate the scene light, shadow, ground
  */
@@ -710,9 +708,6 @@ function check_cubes() {
   var berserk_downloadTimer;
   var speed_downloadTimer;
 
-
-
-
   for (var i = 0; i < nCubes; i++) {
     if (healthcubes[i].visible === true && tank.position.x >= healthcubes[i].position.x - 10 && tank.position.x <= healthcubes[i].position.x + 10 && tank.position.z >= healthcubes[i].position.z - 10 && tank.position.z <= healthcubes[i].position.z + 10) {
       healthcubes[i].visible = false;
@@ -834,6 +829,7 @@ function play_pause_game() {
     backgroundMusic.play();
     sound_war.play();
     sound_cannon.play();
+    var pause_div = document.getElementById("pause_div_id").style.display = "none";
     animate();
 
   } else {
@@ -846,6 +842,7 @@ function play_pause_game() {
     sound_war.pause();
     sound_cannon.pause();
     cancelAnimationFrame(id);
+    var pause_div = document.getElementById("pause_div_id").style.display = "block";
 
   }
 }
@@ -861,4 +858,9 @@ function changeImage(){
   else {
     document.getElementById("play_pause").src = 'img/ResumeBTN.png';
   }
+}
+
+function restart_game() {
+  // Boolean for Stop Animation
+  render();
 }

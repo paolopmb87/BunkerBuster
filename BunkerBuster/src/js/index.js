@@ -117,6 +117,9 @@ var berserk_cube_texture;
 var enemy_health_bar = [];
 var enemy_health_life = [];
 
+var speed_up =false;                    //init perks values
+var berserk_up = false;
+
 
 /**
  * var to pause/play game
@@ -138,7 +141,7 @@ function init_variables(){
   cannon_shell = new THREE.Mesh(new THREE.SphereGeometry(2, 8, 6), new THREE.MeshLambertMaterial({color: 0xff0000}));
   health_bar = document.getElementById("health");
   speed_bar = document.getElementById("speed_pb_id");
-  berserk_bar = document.getElementById("berserk_pb_bar");
+  berserk_bar = document.getElementById("berserk_pb_id");
 
   // turret_life_bar = document.getElementById("turret-hp-id");
   health_cube_texture = new THREE.TextureLoader().load( 'img/health.png');
@@ -704,6 +707,11 @@ function progress_left(progress_bar_left) {
 };
 
 function check_cubes() {
+  var berserk_downloadTimer;
+  var speed_downloadTimer;
+
+
+
 
   for (var i = 0; i < nCubes; i++) {
     if (healthcubes[i].visible === true && tank.position.x >= healthcubes[i].position.x - 10 && tank.position.x <= healthcubes[i].position.x + 10 && tank.position.z >= healthcubes[i].position.z - 10 && tank.position.z <= healthcubes[i].position.z + 10) {
@@ -714,34 +722,57 @@ function check_cubes() {
     }
 
     if (speedcubes[i].visible === true && tank.position.x >= speedcubes[i].position.x - 10 && tank.position.x <= speedcubes[i].position.x + 10 && tank.position.z >= speedcubes[i].position.z - 10 && tank.position.z <= speedcubes[i].position.z + 10) {
-      speedcubes[i].visible = false;
-      console.log('SPEED UP');
-      moveDistance = moveDistance * 2;
-      speed_bar.value = 100;
-      progress_left(speed_bar);
-      setTimeout(function () {
-        if(timeleft <= 0)
-          moveDistance = moveDistance / 2;
-      }, 1000);
 
-      console.log('SPEED UP IS OVER');
+      if(speed_up ===true){
+        speed_bar.value = 100;
+        speedcubes[i].visible = false;
+      }
+
+      else if(speed_up ===false) {
+       speed_up = true;
+       speedcubes[i].visible = false;
+
+       moveDistance = moveDistance * 2;
+       console.log('SPEED UP');
+       speed_bar.value = 100;
+
+       speed_downloadTimer = setInterval(function () {
+         speed_bar.value -= 10;
+         if (speed_bar.value <= 0) {
+           clearInterval(speed_downloadTimer);
+           moveDistance = moveDistance / 2;
+           console.log('SPEED UP IS OVER');
+           speed_up = false;
+
+         }
+       }, 1000);
+     }
+
     }
 
     if (berserkcubes[i].visible === true && tank.position.x >= berserkcubes[i].position.x - 10 && tank.position.x <= berserkcubes[i].position.x + 10 && tank.position.z >= berserkcubes[i].position.z - 10 && tank.position.z <= berserkcubes[i].position.z + 10) {
-      berserkcubes[i].visible = false;
-      console.log('BERSERK UP');
-      rate = rate / 2;
-      p1fireRate = rate;
-      berserk_bar.value=100;
-      progress_left(berserk_bar);
-      setTimeout(function () {
-        if(timeleft <= 0)
-          rate = rate * 2;
-          p1fireRate = rate;
-          berserk_bar.value += 20;
-      }, 10000);
-      console.log('BERSERK UP IS OVER');
-      berserk_bar.value -=20;
+      if (berserk_up === true) {
+        berserk_bar.value = 100;
+        berserkcubes[i].visible = false;
+      }
+      else if (berserk_up === false) {
+        berserk_up = true;
+        berserkcubes[i].visible = false;
+        rate = rate / 2;
+        console.log('BERSERK UP');
+        berserk_bar.value = 100;
+        p1fireRate = rate;
+
+        berserk_downloadTimer = setInterval(function () {
+          berserk_bar.value -=10;
+          if(berserk_bar.value <= 0){
+            clearInterval(berserk_downloadTimer);
+            rate = rate * 2;
+            console.log('BERSERK UP IS OVER');
+            berserk_up = false;
+          }
+        },1000);
+      }
     }
   }
 }
@@ -756,16 +787,20 @@ function update_cannons(){
  */
 
 function render(){
+
+  var rot_x = 0.018;
+  var rot_y = 0.020;
+
   backgroundMusic.play();
   sound_war.play();
   requestAnimationFrame(update);
   for(var i = 0; i< nCubes;i++){
-    healthcubes[i].rotation.x += 0.008;
-    healthcubes[i].rotation.y += 0.012;
-    speedcubes[i].rotation.x += 0.008;
-    speedcubes[i].rotation.y += 0.012;
-    berserkcubes[i].rotation.x += 0.008;
-    berserkcubes[i].rotation.y += 0.012;
+    healthcubes[i].rotation.x += rot_x;
+    healthcubes[i].rotation.y += rot_y;
+    speedcubes[i].rotation.x += rot_x;
+    speedcubes[i].rotation.y += rot_y;
+    berserkcubes[i].rotation.x += rot_x;
+    berserkcubes[i].rotation.y += rot_y;
   }
 
   renderer.render(scene, camera);//draw
@@ -816,13 +851,14 @@ function play_pause_game() {
 }
 
 function changeImage(){
-  if (document.getElementById("play_pause").src === "img/ResumeBTN.png"){
-    console.log('sono qui');
-    document.getElementById("play_pause").src = "img/PauseBTN.png";
+  var abs_path = document.getElementById("play_pause").src;
+  var path = abs_path.substring(abs_path.lastIndexOf("/"),abs_path.length);
+  console.log(path);
 
+  if (path === '/ResumeBTN.png'){
+    document.getElementById("play_pause").src = 'img/PauseBTN.png';
   }
   else {
-    document.getElementById("play_pause").src = "img/ResumeBTN.png";
+    document.getElementById("play_pause").src = 'img/ResumeBTN.png';
   }
-
 }

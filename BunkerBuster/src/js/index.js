@@ -693,7 +693,7 @@ function check_Turret_Collision(par) {
   return true;
 }
 
-function progress_left(progress_bar_left, timeleft) {
+function progress_left(progress_bar_left) {
   var downloadTimer = setInterval(function(){
     progress_bar_left.value -= 10;
     timeleft = progress_bar_left.value;
@@ -718,7 +718,7 @@ function check_cubes() {
       console.log('SPEED UP');
       moveDistance = moveDistance * 2;
       speed_bar.value = 100;
-      progress_left(speed_bar,timeleft);
+      progress_left(speed_bar);
       setTimeout(function () {
         if(timeleft <= 0)
           moveDistance = moveDistance / 2;
@@ -732,10 +732,13 @@ function check_cubes() {
       console.log('BERSERK UP');
       rate = rate / 2;
       p1fireRate = rate;
+      berserk_bar.value=100;
+      progress_left(berserk_bar);
       setTimeout(function () {
-        rate = rate * 2;
-        p1fireRate = rate;
-        berserk_bar.value += 20;
+        if(timeleft <= 0)
+          rate = rate * 2;
+          p1fireRate = rate;
+          berserk_bar.value += 20;
       }, 10000);
       console.log('BERSERK UP IS OVER');
       berserk_bar.value -=20;

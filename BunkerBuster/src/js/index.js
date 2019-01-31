@@ -102,7 +102,6 @@ var berserkcubes = [];
 var berserk_bar;
 
 var timeleft = 0;
-var timetotal = 0;
 var delta = 0.01; // seconds.
 var moveDistance = 100 * delta; //25 default
 var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
@@ -693,18 +692,13 @@ function check_Turret_Collision(par) {
   }
   return true;
 }
-//
-// function progress_left(progress_bar_left) {
-//   var i = progress_bar_left.value;
-//
-//   var counterBack = setInterval(function(){
-//     i--;
-//     if (i > 0){
-//       progress_bar_left.value = i-100;
-//     } else {
-//       clearInterval(counterBack);
-//     }
-//
+
+// function progress_left(progress_bar_left, timeleft) {
+//   var downloadTimer = setInterval(function(){
+//     progress_bar_left.value = timeleft;
+//     timeleft -= 1;
+//     if(timeleft <= 0)
+//       clearInterval(downloadTimer);
 //   }, 1000);
 // };
 
@@ -722,14 +716,14 @@ function check_cubes() {
       speedcubes[i].visible = false;
       console.log('SPEED UP');
       moveDistance = moveDistance * 2;
-
-      // progress_left(speed_bar);
-
-      // speed_bar.value += 10000;
+      timeleft +=10;
 
       setTimeout(function () {
-        moveDistance = moveDistance / 2;
-      }, 10000);
+        speed_bar.value = timeleft;
+        timeleft -= 1;
+        if(timeleft <= 0)
+          clearInterval(downloadTimer);
+      }, 1000);
 
       console.log('SPEED UP IS OVER');
     }
@@ -815,5 +809,6 @@ function play_pause_game() {
     sound_war.stop();
     sound_cannon.stop();
     cancelAnimationFrame(id);
+
   }
 }

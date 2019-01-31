@@ -36,7 +36,7 @@ body {
   margin-left: auto;
   margin-right: auto;
   width: 100%;
-  height: 87%;
+  height: 85%;
 }
 
 #playBTN{
@@ -46,11 +46,14 @@ body {
   width: 20%;
 }
 
+  /**
+      game div
+   **/
 .play_game {
   margin-left: auto;
   margin-right: auto;
   width: 100%;
-  height: 85%;
+  height: 84%;
   display: none;
   position:relative;
 }
@@ -64,10 +67,13 @@ body {
 
 }
 
+/**
+    footer div
+ **/
 .footer {
   background-color: black;
   border-top: 2px solid red;
-  height: 13%;
+  height: 15%;
   box-sizing: border-box;
   width: auto;
   margin:auto;

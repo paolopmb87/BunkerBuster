@@ -80,7 +80,7 @@ var cannonsfireRate = 80;
 var viewfinder;
 var soundPath = "sounds/";
 var sound_tank_hit, sound_game_over,sound_war, sound_cannon,backgroundMusic,sound_shot_tank, sound_reload ;
-;
+
 
 var health=0;
 var health_bar;
@@ -101,6 +101,8 @@ var speed_bar;
 var berserkcube;
 var berserkcubes = [];
 var berserk_bar;
+var scorecube;
+var scorecubes = [];
 
 var timeleft = 0;
 var delta = 0.01; // seconds.
@@ -114,12 +116,15 @@ var nCubes;
 var health_cube_texture;
 var speed_cube_texture;
 var berserk_cube_texture;
+var score_cube_texture;
 
 var enemy_health_bar = [];
 var enemy_health_life = [];
 
 var speed_up =false;                    //init perks values
 var berserk_up = false;
+
+var SCORE = 0;
 
 
 /**
@@ -137,7 +142,7 @@ function start_game() {
   animate();
 }
 
-function init_variables(){
+function init_variables() {
   shell = new THREE.Mesh(new THREE.SphereGeometry(2.5, 8, 6), new THREE.MeshLambertMaterial({color: 0x0000}));
   cannon_shell = new THREE.Mesh(new THREE.SphereGeometry(2, 8, 6), new THREE.MeshLambertMaterial({color: 0xff0000}));
   health_bar = document.getElementById("health");
@@ -145,17 +150,17 @@ function init_variables(){
   berserk_bar = document.getElementById("berserk_pb_id");
 
   // turret_life_bar = document.getElementById("turret-hp-id");
-  health_cube_texture = new THREE.TextureLoader().load( 'img/health.png');
-  speed_cube_texture = new THREE.TextureLoader().load( 'img/speed.png');
-  berserk_cube_texture = new THREE.TextureLoader().load( 'img/berserk.png');
-
+  health_cube_texture = new THREE.TextureLoader().load('img/health.png');
+  speed_cube_texture = new THREE.TextureLoader().load('img/speed.png');
+  berserk_cube_texture = new THREE.TextureLoader().load('img/berserk.png');
+  score_cube_texture = new THREE.TextureLoader().load('img/score.png');
 }
 
 function init() {
-  document.getElementById('play_btn_div_id').style.display='none';
-  document.getElementById('play_pause').style.display='inline-block';
+  document.getElementById('play_btn_div_id').style.display = 'none';
+  document.getElementById('play_pause').style.display = 'inline-block';
 
-  document.getElementById('play_game_id').style.display='block';
+  document.getElementById('play_game_id').style.display = 'block';
 
   play_game_id = document.getElementById('play_game_id');
 
@@ -170,10 +175,11 @@ function init() {
   // set up the scene
   createScene();
   // CONTROLS
-  controls = new THREE.OrbitControls( camera, renderer.domElement );
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
   //controls.enabled = false;
 
   // STATS
+  SCORE = new component("30px", "Consolas", "black", 280, 40, "text");
   stats = new Stats();
   stats.domElement.style.position = 'absolute';
   stats.domElement.style.bottom = '0px';
@@ -182,18 +188,18 @@ function init() {
   play_game_id.appendChild(renderer.domElement);
   play_game_id.appendChild(stats.domElement);
 
-  var cubegeometry = new THREE.BoxGeometry( 10, 10, 10 );
-  var cubematerial = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-  cube = new THREE.Mesh(cubegeometry, cubematerial );
+  var cubegeometry = new THREE.BoxGeometry(10, 10, 10);
+  var cubematerial = new THREE.MeshBasicMaterial({color: 0x00ff00});
+  cube = new THREE.Mesh(cubegeometry, cubematerial);
 
   //cube.scale.set(5,7,9);
-  cube.position.set(50,5,90);
+  cube.position.set(50, 5, 90);
   scene.add(cube);
-  cann_positions[0] =  [300,0,150];
-  cann_positions[1] =  [-300,0,800];
-  cann_positions[2] =  [1000,0,350];
-  cann_positions[3] =  [-1000,0,-500];
-  cann_positions[4] =  [300,0,900];
+  cann_positions[0] = [300, 0, 150];
+  cann_positions[1] = [-300, 0, 800];
+  cann_positions[2] = [1000, 0, 350];
+  cann_positions[3] = [-1000, 0, -500];
+  cann_positions[4] = [300, 0, 900];
 
   tank_life = 100;
 
@@ -373,6 +379,7 @@ function add_cubes(){
   add_healthcubes(nCubes);
   add_speedcubes(nCubes);
   add_berserkcubes(nCubes);
+  add_scorecubes(nCubes);
 }
 
 function add_healthcubes(nCubes){
@@ -418,6 +425,20 @@ function add_berserkcubes(nCubes){
     berserkcubes[i].position.set(generate_random(),8,generate_random());
     berserkcubes[i].scale.set(0.4,0.4,0.4);
     scene.add(berserkcubes[i]);
+  }
+}
+
+function add_scorecubes(nCubes){
+  const Material = new THREE.MeshBasicMaterial( { map: score_cube_texture } );
+  const Geometry = new THREE.CubeGeometry(30, 30, 30);
+  scorecube = new THREE.Mesh(Geometry,Material);
+
+
+  for(var i = 0; i<nCubes; i++){
+    scorecubes[i] = scorecube.clone();
+    scorecubes[i].position.set(generate_random(),8,generate_random());
+    scorecubes[i].scale.set(0.4,0.4,0.4);
+    scene.add(scorecubes[i]);
   }
 }
 
@@ -746,30 +767,30 @@ function check_cubes() {
 
     if (speedcubes[i].visible === true && tank.position.x >= speedcubes[i].position.x - 10 && tank.position.x <= speedcubes[i].position.x + 10 && tank.position.z >= speedcubes[i].position.z - 10 && tank.position.z <= speedcubes[i].position.z + 10) {
 
-      if(speed_up ===true){
+      if (speed_up === true) {
         speed_bar.value = 100;
         speedcubes[i].visible = false;
       }
 
-      else if(speed_up ===false) {
-       speed_up = true;
-       speedcubes[i].visible = false;
+      else if (speed_up === false) {
+        speed_up = true;
+        speedcubes[i].visible = false;
 
-       moveDistance = moveDistance * 2;
-       console.log('SPEED UP');
-       speed_bar.value = 100;
+        moveDistance = moveDistance * 2;
+        console.log('SPEED UP');
+        speed_bar.value = 100;
 
-       speed_downloadTimer = setInterval(function () {
-         speed_bar.value -= 10;
-         if (speed_bar.value <= 0) {
-           clearInterval(speed_downloadTimer);
-           moveDistance = moveDistance / 2;
-           console.log('SPEED UP IS OVER');
-           speed_up = false;
+        speed_downloadTimer = setInterval(function () {
+          speed_bar.value -= 10;
+          if (speed_bar.value <= 0) {
+            clearInterval(speed_downloadTimer);
+            moveDistance = moveDistance / 2;
+            console.log('SPEED UP IS OVER');
+            speed_up = false;
 
-         }
-       }, 1000);
-     }
+          }
+        }, 1000);
+      }
 
     }
 
@@ -787,16 +808,27 @@ function check_cubes() {
         p1fireRate = rate;
 
         berserk_downloadTimer = setInterval(function () {
-          berserk_bar.value -=10;
-          if(berserk_bar.value <= 0){
+          berserk_bar.value -= 10;
+          if (berserk_bar.value <= 0) {
             clearInterval(berserk_downloadTimer);
             rate = rate * 2;
             console.log('BERSERK UP IS OVER');
             berserk_up = false;
           }
-        },1000);
+        }, 1000);
       }
     }
+
+    if (scorecubes[i].visible === true && tank.position.x >= scorecubes[i].position.x - 10 && tank.position.x <= scorecubes[i].position.x + 10 && tank.position.z >= scorecubes[i].position.z - 10 && tank.position.z <= scorecubes[i].position.z + 10){
+
+      scorecubes[i].visible = false;
+      console.log('Score UP');
+      SCORE += 20;
+
+
+    }
+
+
   }
 }
 
@@ -824,6 +856,8 @@ function render(){
     speedcubes[i].rotation.y += rot_y;
     berserkcubes[i].rotation.x += rot_x;
     berserkcubes[i].rotation.y += rot_y;
+    scorecubes[i].rotation.x += rot_x;
+    scorecubes[i].rotation.y += rot_y;
   }
 
   renderer.render(scene, camera);//draw

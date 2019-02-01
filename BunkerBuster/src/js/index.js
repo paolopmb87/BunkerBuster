@@ -643,6 +643,10 @@ function cannon_shoot(){
   cannon_shell.castShadow = false;
   if (tank === undefined) return;
 
+  if(tank.position.x===0
+      && tank.position.y===0
+        && tank.position.z ===0) return;
+
   for( var i=0;i<cannons.length;i++) {
     if (cannons[i].visible === true) {
       cannon_shells[i] = cannon_shell.clone();

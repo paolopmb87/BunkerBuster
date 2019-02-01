@@ -79,7 +79,8 @@ var p1fireRate = rate;   //FIRE RATE
 var cannonsfireRate = 80;
 var viewfinder;
 var soundPath = "sounds/";
-var sound_tank_hit, sound_game_over,sound_war, sound_cannon,backgroundMusic,sound_shot_tank;
+var sound_tank_hit, sound_game_over,sound_war, sound_cannon,backgroundMusic,sound_shot_tank, sound_reload ;
+;
 
 var health=0;
 var health_bar;
@@ -165,6 +166,7 @@ function init() {
   backgroundMusic = new sound(soundPath + "background.mp3");
   sound_war = new sound(soundPath + "sound_war.mp3");
   sound_cannon = new sound(soundPath + "cannon_shot.mp3");
+  sound_reload = new sound(soundPath + "reload.mp3");
   sound_cannon.set_volume(0.2);
   // set up the scene
   createScene();
@@ -454,7 +456,7 @@ function addEnemyHPBar(pos) {
 
 }
 
-function generate_random(){
+function generate_random() {
   var randomN = (Math.random() * 3801) - 1900;   //numbers between -1900 and 1900, the coordinates of the terrain
   return randomN;
 }
@@ -463,68 +465,94 @@ function generate_random(){
 /**
  * KEYBOARD - MOUSE
  */
-function update(){
+function update() {
+
+  var shot = false;
+
 
   check_cubes();
 
-  for(var index=0; index<bullets.length; index+=1){
-    if( bullets[index] === undefined ) continue;
-    if( bullets[index].alive === false ){
-      bullets.splice(index,1);
+  for (var index = 0; index < bullets.length; index += 1) {
+    if (bullets[index] === undefined) continue;
+    if (bullets[index].alive === false) {
+      bullets.splice(index, 1);
       continue;
     }
     bullets[index].position.add(bullets[index].velocity);
   }
 
-  for(var index=0; index<CANNON_BULLETS.length; index+=1){
-    if( CANNON_BULLETS[index] === undefined ) continue;
-    if( CANNON_BULLETS[index].alive === false ){
-      CANNON_BULLETS.splice(index,1);
+  for (var index = 0; index < CANNON_BULLETS.length; index += 1) {
+    if (CANNON_BULLETS[index] === undefined) continue;
+    if (CANNON_BULLETS[index].alive === false) {
+      CANNON_BULLETS.splice(index, 1);
       continue;
     }
     CANNON_BULLETS[index].position.add(CANNON_BULLETS[index].velocity);
   }
 
-  if ( keyboard.pressed("W") ){
-    if(check_Turret_Collision(0)){
-      tank.translateZ( moveDistance );
+  if (keyboard.pressed("W")) {
+    if (check_Turret_Collision(0)) {
+      tank.translateZ(moveDistance);
       update_cannons();
       update_camera();
     }
   }
 
-  if ( keyboard.pressed("S") ){
-    if(check_Turret_Collision(1)) {
-      tank.translateZ(-moveDistance/2);
+  if (keyboard.pressed("S")) {
+    if (check_Turret_Collision(1)) {
+      tank.translateZ(-moveDistance / 2);
       update_cannons();
       update_camera();
     }
   }
-  if ( keyboard.pressed("A") ){
-    tank.rotateOnAxis( new THREE.Vector3(0,1,0), rotateAngle);
-    viewfinder.rotateOnAxis( new THREE.Vector3(0,0,1), rotateAngle);
+  if (keyboard.pressed("A")) {
+    tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), rotateAngle);
+    viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
   }
-  if ( keyboard.pressed("D") ){
-    tank.rotateOnAxis( new THREE.Vector3(0,1,0), -rotateAngle);
-    viewfinder.rotateOnAxis( new THREE.Vector3(0,0,1), -rotateAngle);
+  if (keyboard.pressed("D")) {
+    tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), -rotateAngle);
+    viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
   }
-  if ( keyboard.pressed("Q") ){
-    Turret_2.rotateOnAxis( new THREE.Vector3(0,0,1), rotateAngle);
-    viewfinder.rotateOnAxis( new THREE.Vector3(0,0,1), rotateAngle);
+  if (keyboard.pressed("Q")) {
+    Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
+    viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
   }
-  if ( keyboard.pressed("E") ){
-    Turret_2.rotateOnAxis( new THREE.Vector3(0,0,1), -rotateAngle);
-    viewfinder.rotateOnAxis( new THREE.Vector3(0,0,1), -rotateAngle);}
+  if (keyboard.pressed("E")) {
+    Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
+    viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
+  }
   // rotate left/right/up/down
   rotationMatrix = new THREE.Matrix4().identity();
 
-  if( p1fireRate === rate  && keyboard.pressed("V")){
-    tank_shoot();
+  document.addEventListener("keydown", onDocumentKeyDown, false);
+
+  function onDocumentKeyDown(event) {
+    var keyCode = event.which;
+    if (keyCode === 86 && p1fireRate !== rate && shot) {
+      sound_reload.play();
+    }
+
+    else if (keyCode === 86 && p1fireRate === rate && !shot) {
+      //sound_reload.stop();
+      sound_reload.stop();
+      tank_shoot();
+      shot = true;
+    }
   }
 
-  if(cannonsfireRate === 80){
+  shot = false;
+
+  /*
+  if( p1fireRate === rate  && keyboard.pressed("V")){
+    sound_reload.stop();
+    tank_shoot();
+  }
+  else if (p1fireRate !== rate  && keyboard.pressed("V")) sound_reload.play();*/
+
+  if (cannonsfireRate === 80) {
     cannon_shoot();
   }
+
   shoot_controls();
   controls.update();
   stats.update();
@@ -881,6 +909,7 @@ function mute_unmute_game(val){
     backgroundMusic.set_volume(0);
     sound_war.set_volume(0);
     sound_cannon.set_volume(0);
+    sound_reload.set_volume(0);
   }
   else{
     sound_shot_tank.set_volume(1);
@@ -888,6 +917,7 @@ function mute_unmute_game(val){
     sound_game_over.set_volume(1);
     backgroundMusic.set_volume(1);
     sound_war.set_volume(1);
+    sound_reload.set_volume(1);
     sound_cannon.set_volume(0.2);
 
   }

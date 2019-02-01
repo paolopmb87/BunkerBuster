@@ -120,7 +120,7 @@ var enemy_health_life = [];
 var speed_up =false;                    //init perks values
 var berserk_up = false;
 
-
+var canvas;
 /**
  * var to pause/play game
  */
@@ -148,6 +148,7 @@ function init_variables(){
   speed_cube_texture = new THREE.TextureLoader().load( 'img/speed.png');
   berserk_cube_texture = new THREE.TextureLoader().load( 'img/berserk.png');
 
+  canvas = document.getElementsByTagName("canvas")[0].setAttribute("id", "canvas_id");
 }
 
 function init() {
@@ -568,9 +569,7 @@ function shoot_controls() {
         console.log('VITA:' + tank_life);
       }
       if (tank_life === 0){
-
-        sound_game_over.stop();
-        sound_game_over.play();
+        game_over();
       }
     }
   }
@@ -842,8 +841,8 @@ function play_pause_game() {
     sound_war.pause();
     sound_cannon.pause();
     cancelAnimationFrame(id);
-    var pause_div = document.getElementById("pause_div_id").style.display = "block";
-
+    document.getElementById("pause_div_id").style.display = "block";
+    document.getElementById("restart_game_div_id").style.display = "block";
   }
 }
 
@@ -861,6 +860,21 @@ function changeImage(){
 }
 
 function restart_game() {
-  // Boolean for Stop Animation
-  render();
+  var txt;
+  isPlay = false;
+  if (confirm("Are you sure?")) {
+    //"You pressed OK!";
+    window.location.reload();
+  } else {
+    txt = "You pressed Cancel!";
+    isPlay = true;
+  }
+  document.getElementById("alert").innerHTML = txt;
+}
+
+function game_over(){
+  isPlay = false;
+  document.getElementById("game_over_div_id").style.display = "block";
+  sound_game_over.stop();
+  sound_game_over.play();
 }

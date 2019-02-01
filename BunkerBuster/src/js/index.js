@@ -13,7 +13,7 @@
   };
   fps.src='//rawgit.com/mrdoob/stats.js/master/build/stats.min.js';
   document.head.appendChild(fps);
-})()
+})
 
 /**
  * Management of window size
@@ -125,8 +125,6 @@ var speed_up =false;                    //init perks values
 var berserk_up = false;
 
 var SCORE = 0;
-
-
 /**
  * var to pause/play game
  */
@@ -179,7 +177,6 @@ function init() {
   //controls.enabled = false;
 
   // STATS
-  SCORE = new component("30px", "Consolas", "black", 280, 40, "text");
   stats = new Stats();
   stats.domElement.style.position = 'absolute';
   stats.domElement.style.bottom = '0px';
@@ -487,6 +484,8 @@ function generate_random() {
  */
 function update() {
 
+  document.getElementById('score').innerHTML = "Score: " + SCORE;
+
   var shot = false;
 
 
@@ -586,10 +585,12 @@ function shoot_controls() {
         bullets[i].visible = false;
         if (  enemy_health_life[z] === 2) {
           enemy_health_bar[z].material.color.setHex(0xffff00);   //INSERIRE GIALLO
+          SCORE += 10;
         }
 
         if (  enemy_health_life[z] === 1) {
           enemy_health_bar[z].material.color.setHex(0xff471a);   //INSERIRE ROSSO
+          SCORE += 10;
         }
         if ( enemy_health_life[z] === 0) {
          // enemy_health_life[z].remove();
@@ -598,6 +599,7 @@ function shoot_controls() {
           enemy_health_bar[z].material.dispose();
           enemy_health_bar[z] = undefined;
           cannons[z].visible = false;
+          SCORE += 30;
         }
         enemy_health_life[z] -= 1;
       }
@@ -962,3 +964,4 @@ function restart_game() {
   // Boolean for Stop Animation
   render();
 }
+

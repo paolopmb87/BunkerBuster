@@ -54,7 +54,7 @@ body {
   margin-left: auto;
   margin-right: auto;
   width: 100%;
-  height: 87.5%;
+  height: 88.7%;
   display: none;
   position:relative;
   border-top: 2px solid red;
@@ -68,6 +68,22 @@ body {
   width: auto;
   margin:auto;
   position:relative;
+
+}
+
+#mute_unmute_div_id{
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100px;
+}
+
+#mute_unmute{
+  float: right;
+  height: 100px;
+  width: 100px;
+  margin-right: 10px;
+  background-color: whitesmoke;
 
 }
 
@@ -283,3 +299,4 @@ progress#berserk_pb_id::-webkit-progress-value {
 #canvas{
   position: relative;
 }
+

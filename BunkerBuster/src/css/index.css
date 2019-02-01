@@ -87,6 +87,20 @@ body {
 
 }
 
+#score {
+  display: block;
+  position: absolute;
+  font-weight: bold;
+  color: black;
+  font-size: 20px;
+  background-color: whitesmoke;
+  z-index: 100;
+  float:right;
+  height: 30px;
+  width: 100px;
+  margin-left: 90%;
+}
+
 /**
     footer div
  **/
@@ -300,13 +314,3 @@ progress#berserk_pb_id::-webkit-progress-value {
   position: relative;
 }
 
-#score
-{
-  font-weight: bold;
-  color: black;
-  font-size: 25px;
-  position: absolute;
-  top: 8.5%;
-  left:90%;
-  z-index: 100;
-}

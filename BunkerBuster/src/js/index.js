@@ -50,7 +50,6 @@ var scenario_mesh = [];
 var mesh = [];
 
 var TANK_LOADED = false;
-var MESH_LOADED = false;
 var NUM_LOADED = 0;
 
 // var dom;
@@ -118,7 +117,7 @@ var berserk_cube_texture;
 var enemy_health_bar = [];
 var enemy_health_life = [];
 
-var speed_up =false;                    //init perks values
+var speed_up = false;                    //init perks values
 var berserk_up = false;
 
 var canvas;
@@ -641,11 +640,13 @@ function tank_shoot() {
 function cannon_shoot(){
 
   cannon_shell.castShadow = false;
-  if (tank === undefined) return;
+  if (tank === undefined)
+    return;
 
   if(tank.position.x===0
       && tank.position.y===0
-        && tank.position.z ===0) return;
+        && tank.position.z ===0)
+    return;
 
   for( var i=0;i<cannons.length;i++) {
     if (cannons[i].visible === true) {
@@ -902,7 +903,7 @@ function mute_unmute_game(val){
   if (val ===2){
     sound_shot_tank.set_volume(0);
     sound_tank_hit.set_volume(0);
-    sound_game_over.set_volume(0);
+    // sound_game_over.set_volume(0);
     backgroundMusic.set_volume(0);
     sound_war.set_volume(0);
     sound_cannon.set_volume(0);
@@ -931,7 +932,7 @@ function restart_game() {
     canvas_id.remove();
     start_game();
   } else {
-    txt = "You pressed Cancel!";
+    //"You pressed Cancel!";
     isPlay = true;
   }
 }
@@ -939,8 +940,19 @@ function restart_game() {
 function game_over(){
   isPlay = false;
   document.getElementById("game_over_div_id").style.display = "block";
-  sound_game_over.stop();
+  // sound_game_over.stop();
   sound_game_over.play();
+  health_bar.value=100;
+  berserk_bar.value=0;
+  speed_bar.value=0;
+  enemy_health_bar = [];
+  enemy_health_life = [];
+  cannons = [];
+  bullets=[];
+  CANNON_BULLETS = [];
+  cann_positions = [];
+  mute_unmute_game(2);
+
 }
 
 function restart_game_after_gameover() {
@@ -948,5 +960,5 @@ function restart_game_after_gameover() {
   var canvas_id = document.getElementById("canvas_id");
   canvas_id.remove();
   start_game();
-}
 
+}

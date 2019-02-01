@@ -846,16 +846,50 @@ function play_pause_game() {
   }
 }
 
-function changeImage(){
-  var abs_path = document.getElementById("play_pause").src;
-  var path = abs_path.substring(abs_path.lastIndexOf("/"),abs_path.length);
-  console.log(path);
+function changeImage(ID){
+  if(ID ===1) {
+    var abs_path1 = document.getElementById("play_pause").src;
+    var path1 = abs_path1.substring(abs_path1.lastIndexOf("/"), abs_path1.length);
 
-  if (path === '/ResumeBTN.png'){
-    document.getElementById("play_pause").src = 'img/PauseBTN.png';
+    if (path1 === '/ResumeBTN.png') {
+      document.getElementById("play_pause").src = 'img/PauseBTN.png';
+    }
+    else {
+      document.getElementById("play_pause").src = 'img/ResumeBTN.png';
+    }
   }
-  else {
-    document.getElementById("play_pause").src = 'img/ResumeBTN.png';
+  if (ID === 2){
+
+    var abs_path2 = document.getElementById("mute_unmute").src;
+    var path2 = abs_path2.substring(abs_path2.lastIndexOf("/"), abs_path2.length);
+    if (path2 === '/UnmuteBTN.png') {
+      mute_unmute_game(1);
+      document.getElementById("mute_unmute").src = 'img/MuteBTN.png';
+    }
+    else {
+      mute_unmute_game(2);
+      document.getElementById("mute_unmute").src = 'img/UnmuteBTN.png';
+    }
+  }
+}
+
+function mute_unmute_game(val){
+  if (val ===2){
+    sound_shot_tank.set_volume(0);
+    sound_tank_hit.set_volume(0);
+    sound_game_over.set_volume(0);
+    backgroundMusic.set_volume(0);
+    sound_war.set_volume(0);
+    sound_cannon.set_volume(0);
+  }
+  else{
+    sound_shot_tank.set_volume(1);
+    sound_tank_hit.set_volume(1);
+    sound_game_over.set_volume(1);
+    backgroundMusic.set_volume(1);
+    sound_war.set_volume(1);
+    sound_cannon.set_volume(0.2);
+
   }
 }
 

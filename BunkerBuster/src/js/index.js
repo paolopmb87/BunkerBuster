@@ -641,6 +641,7 @@ function tank_shoot() {
 function cannon_shoot(){
 
   cannon_shell.castShadow = false;
+  if (tank === undefined) return;
 
   for( var i=0;i<cannons.length;i++) {
     if (cannons[i].visible === true) {
@@ -721,19 +722,11 @@ function check_Turret_Collision(par) {
   return true;
 }
 
-function progress_left(progress_bar_left) {
-  var downloadTimer = setInterval(function(){
-    progress_bar_left.value -= 10;
-    timeleft = progress_bar_left.value;
-    timeleft -= 1;
-    if(timeleft <= 0)
-      clearInterval(downloadTimer);
-  }, 1000);
-};
-
 function check_cubes() {
   var berserk_downloadTimer;
   var speed_downloadTimer;
+
+  if(tank === undefined) return;
 
   for (var i = 0; i < nCubes; i++) {
     if (healthcubes[i].visible === true && tank.position.x >= healthcubes[i].position.x - 10 && tank.position.x <= healthcubes[i].position.x + 10 && tank.position.z >= healthcubes[i].position.z - 10 && tank.position.z <= healthcubes[i].position.z + 10) {
@@ -928,17 +921,15 @@ function restart_game() {
   isPlay = false;
   if (confirm("Are you sure?")) {
     //"You pressed OK!";
-    location.reload();
-    // let wrap = document.getElementById("wrap_div");
-    // wrap.append('<div class="play_game" id="play_game_id">');
-
+    // location.reload();
+    document.getElementById("pause_div_id").style.display = "none";
+    var canvas_id = document.getElementById("canvas_id");
+    canvas_id.remove();
+    start_game();
   } else {
     txt = "You pressed Cancel!";
     isPlay = true;
   }
-  // document.getElementById("alert").innerHTML = txt;
-
-
 }
 
 function game_over(){
@@ -949,5 +940,9 @@ function game_over(){
 }
 
 function restart_game_after_gameover() {
-  location.reload();
+  document.getElementById("game_over_div_id").style.display = "none";
+  var canvas_id = document.getElementById("canvas_id");
+  canvas_id.remove();
+  start_game();
 }
+

@@ -898,12 +898,17 @@ function restart_game() {
   isPlay = false;
   if (confirm("Are you sure?")) {
     //"You pressed OK!";
-    window.location.reload();
+    location.reload();
+    // let wrap = document.getElementById("wrap_div");
+    // wrap.append('<div class="play_game" id="play_game_id">');
+
   } else {
     txt = "You pressed Cancel!";
     isPlay = true;
   }
-  document.getElementById("alert").innerHTML = txt;
+  // document.getElementById("alert").innerHTML = txt;
+
+
 }
 
 function game_over(){
@@ -911,4 +916,8 @@ function game_over(){
   document.getElementById("game_over_div_id").style.display = "block";
   sound_game_over.stop();
   sound_game_over.play();
+}
+
+function restart_game_after_gameover() {
+  location.reload();
 }

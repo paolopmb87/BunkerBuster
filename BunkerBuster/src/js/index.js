@@ -1003,7 +1003,3 @@ function restart_game_after_gameover() {
   mute_unmute_game(1);
 
 }
-
-function setHighScore() {
-  
-}

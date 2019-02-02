@@ -3,7 +3,7 @@
 # Useful .gitignore templates: https://github.com/github/gitignore
 
 ./.idea
-./github
+./.github
 ./editorconfig
 ./gitattributes
 ./CHANGELOG.md

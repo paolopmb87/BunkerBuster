@@ -1000,4 +1000,3 @@ function restart_game_after_gameover() {
   start_game();
 
 }
-

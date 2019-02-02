@@ -1,19 +1,19 @@
 /**
  * Fps management
  */
-(function(){
-  var fps=document.createElement('fps');
-  fps.onload=function (){
-    var wp = new Stats();
-    document.body.appendChild(wp.dom);
-    requestAnimationFrame(function loop() {
-      wp.update();
-      requestAnimationFrame(loop)
-    });
-  };
-  fps.src='//rawgit.com/mrdoob/stats.js/master/build/stats.min.js';
-  document.head.appendChild(fps);
-})
+// (function(){
+//   var fps=document.createElement('fps');
+//   fps.onload=function (){
+//     var wp = new Stats();
+//     document.body.appendChild(wp.dom);
+//     requestAnimationFrame(function loop() {
+//       wp.update();
+//       requestAnimationFrame(loop)
+//     });
+//   };
+//   fps.src='//rawgit.com/mrdoob/stats.js/master/build/stats.min.js';
+//   document.head.appendChild(fps);
+// })
 
 /**
  * Management of window size
@@ -938,7 +938,7 @@ function changeImage(ID){
 }
 
 function mute_unmute_game(val){
-  if (val ===2){
+  if (val === 2){
     sound_shot_tank.set_volume(0);
     sound_tank_hit.set_volume(0);
     // sound_game_over.set_volume(0);
@@ -989,6 +989,8 @@ function game_over(){
   bullets=[];
   CANNON_BULLETS = [];
   cann_positions = [];
+  var id = requestAnimationFrame(animate);
+  cancelAnimationFrame(id);
   mute_unmute_game(2);
 
 }
@@ -998,6 +1000,10 @@ function restart_game_after_gameover() {
   var canvas_id = document.getElementById("canvas_id");
   canvas_id.remove();
   start_game();
+  mute_unmute_game(1);
 
 }
 
+function setHighScore() {
+  
+}

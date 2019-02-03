@@ -313,7 +313,7 @@ game_over_restart_game_btn_id{
 
 }
 progress#health::-webkit-progress-value {
-  background: green;
+  background: #109b8b;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
 
 }
@@ -328,7 +328,7 @@ progress#health::-webkit-progress-value {
   padding-bottom: 2px;
 }
 progress#speed_pb_id::-webkit-progress-value {
-  background: deepskyblue;
+  background: #fbff1e;
   margin-bottom: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
 }
@@ -344,7 +344,7 @@ progress#speed_pb_id::-webkit-progress-value {
 }
 
 progress#berserk_pb_id::-webkit-progress-value {
-  background: red;
+  background: #9fa196;
   margin-bottom: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
 }

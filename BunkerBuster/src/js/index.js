@@ -30,7 +30,7 @@ function onWindowResize() {
 /**
  * Variables declaration
  */
-var VIEW_ANGLE = 90, NEAR = 0.1, FAR = 1000,CAMERA_HEIGHT = 300,NUM_TURRETS = 5;
+var VIEW_ANGLE = 90, NEAR = 0.1, FAR = 1000,CAMERA_HEIGHT = 250,NUM_TURRETS = 5;
 
 var camera;
 var scene;
@@ -78,7 +78,8 @@ var p1fireRate = rate;   //FIRE RATE
 var cannonsfireRate = 80;
 var viewfinder;
 var soundPath = "sounds/";
-var sound_tank_hit, sound_game_over,sound_war, sound_cannon,backgroundMusic,sound_shot_tank, sound_reload ;
+var sound_tank_hit, sound_game_over,explosion,sound_war,power_up, sound_cannon,backgroundMusic,
+  sound_shot_tank, sound_reload, cann_explosion,hit_on_cannnon ;
 
 
 var health=0;
@@ -166,11 +167,15 @@ function init() {
 
   sound_shot_tank = new sound(soundPath + "tank_shot.mp3");
   sound_tank_hit = new sound(soundPath + "tankhit.mp3");
-  sound_game_over = new sound(soundPath + "game_over.mp3");
+//  sound_game_over = new sound(soundPath + "game_over.mp3");
+  explosion = new sound(soundPath+"grenade.mp3");
   backgroundMusic = new sound(soundPath + "background.mp3");
   sound_war = new sound(soundPath + "sound_war.mp3");
   sound_cannon = new sound(soundPath + "cannon_shot.mp3");
   sound_reload = new sound(soundPath + "reload.mp3");
+  power_up = new sound(soundPath + "powerup.mp3");
+  cann_explosion = new sound(soundPath + "cannon_explosion.mp3");
+  hit_on_cannnon = new sound(soundPath+ "hit_on_cannon.mp3");
   sound_cannon.set_volume(0.2);
   // set up the scene
   createScene();
@@ -587,11 +592,13 @@ function shoot_controls() {
         bullets[i].visible = false;
         if (  enemy_health_life[z] === 2) {
           enemy_health_bar[z].material.color.setHex(0xffff00);   //INSERIRE GIALLO
+          hit_on_cannnon.play();
           SCORE += 10;
         }
 
         if (  enemy_health_life[z] === 1) {
           enemy_health_bar[z].material.color.setHex(0xff471a);   //INSERIRE ROSSO
+          hit_on_cannnon.play();
           SCORE += 10;
         }
         if ( enemy_health_life[z] === 0) {
@@ -601,6 +608,8 @@ function shoot_controls() {
           enemy_health_bar[z].material.dispose();
           enemy_health_bar[z] = undefined;
           cannons[z].visible = false;
+          cann_explosion.play();
+
           SCORE += 30;
         }
         enemy_health_life[z] -= 1;
@@ -761,6 +770,7 @@ function check_cubes() {
   for (var i = 0; i < nCubes; i++) {
     if (healthcubes[i].visible === true && tank.position.x >= healthcubes[i].position.x - 10 && tank.position.x <= healthcubes[i].position.x + 10 && tank.position.z >= healthcubes[i].position.z - 10 && tank.position.z <= healthcubes[i].position.z + 10) {
       healthcubes[i].visible = false;
+      power_up.play();
       tank_life += 20;
       health_bar.value += 20;
       console.log('HEAL-> VITA: ' + tank_life);
@@ -771,11 +781,13 @@ function check_cubes() {
       if (speed_up === true) {
         speed_bar.value = 100;
         speedcubes[i].visible = false;
+        power_up.play();
       }
 
       else if (speed_up === false) {
         speed_up = true;
         speedcubes[i].visible = false;
+        power_up.play();
 
         moveDistance = moveDistance * 2;
         console.log('SPEED UP');
@@ -799,10 +811,12 @@ function check_cubes() {
       if (berserk_up === true) {
         berserk_bar.value = 100;
         berserkcubes[i].visible = false;
+        power_up.play();
       }
       else if (berserk_up === false) {
         berserk_up = true;
         berserkcubes[i].visible = false;
+        power_up.play();
         rate = rate / 2;
         console.log('BERSERK UP');
         berserk_bar.value = 100;
@@ -823,6 +837,7 @@ function check_cubes() {
     if (scorecubes[i].visible === true && tank.position.x >= scorecubes[i].position.x - 10 && tank.position.x <= scorecubes[i].position.x + 10 && tank.position.z >= scorecubes[i].position.z - 10 && tank.position.z <= scorecubes[i].position.z + 10){
 
       scorecubes[i].visible = false;
+      power_up.play();
       console.log('Score UP');
       SCORE += 20;
 
@@ -939,20 +954,22 @@ function mute_unmute_game(val){
   if (val === 2){
     sound_shot_tank.set_volume(0);
     sound_tank_hit.set_volume(0);
-    // sound_game_over.set_volume(0);
     backgroundMusic.set_volume(0);
     sound_war.set_volume(0);
     sound_cannon.set_volume(0);
     sound_reload.set_volume(0);
+    cann_explosion.set_volume(0);
   }
   else{
     sound_shot_tank.set_volume(1);
     sound_tank_hit.set_volume(1);
-    sound_game_over.set_volume(1);
+  //  sound_game_over.set_volume(1);
+    explosion.set_volume(1);
     backgroundMusic.set_volume(1);
     sound_war.set_volume(1);
     sound_reload.set_volume(1);
     sound_cannon.set_volume(0.2);
+    cann_explosion.set_volume(1);
 
   }
 }
@@ -967,6 +984,10 @@ function restart_game() {
     document.getElementById("play_pause").src = 'img/PauseBTN.png';
     var canvas_id = document.getElementById("canvas_id");
     canvas_id.remove();
+    health_bar.value = 100;
+    tank_life = 100;
+    berserk_bar.value = 0;
+    speed_bar.value=0
     start_game();
   } else {
     //"You pressed Cancel!";
@@ -977,8 +998,9 @@ function restart_game() {
 function game_over(){
   isPlay = false;
   document.getElementById("game_over_div_id").style.display = "block";
-  // sound_game_over.stop();
-  sound_game_over.play();
+
+  //sound_game_over.play();
+  explosion.play();
   health_bar.value=100;
   berserk_bar.value=0;
   speed_bar.value=0;
@@ -988,6 +1010,7 @@ function game_over(){
   bullets=[];
   CANNON_BULLETS = [];
   cann_positions = [];
+  SCORE = 0;
   var id = requestAnimationFrame(animate);
   cancelAnimationFrame(id);
   mute_unmute_game(2);

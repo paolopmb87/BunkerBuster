@@ -53,32 +53,47 @@
       <img id="playBTN" src="img/PlayBTN.png" onclick="start_game()">
     </div>
 
+
+
+
     <div class="play_game" id="play_game_id">
       <div class="progresses">
-        <span class="Progress-Label" id="hp">HP:</span>
+        <span class="Progress-Label" id="hp" ></span>
           <progress id="health" value="100" max="100"></progress>
-        <span class="Progress-Label" id="speed">Speed:</span>
+        <span class="Progress-Label" id="speed"></span>
           <progress id="speed_pb_id" value="0" max="100"></progress>
-        <span class="Progress-Label" id="berserk">Berserk:</span>
+        <span class="Progress-Label" id="berserk"></span>
           <progress id="berserk_pb_id" value="0" max="100"></progress>
       </div>
+
+
+      <div id="HLT_id">
+        <img id="HLT_IMG" src="img/health.png" style="width:18px;height:18px;">
+      </div>
+      <div id="SPEED_id">
+        <img id="SPEED_IMG" src="img/speed.png" style="width:18px;height:18px;">
+      </div>
+      <div id="BRSK_id">
+        <img id="BRSK_IMG" src="img/berserk.png" style="width:18px;height:18px;">
+      </div>
+
+      <div id= "score"></div>
+
 
       <div id="mute_unmute_div_id">
         <img id="mute_unmute" src="img/MuteBTN.png" style="width:30px;height:30px;" onclick="changeImage(2)">
       </div>
 
-      <div id= "score"></div>
-
       <div class="pause_div" id="pause_div_id">PAUSE
         <div id="restart_game_div_id">
-          <img id="restart_game_btn_id" src="img/reset_buttonIMG.png" style="width:100px;height:100px;" onclick="restart_game();" >
+          <img id="restart_game_btn_id" src="img/reset_buttonIMG.png" style="width:8%;height:8%;" onclick="restart_game();" >
           <p id="alert"></p>
         </div>
       </div>
 
       <div class="game_over_div" id="game_over_div_id">GAME OVER
         <div>
-          <img id="game_over_restart_game_btn_id" src="img/reset_buttonIMG.png" style="width:100px;height:100px;" onclick="restart_game_after_gameover()" >
+          <img id="game_over_restart_game_btn_id" src="img/reset_buttonIMG.png" style="width:8%;height:8%;" onclick="restart_game_after_gameover()" >
         </div>
       </div>
 

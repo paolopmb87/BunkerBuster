@@ -887,17 +887,14 @@ function animate() {
 function play_pause_game() {
   // Start and Pause
   if (!isPlay) {
-    document.getElementById('play_pause').innerHTML = "Pause";
     isPlay = true;
     backgroundMusic.play();
     sound_war.play();
     sound_cannon.play();
-    var pause_div = document.getElementById("pause_div_id").style.display = "none";
+    document.getElementById("pause_div_id").style.display = "none";
     animate();
 
   } else {
-
-    document.getElementById('play_pause').innerHTML = "Play";
     isPlay = false;
     var id = requestAnimationFrame(animate);
     sound_shot_tank.pause();
@@ -923,6 +920,7 @@ function changeImage(ID){
     }
   }
   if (ID === 2){
+    console.log("AOOOOOO");
 
     var abs_path2 = document.getElementById("mute_unmute").src;
     var path2 = abs_path2.substring(abs_path2.lastIndexOf("/"), abs_path2.length);
@@ -966,6 +964,7 @@ function restart_game() {
     //"You pressed OK!";
     // location.reload();
     document.getElementById("pause_div_id").style.display = "none";
+    document.getElementById("play_pause").src = 'img/PauseBTN.png';
     var canvas_id = document.getElementById("canvas_id");
     canvas_id.remove();
     start_game();

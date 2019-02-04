@@ -144,7 +144,7 @@ function start_game() {
 
 function init_variables() {
   shell = new THREE.Mesh(new THREE.SphereGeometry(2.5, 8, 6), new THREE.MeshLambertMaterial({color: 0x0000}));
-  cannon_shell = new THREE.Mesh(new THREE.SphereGeometry(2, 8, 6), new THREE.MeshLambertMaterial({color: 0xff0000}));
+  cannon_shell = new THREE.Mesh(new THREE.SphereGeometry(4, 8, 6), new THREE.MeshLambertMaterial({color: 0xff0000}));
   health_bar = document.getElementById("health");
   speed_bar = document.getElementById("speed_pb_id");
   berserk_bar = document.getElementById("berserk_pb_id");
@@ -254,7 +254,7 @@ function createScene(){
   scene.add( ground );
 
   light = new THREE.PointLight( 0xffffff, 1.5,0 ,2 );
-  light.position.set(200,400,200);
+  light.position.set(200,1000,200);
   light.shadowCameraVisible = true;
   light.castShadow = true;
   //light.shadowDarkness = 0.95;
@@ -958,6 +958,7 @@ function mute_unmute_game(val){
     sound_war.set_volume(0);
     sound_cannon.set_volume(0);
     sound_reload.set_volume(0);
+    power_up.set_volume(0);
     cann_explosion.set_volume(0);
     hit_on_cannnon.set_volume(0);
   }
@@ -972,6 +973,7 @@ function mute_unmute_game(val){
     sound_cannon.set_volume(0.2);
     cann_explosion.set_volume(1);
     hit_on_cannnon.set_volume(1);
+    power_up.set_volume(1);
 
   }
 }

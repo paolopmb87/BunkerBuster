@@ -21,7 +21,6 @@ tr:nth-child(even) {
 
 .modal-body{
   height: 70rem!important;
-  width: 70rem!important;
   color:red;
   text-align: center;
 }

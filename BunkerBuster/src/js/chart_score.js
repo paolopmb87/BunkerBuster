@@ -1,6 +1,5 @@
 var score = 0;
 
-
 function save_high_score(score) {
   var highScore = localStorage.getItem("highScore") || 0;
   var username = localStorage.getItem("username_id") || 0;

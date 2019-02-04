@@ -270,7 +270,7 @@ body {
 }
 
 input[type=text] {
-  width: 50%;
+  width: 65%;
   height: 30px;
   box-sizing: border-box;
   border: 2px solid #ccc;
@@ -291,7 +291,7 @@ input[type=button], input[type=submit], input[type=reset] {
   height: 30px;
   width: 70px;
   margin-top: 10px;
-  margin-left: 37%;
+  margin-left: 43%;
 }
 
 

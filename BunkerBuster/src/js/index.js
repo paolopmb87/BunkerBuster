@@ -502,8 +502,8 @@ function update() {
    curTime = clock.getElapsedTime() - startTime;
 
   document.getElementById('score').innerHTML = "Score: " + SCORE;
-  save_high_score(SCORE);
-
+  save_high_score(SCORE)
+  save_users_score(SCORE)
   document.getElementById('time').innerHTML = "Timer: " + curTime.toFixed(2);
 
 
@@ -1046,11 +1046,7 @@ function game_over(par) {
   var id = requestAnimationFrame(animate);
   cancelAnimationFrame(id);
   mute_unmute_game(2)
-
-
 }
-
-
 
 function restart_game_after_gameover() {
   document.getElementById("game_over_div_id").style.display = "none";

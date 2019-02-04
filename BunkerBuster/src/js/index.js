@@ -1027,3 +1027,8 @@ function restart_game_after_gameover() {
   mute_unmute_game(1);
 
 }
+
+function saveusername() {
+  var username = document.getElementById("username_id");
+  localStorage.setItem("username_id", username.value);
+}

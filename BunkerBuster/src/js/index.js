@@ -73,6 +73,7 @@ var Body_2;
 var Track;
 var Turret;
 var Turret_2;
+var destr_cann;
 var rate = 90;
 var p1fireRate = rate;   //FIRE RATE
 var cannonsfireRate = 80;
@@ -125,7 +126,7 @@ var speed_up = false;                    //init perks values
 var berserk_up = false;
 
 var canvas;
-var SCORE = 0;
+var SCORE;
 var clock,startTime, curTime;
 
 /**
@@ -159,6 +160,8 @@ function init_variables() {
 }
 
 function init() {
+  destr_cann = 0;
+  SCORE = 0;
   clock = new THREE.Clock();
   startTime=clock.getElapsedTime();
 
@@ -494,6 +497,7 @@ function generate_random() {
  * KEYBOARD - MOUSE
  */
 function update() {
+
    var shot = false;
    curTime = clock.getElapsedTime() - startTime;
 
@@ -501,7 +505,6 @@ function update() {
   save_high_score(SCORE);
 
   document.getElementById('time').innerHTML = "Timer: " + curTime.toFixed(2);
-
 
 
    check_cubes();
@@ -598,6 +601,9 @@ function shoot_controls() {
     for (var z = 0; z < cannons.length; z++) {
       if (bullets[i].visible === true &&  cannons[z].visible && bullets[i].position.x >= cannons[z].position.x - 10 && bullets[i].position.x <= cannons[z].position.x + 10 && bullets[i].position.z >= cannons[z].position.z - 10 && bullets[i].position.z <= cannons[z].position.z + 10) {
         bullets[i].visible = false;
+    /*    bullets[i].geometry.dispose();
+        bullets[i].material.dispose();
+        bullets[i] = undefined;*/
         if (  enemy_health_life[z] === 2) {
           enemy_health_bar[z].material.color.setHex(0xffff00);   //INSERIRE GIALLO
           hit_on_cannnon.play();
@@ -617,8 +623,13 @@ function shoot_controls() {
           enemy_health_bar[z] = undefined;
           cannons[z].visible = false;
           cann_explosion.play();
-
+          destr_cann = destr_cann+1;
           SCORE += 30;
+          if(destr_cann === 5){
+            game_over(1);
+          }
+
+
         }
         enemy_health_life[z] -= 1;
       }
@@ -638,9 +649,8 @@ function shoot_controls() {
         console.log('VITA:' + tank_life);
       }
       if (tank_life === 0){
-        game_over();
-        var res = clock.getElapsedTime() - startTime;
-        console.log(res.toFixed(2));
+        game_over(0);
+
       }
     }
   }
@@ -660,9 +670,6 @@ function tank_shoot() {
     4.5*Math.sin(viewfinder.rotation.z),
     0,
     4.5*Math.cos(viewfinder.rotation.z));
-
-  console.log(temp_shell.velocity.x);
-  console.log(temp_shell.velocity.z);
 
   temp_shell.alive = true;
 
@@ -849,7 +856,7 @@ function check_cubes() {
       scorecubes[i].visible = false;
       power_up.play();
       console.log('Score UP');
-      SCORE += 20;
+      SCORE += 40;
 
 
     }
@@ -999,7 +1006,7 @@ function restart_game() {
     health_bar.value = 100;
     tank_life = 100;
     berserk_bar.value = 0;
-    speed_bar.value=0
+    speed_bar.value=0;
     start_game();
   } else {
     //"You pressed Cancel!";
@@ -1007,27 +1014,43 @@ function restart_game() {
   }
 }
 
-function game_over(){
-  isPlay = false;
-  document.getElementById("game_over_div_id").style.display = "block";
+function game_over(par) {
+  SCORE -= curTime.toFixed(2);
+  var temp_div = document.getElementById("game_over_div_id");
+  var text_to_change = temp_div.childNodes[0];
 
-  //sound_game_over.play();
-  explosion.play();
-  health_bar.value=100;
-  berserk_bar.value=0;
-  speed_bar.value=0;
+  if (par === 0) {
+    document.getElementById('score').innerHTML = "Score: " + Math.floor(SCORE);
+    text_to_change.nodeValue = 'GAME OVER';
+    document.getElementById("game_over_div_id").style.display = "block";
+    explosion.play();
+
+  }
+  else if (par === 1) {
+    SCORE += 100;
+    document.getElementById('score').innerHTML = "Score: " + Math.floor(SCORE);
+    text_to_change.nodeValue = 'VICTORY';
+    document.getElementById("game_over_div_id").style.display = "block";
+  }
+
+  isPlay = false;
+  health_bar.value = 100;
+  berserk_bar.value = 0;
+  speed_bar.value = 0;
   enemy_health_bar = [];
   enemy_health_life = [];
   cannons = [];
-  bullets=[];
+  bullets = [];
   CANNON_BULLETS = [];
   cann_positions = [];
-  SCORE = 0;
   var id = requestAnimationFrame(animate);
   cancelAnimationFrame(id);
-  mute_unmute_game(2);
+  mute_unmute_game(2)
+
 
 }
+
+
 
 function restart_game_after_gameover() {
   document.getElementById("game_over_div_id").style.display = "none";

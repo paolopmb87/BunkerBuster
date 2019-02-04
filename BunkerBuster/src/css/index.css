@@ -248,16 +248,16 @@ body {
 }
 
 #username_form_div{
-  padding-top: 2%;
-  background: rgba(0, 0, 0, 0.8);
-  width:30%;
-  height: 150px;
+  padding-top: 1%;
+  background: rgba(0, 0, 0, 0.4);
+  padding-left: 5px;
+  width:35%;
+  height: 100px;
   position: absolute;
-  font-size: 20px;
-  text-align: center;
-  margin-left: 36%;
-  color: red;
+  margin-top: 5%;
+  margin-left: 33%;
   float: inside;
+  color: red;
 }
 
 #username_form{
@@ -266,6 +266,7 @@ body {
   position: absolute;
   font-size: 20px;
   float: inside;
+  padding-left: 10px;
 }
 
 input[type=text] {
@@ -275,6 +276,9 @@ input[type=text] {
   border: 2px solid #ccc;
   border-radius: 50px;
   font-size: 14px;
+  color: black;
+  text-align: center;
+  margin-top: 10px;
 }
 
 input[type=button], input[type=submit], input[type=reset] {
@@ -283,20 +287,16 @@ input[type=button], input[type=submit], input[type=reset] {
   border-radius: 50px;
   color: #bf2020;
   text-decoration: none;
-  margin: 10px 5px;
   cursor: pointer;
   height: 30px;
   width: 70px;
+  margin-top: 10px;
+  margin-left: 37%;
 }
 
 
 #restart_game_btn_id{
   float: inside;
-  /*margin-top: 150px!important;*/
-  /*  height: 25px;
-   width: 70px;
-  margin-left: 42%;
-  margin-top: 0.6%;*/
 }
 
 

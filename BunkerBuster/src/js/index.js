@@ -492,6 +492,7 @@ function generate_random() {
 function update() {
 
   document.getElementById('score').innerHTML = "Score: " + SCORE;
+  save_high_score(SCORE);
 
   var shot = false;
 

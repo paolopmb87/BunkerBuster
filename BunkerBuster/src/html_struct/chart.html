@@ -4,13 +4,34 @@
     <meta charset="UTF-8">
     <title>Chart Page</title>
   <link rel="stylesheet" href="../css/chart.css">
+
 </head>
 <body>
 
+<script src="../js/chart_username_score.js"></script>
+
 <div class="modal-body">
   <h2 class="text-center">RECORDS</h2>
-  <script src="../js/highscore.js">
-  </script>
+    <div>
+      Username:<br>
+      <input name="username" id="username_id" placeholder="username">
+      <input type="submit" value="Save" onclick="saveusername()">
+    </div>
+
+    <div>
+      <table>
+        <tr>
+          <th>Username</th>
+          <th>Score</th>
+          <th>High Score</th>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+    </div>
 </div>
 </body>
 </html>

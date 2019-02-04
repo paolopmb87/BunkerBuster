@@ -935,7 +935,6 @@ function changeImage(ID){
     }
   }
   if (ID === 2){
-    console.log("AOOOOOO");
 
     var abs_path2 = document.getElementById("mute_unmute").src;
     var path2 = abs_path2.substring(abs_path2.lastIndexOf("/"), abs_path2.length);
@@ -959,6 +958,7 @@ function mute_unmute_game(val){
     sound_cannon.set_volume(0);
     sound_reload.set_volume(0);
     cann_explosion.set_volume(0);
+    hit_on_cannnon.set_volume(0);
   }
   else{
     sound_shot_tank.set_volume(1);
@@ -970,6 +970,7 @@ function mute_unmute_game(val){
     sound_reload.set_volume(1);
     sound_cannon.set_volume(0.2);
     cann_explosion.set_volume(1);
+    hit_on_cannnon.set_volume(1);
 
   }
 }

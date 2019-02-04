@@ -126,6 +126,7 @@ var berserk_up = false;
 
 var canvas;
 var SCORE = 0;
+var clock,startTime, curTime;
 
 /**
  * var to pause/play game
@@ -158,6 +159,9 @@ function init_variables() {
 }
 
 function init() {
+  clock = new THREE.Clock();
+  startTime=clock.getElapsedTime();
+
   document.getElementById('play_btn_div_id').style.display = 'none';
   document.getElementById('play_pause').style.display = 'inline-block';
 
@@ -490,14 +494,17 @@ function generate_random() {
  * KEYBOARD - MOUSE
  */
 function update() {
+   var shot = false;
+   curTime = clock.getElapsedTime() - startTime;
 
   document.getElementById('score').innerHTML = "Score: " + SCORE;
   save_high_score(SCORE);
 
-  var shot = false;
+  document.getElementById('time').innerHTML = "Timer: " + curTime.toFixed(2);
 
 
-  check_cubes();
+
+   check_cubes();
 
   for (var index = 0; index < bullets.length; index += 1) {
     if (bullets[index] === undefined) continue;
@@ -632,6 +639,8 @@ function shoot_controls() {
       }
       if (tank_life === 0){
         game_over();
+        var res = clock.getElapsedTime() - startTime;
+        console.log(res.toFixed(2));
       }
     }
   }
@@ -859,7 +868,6 @@ function update_cannons(){
  */
 
 function render(){
-
   var rot_x = 0.018;
   var rot_y = 0.020;
 

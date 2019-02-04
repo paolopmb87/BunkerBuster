@@ -32,7 +32,7 @@
 <body id="bd">
 
 <script src="js/index.js"></script>
-<script src="js/chart_username_score.js"></script>
+<script src="js/chart_score.js"></script>
 
   <section id="loading-screen">
 
@@ -50,6 +50,15 @@
 
 
     <!--START GAME BUTTON-->
+
+    <div id="username_form_div">
+      <form id="username_form">
+        Insert Username:
+        <input id="username_id" type="text" placeholder="username" >
+        <input id="submit_id" type="submit" value="Save" onclick="saveusername()"><br>
+      </form>
+    </div>
+
     <div class="play_btn_div" id="play_btn_div_id">
       <img id="playBTN" src="img/PlayBTN.png" onclick="start_game()">
     </div>
@@ -92,13 +101,6 @@
       </div>
 
       <div class="game_over_div" id="game_over_div_id">GAME OVER
-        <br>
-        <div>
-          Username:<br>
-          <input name="username" id="username_id" placeholder="username">
-          <input type="submit" value="Save" onclick="saveusername()">
-        </div>
-
         <div>
           <img id="game_over_restart_game_btn_id" src="img/reset_buttonIMG.png" style="width:8%;height:8%;" onclick="restart_game_after_gameover()" >
         </div>

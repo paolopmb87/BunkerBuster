@@ -1,38 +1,370 @@
+html, body {
+  height: 100%;
+}
+
+body {
+  margin:0px;
+  padding: 0px;
+}
+
+.wrap{
+  background: url(../img/poster.jpg) no-repeat bottom left;
+  background-size: 100% 100%;
+  width: 100%;
+  height: 84%;
+}
+
 @font-face {
   font-family: "Font Title";
   src: url(../fonts/PanfletaStencil-ExtraBold.ttf) format("truetype");
 }
 
-.help {
-  position: fixed;
-  bottom: 5%;
-  left: 5%;
-  display: inline-block;
-  height: 50px;
-  width: 50px;
-}
-
-#img{
-  height: 50px;
-  width: 50px;
-}
-
 #title{
-  font-family: Font Title;
-  font-size: 75px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left:20px;
   text-align: center;
+  font-family: Font Title;
+  font-size: 70px;
   color: crimson;
   font-weight: bold;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-
+  height: 70px;
 }
 
-#bd {
-  background-image: url(../img/poster.jpg);
+.play_btn_div{
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  height: 84%;
 }
 
 #playBTN{
-  top: 20%;
-  left: 35%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 20%;
+}
+
+  /**
+      game div
+   **/
+.play_game {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  height: 88%;
+  display: none;
+  position:relative;
+  border-top: 2px solid red;
+
+}
+
+#play_game_id {
+  display: none;
+  box-sizing: border-box;
+  border-top: 2px solid red;
+  width: auto;
+  margin:auto;
+  position:relative;
+
+}
+
+#mute_unmute_div_id{
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100px;
+}
+
+#mute_unmute {
+  float: right;
+  height: 100px;
+  width: 100px;
+  margin-right: 10px;
+  background-color: whitesmoke;
+
+}
+
+#HLT_id{
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100px;
+}
+
+
+#HLT_IMG{
+  float: left;
+  height: 100px;
+  width: 100px;
+  margin-left: 55px;
+  margin-top: 10px;
+}
+
+#SPEED_id{
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100px;
+}
+
+
+#SPEED_IMG{
+  float: left;
+  height: 100px;
+  width: 100px;
+  margin-left: 55px;
+  margin-top: 30px;
+}
+
+#BRSK_id{
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100px;
+}
+
+
+#BRSK_IMG{
+  float: left;
+  height: 100px;
+  width: 100px;
+  margin-left: 55px;
+  margin-top: 50px;
+}
+
+
+
+
+#score {
+  display: block;
+  position: absolute;
+  font-weight: bold;
+  color: black;
+  font-size: 20px;
+  background-color: whitesmoke;
+  z-index: 100;
+  float:right;
+  height: 30px;
+  width: 200px;
+  margin-left: 82%;
+}
+
+/**
+    footer div
+ **/
+.footer {
+  background-color: black;
+  border-top: 2px solid red;
+  height: 16%;
+  box-sizing: border-box;
+  width: auto;
+  margin:auto;
+  display: block;
+}
+
+.foot{
+  background-color: black;
+  border-top: 2px solid red;
+  display: block;
+  box-sizing: border-box;
+  height: 16%;
+  width: auto;
+  margin:auto;
+}
+
+.chart{
+  padding-top:1%;
+  margin-right: 1%;
+  height: 100px;
+  width: 100px;
+  float: right;
+}
+
+#CHART{
+  height: 100px;
+  width: 100px;
+}
+
+.help {
+  padding-top:1%;
+  margin-left: 1%;
+  height: 100px;
+  width: 100px;
+  float: left;
+  /*z-index:1;*/
+}
+
+#HLP{
+  padding-top:1%;
+  margin-left: 1%;
+  height: 80px;
+  width: 80px;
+}
+
+#play_pause{
+  display:none;
+  float: left;
+  height: 25px;
+  width: 70px;
+  left: 40%;
+  margin-top: 0.6%;
+  margin-left: 43%;
+}
+
+#pause_div_id{
+  width:100%;
+  height: 100%;
+  display: none;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.8);
+  font-size: 100px;
+  text-align: center;
+  padding-top: 10%;
+  color: red;
+  font-family: Font Title;
+
+
+
+}
+
+#game_over_div_id{
+  width:100%;
+  height: 100%;
+  display: none;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.8);
+  font-family: Font Title;
+  font-size: 100px;
+  text-align: center;
+  padding-top: 10%;
+  color: red;
+  float: inside;
+
+}
+
+game_over_restart_game_btn_id{
+  float: inside;
+  /*margin-left: 46.5%;*/
+  /*margin-top: 0.6%;*/
+}
+
+#restart_game_btn_id{
+  float: inside;
+  /*  height: 25px;
+   width: 70px;
+  margin-left: 42%;
+  margin-top: 0.6%;*/
+}
+
+/*#health{*/
+  /*position: absolute;*/
+  /*margin-left: 30px;*/
+/*}*/
+
+#hp{
+  display: block;
+  position: absolute;
+  margin-left: 30px;
+  margin-top:  10px;
+  height: 20px;
+  background-color: green;
+  font-family: Helvetica, sans-serif;
+  font-size: 16px;
+  padding-bottom: 2px;
+}
+
+#speed{
+  height: 20px;
+  display: block;
+  position: absolute;
+  margin-left: 30px;
+  margin-top:  30px;
+  background-color: blue;
+  font-family: Helvetica, sans-serif;
+  font-size: 16px;
+  margin-bottom: 2px;
+}
+
+#berserk{
+  height: 20px;
+  display: block;
+  position: absolute;
+  margin-left: 30px;
+  margin-top: 50px;
+  background-color: red;
+  font-family: Helvetica, sans-serif;
+  font-size: 16px;
+  margin-bottom: 2px;
+}
+
+
+#health{
+  position: absolute;
+  height: 20px;
+  width: 400px;
+  margin-left: 100px;
+  margin-top: 10px;
+  border-radius: 2px;
+  margin-bottom: 2px;
+  padding-bottom: 2px;
+
+}
+progress#health::-webkit-progress-value {
+  background: #109b8b;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+
+}
+
+#speed_pb_id{
+  position: absolute;
+  height: 20px;
+  width: 400px;
+  margin-left: 100px;
+  margin-top: 30px;
+  border-radius: 2px;
+  padding-bottom: 2px;
+}
+progress#speed_pb_id::-webkit-progress-value {
+  background: #fbff1e;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+}
+
+#berserk_pb_id{
+  position: absolute;
+  height: 20px;
+  width: 400px;
+  margin-left: 100px;
+  margin-top: 50px;
+  border-radius: 2px;
+  padding-bottom: 2px;
+}
+
+progress#berserk_pb_id::-webkit-progress-value {
+  background: #9fa196;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+}
+
+/*#turret-hp{*/
+  /*display: none;*/
+  /*height: 30px;*/
+  /*width: 30px;*/
+/*}*/
+
+/*progress#turret-hp-id::-webkit-progress-value {*/
+  /*background: red;*/
+  /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;*/
+/*}*/
+
+.progresses{
+  box-sizing: border-box;
+}
+
+#canvas{
+  position: relative;
 }
 

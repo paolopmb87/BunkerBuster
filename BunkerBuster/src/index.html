@@ -16,10 +16,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/91/three.min.js"></script>
   <script src="//threejs.org/examples/js/controls/OrbitControls.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone-min.js"></script>
   <script src="https://www.google-analytics.com/analytics.js" async defer></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="//cdn.rawgit.com/mrdoob/three.js/master/examples/js/loaders/ColladaLoader.js"></script>
+  <script src="js/THREEx.KeyboardState.js"></script>
+  <script src="js/Stats.js"></script>
+
 
   <!-- CSS FILES -->
   <link rel="stylesheet" href="css/normalize.css">
@@ -28,22 +31,108 @@
 
 <body id="bd">
 
-<!-- Add your site or application content here -->
-<p id="title">Bunker Buster</p>
+<script src="js/index.js"></script>
 
-<!--JAVASCRIPT FILES-->
-<!<script src="js/index.js"></script>
+  <section id="loading-screen">
 
-<center><img id="playBTN" src="img/PlayBTN.png"></center>
+    <div id="loader"></div>
 
-<div class ="help"> <a href="html_struct/help.html" data-target="#theModal" data-toggle="modal"><img id="img" src="img/HLP.png"></a></div>
-<div class="modal fade text-center" id="theModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
+  </section>
+
+  <div class="wrap" id="wrap_div">
+    <!--JAVASCRIPT FILES-->
+    <!-- Add your site or application content here -->
+    <div class="div_title" id="div_title_id">
+      <p id="title">Bunker Buster</p>
+    </div>
+
+
+
+    <!--START GAME BUTTON-->
+    <div class="play_btn_div" id="play_btn_div_id">
+      <img id="playBTN" src="img/PlayBTN.png" onclick="start_game()">
+    </div>
+
+
+
+
+    <div class="play_game" id="play_game_id">
+      <div class="progresses">
+        <span class="Progress-Label" id="hp" ></span>
+          <progress id="health" value="100" max="100"></progress>
+        <span class="Progress-Label" id="speed"></span>
+          <progress id="speed_pb_id" value="0" max="100"></progress>
+        <span class="Progress-Label" id="berserk"></span>
+          <progress id="berserk_pb_id" value="0" max="100"></progress>
+      </div>
+
+
+      <div id="HLT_id">
+        <img id="HLT_IMG" src="img/health.png" style="width:18px;height:18px;">
+      </div>
+      <div id="SPEED_id">
+        <img id="SPEED_IMG" src="img/speed.png" style="width:18px;height:18px;">
+      </div>
+      <div id="BRSK_id">
+        <img id="BRSK_IMG" src="img/berserk.png" style="width:18px;height:18px;">
+      </div>
+
+      <div id= "score"></div>
+
+
+      <div id="mute_unmute_div_id">
+        <img id="mute_unmute" src="img/MuteBTN.png" style="width:30px;height:30px;" onclick="changeImage(2)">
+      </div>
+
+      <div class="pause_div" id="pause_div_id">PAUSE
+        <div id="restart_game_div_id">
+          <img id="restart_game_btn_id" src="img/reset_buttonIMG.png" style="width:8%;height:8%;" onclick="restart_game();" >
+          <p id="alert"></p>
+        </div>
+      </div>
+
+      <div class="game_over_div" id="game_over_div_id">GAME OVER
+        <div>
+          <img id="game_over_restart_game_btn_id" src="img/reset_buttonIMG.png" style="width:8%;height:8%;" onclick="restart_game_after_gameover()" >
+        </div>
+      </div>
 
     </div>
+
+
+    <!--Modal for helper and Score-->
+    <div class="modal fade text-center" id="theModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade text-center" id="theModal2">
+      <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+      </div>
+    </div>
   </div>
-</div>
+
+  <footer class="footer">
+    <div class="foot">
+      <div class ="help">
+        <a href="html_struct/help.html" data-target="#theModal2" data-toggle="modal">
+          <img id="HLP" src="img/HelpBTN.png"></a>
+      </div>
+
+      <div>
+        <img id="play_pause" src="img/PauseBTN.png" style="width:100px;height:100px;" onclick="play_pause_game();changeImage(1)" >
+      </div>
+
+      <div class ="chart">
+        <a href="html_struct/chart.html" data-target="#theModal" data-toggle="modal">
+          <img id="CHART" src="img/ChartBTN.png"></a>
+      </div>
+    </div>
+  </footer>
 </body>
 
 </html>

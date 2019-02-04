@@ -5,8 +5,6 @@
   <title>Bunker Buster</title>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <link rel="stylesheet" type="text/css" href="css/index.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -25,6 +23,7 @@
 
 
   <!-- CSS FILES -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/index.css">
   <link rel="stylesheet" href="css/chart.css">
@@ -36,115 +35,117 @@
 <script src="js/index.js"></script>
 <script src="js/chart_score.js"></script>
 
-  <section id="loading-screen">
+<section id="loading-screen">
 
-    <div id="loader"></div>
+  <div id="loader"></div>
 
-  </section>
+</section>
 
-  <div class="wrap" id="wrap_div">
-    <!--JAVASCRIPT FILES-->
-    <!-- Add your site or application content here -->
-    <div class="div_title" id="div_title_id">
-      <p id="title">Bunker Buster</p>
+<div class="wrap" id="wrap_div">
+  <!--JAVASCRIPT FILES-->
+  <!-- Add your site or application content here -->
+  <div class="div_title" id="div_title_id">
+    <p id="title">Bunker Buster</p>
+  </div>
+
+
+  <!--START GAME BUTTON-->
+
+  <div id="username_form_div">
+    <form id="username_form">
+      Insert Username:
+      <input id="username_id" type="text" placeholder="username">
+      <input id="submit_id" type="submit" value="Save" onclick="saveusername()"><br>
+    </form>
+  </div>
+
+  <div class="play_btn_div" id="play_btn_div_id">
+    <img id="playBTN" src="img/PlayBTN.png" onclick="start_game()">
+  </div>
+
+
+  <div class="play_game" id="play_game_id">
+    <div class="progresses">
+      <span class="Progress-Label" id="hp"></span>
+      <progress id="health" value="100" max="100"></progress>
+      <span class="Progress-Label" id="speed"></span>
+      <progress id="speed_pb_id" value="0" max="100"></progress>
+      <span class="Progress-Label" id="berserk"></span>
+      <progress id="berserk_pb_id" value="0" max="100"></progress>
     </div>
 
 
-
-    <!--START GAME BUTTON-->
-
-    <div id="username_form_div">
-      <form id="username_form">
-        Insert Username:
-        <input id="username_id" type="text" placeholder="username" >
-        <input id="submit_id" type="submit" value="Save" onclick="saveusername()"><br>
-      </form>
+    <div id="HLT_id">
+      <img id="HLT_IMG" src="img/health.png" style="width:18px;height:18px;">
+    </div>
+    <div id="SPEED_id">
+      <img id="SPEED_IMG" src="img/speed.png" style="width:18px;height:18px;">
+    </div>
+    <div id="BRSK_id">
+      <img id="BRSK_IMG" src="img/berserk.png" style="width:18px;height:18px;">
     </div>
 
-    <div class="play_btn_div" id="play_btn_div_id">
-      <img id="playBTN" src="img/PlayBTN.png" onclick="start_game()">
+    <div id="score"></div>
+    <div id="time"></div>
+
+
+    <div id="mute_unmute_div_id">
+      <img id="mute_unmute" src="img/MuteBTN.png" style="width:30px;height:30px;" onclick="changeImage(2)">
     </div>
 
-
-    <div class="play_game" id="play_game_id">
-      <div class="progresses">
-        <span class="Progress-Label" id="hp" ></span>
-          <progress id="health" value="100" max="100"></progress>
-        <span class="Progress-Label" id="speed"></span>
-          <progress id="speed_pb_id" value="0" max="100"></progress>
-        <span class="Progress-Label" id="berserk"></span>
-          <progress id="berserk_pb_id" value="0" max="100"></progress>
+    <div class="pause_div" id="pause_div_id">PAUSE
+      <div id="restart_game_div_id">
+        <img id="restart_game_btn_id" src="img/reset_buttonIMG.png" style="width:8%;height:8%;"
+             onclick="restart_game();">
+        <p id="alert"></p>
       </div>
+    </div>
 
-
-      <div id="HLT_id">
-        <img id="HLT_IMG" src="img/health.png" style="width:18px;height:18px;">
-      </div>
-      <div id="SPEED_id">
-        <img id="SPEED_IMG" src="img/speed.png" style="width:18px;height:18px;">
-      </div>
-      <div id="BRSK_id">
-        <img id="BRSK_IMG" src="img/berserk.png" style="width:18px;height:18px;">
-      </div>
-
-      <div id= "score"></div>
-      <div id= "time"></div>
-
-
-      <div id="mute_unmute_div_id">
-        <img id="mute_unmute" src="img/MuteBTN.png" style="width:30px;height:30px;" onclick="changeImage(2)">
-      </div>
-
-      <div class="pause_div" id="pause_div_id">PAUSE
-        <div id="restart_game_div_id">
-          <img id="restart_game_btn_id" src="img/reset_buttonIMG.png" style="width:8%;height:8%;" onclick="restart_game();" >
-          <p id="alert"></p>
-        </div>
-      </div>
-
-      <div class="game_over_div" id="game_over_div_id">GAME OVER
-        <div>
-          <img id="game_over_restart_game_btn_id" src="img/reset_buttonIMG.png" style="width:8%;height:8%;" onclick="restart_game_after_gameover()" >
-        </div>
-
+    <div class="game_over_div" id="game_over_div_id">GAME OVER
+      <div>
+        <img id="game_over_restart_game_btn_id" src="img/reset_buttonIMG.png" style="width:8%;height:8%;"
+             onclick="restart_game_after_gameover()">
       </div>
 
     </div>
 
+  </div>
 
-    <!--Modal for helper and Score-->
-    <div class="modal fade text-center" id="theModal">
-      <div class="modal-dialog">
-        <div class="modal-content">
-        </div>
-      </div>
-    </div>
 
-    <div class="modal fade text-center" id="theModal2">
-      <div class="modal-dialog">
-        <div class="modal-content">
-        </div>
+  <!--Modal for helper and Score-->
+  <div class="modal fade text-center" id="theModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
       </div>
     </div>
   </div>
 
-  <footer class="footer">
-    <div class="foot">
-      <div class ="help">
-        <a href="html_struct/help.html" data-target="#theModal2" data-toggle="modal">
-          <img id="HLP" src="img/HelpBTN.png"></a>
-      </div>
-
-      <div>
-        <img id="play_pause" src="img/PauseBTN.png" style="width:100px;height:100px;" onclick="play_pause_game();changeImage(1)" >
-      </div>
-
-      <div class ="chart">
-        <a href="html_struct/chart.html" data-target="#theModal" data-toggle="modal">
-          <img id="CHART" src="img/ChartBTN.png"></a>
+  <div class="modal fade text-center" id="theModal2">
+    <div class="modal-dialog">
+      <div class="modal-content">
       </div>
     </div>
-  </footer>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="foot">
+    <div class="help">
+      <a href="html_struct/help.html" data-target="#theModal2" data-toggle="modal">
+        <img id="HLP" src="img/HelpBTN.png"></a>
+    </div>
+
+    <div>
+      <img id="play_pause" src="img/PauseBTN.png" style="width:100px;height:100px;"
+           onclick="play_pause_game();changeImage(1)">
+    </div>
+
+    <div class="chart">
+      <a href="html_struct/chart.html" data-target="#theModal" data-toggle="modal">
+        <img id="CHART" src="img/ChartBTN.png"></a>
+    </div>
+  </div>
+</footer>
 </body>
 
 </html>

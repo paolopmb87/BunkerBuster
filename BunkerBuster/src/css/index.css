@@ -36,6 +36,7 @@ body {
 .play_btn_div{
   margin-left: auto;
   margin-right: auto;
+  padding-top: 15%;
   width: 100%;
   height: 84%;
 }
@@ -136,8 +137,6 @@ body {
 }
 
 
-
-
 #score {
   display: block;
   position: absolute;
@@ -209,7 +208,7 @@ body {
   float: left;
   height: 25px;
   width: 70px;
-  left: 40%;
+  left: 35%;
   margin-top: 0.6%;
   margin-left: 43%;
 }
@@ -226,8 +225,6 @@ body {
   color: red;
   font-family: Font Title;
 
-
-
 }
 
 #game_over_div_id{
@@ -237,32 +234,71 @@ body {
   position: absolute;
   background: rgba(0, 0, 0, 0.8);
   font-family: Font Title;
-  font-size: 100px;
+  font-size: 70px;
   text-align: center;
   padding-top: 10%;
   color: red;
   float: inside;
-
+  padding-left: 10px;
 }
 
-game_over_restart_game_btn_id{
+#game_over_restart_game_btn_id{
   float: inside;
-  /*margin-left: 46.5%;*/
-  /*margin-top: 0.6%;*/
+  margin-top: 150px!important;
 }
+
+#username_form_div{
+  padding-top: 2%;
+  background: rgba(0, 0, 0, 0.8);
+  width:30%;
+  height: 150px;
+  position: absolute;
+  font-size: 20px;
+  text-align: center;
+  margin-left: 36%;
+  color: red;
+  float: inside;
+}
+
+#username_form{
+  width:100%;
+  height: 200px;
+  position: absolute;
+  font-size: 20px;
+  float: inside;
+}
+
+input[type=text] {
+  width: 50%;
+  height: 30px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 50px;
+  font-size: 14px;
+}
+
+input[type=button], input[type=submit], input[type=reset] {
+  background-color: #afad4c;
+  border: red;
+  border-radius: 50px;
+  color: #bf2020;
+  text-decoration: none;
+  margin: 10px 5px;
+  cursor: pointer;
+  height: 30px;
+  width: 70px;
+}
+
 
 #restart_game_btn_id{
   float: inside;
+  /*margin-top: 150px!important;*/
   /*  height: 25px;
    width: 70px;
   margin-left: 42%;
   margin-top: 0.6%;*/
 }
 
-/*#health{*/
-  /*position: absolute;*/
-  /*margin-left: 30px;*/
-/*}*/
 
 #hp{
   display: block;
@@ -367,4 +403,5 @@ progress#berserk_pb_id::-webkit-progress-value {
 #canvas{
   position: relative;
 }
+
 

@@ -87,7 +87,7 @@ var health=0;
 var health_bar;
 var cube;
 var keyboard = new THREEx.KeyboardState();
-
+keyboard.des
 //temp
 var trees_loader="models/trees/tree2.json";
 var dead_tree_loader="models/trees/dead_tree.json";
@@ -212,7 +212,7 @@ function init() {
   cann_positions[3] = [-1000, 0, -500];
   cann_positions[4] = [300, 0, 900];
 
-  tank_life = 10;
+  tank_life = 100;
 
   init_variables();
   add_cubes();
@@ -277,6 +277,7 @@ function createScene(){
   orbitControl.enableDamping = true;
   orbitControl.dampingFactor = 0.8;
   orbitControl.enableZoom = false;
+  orbitControl.enabled = false;
 
   const viewfinderGeometry = new THREE.BoxBufferGeometry( 0.01, 0.01, 0.01 );
   const viewfinderMaterial = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
@@ -1009,6 +1010,7 @@ function restart_game() {
 }
 
 function game_over(par) {
+  controls.enabled = false;
   SCORE -= curTime.toFixed(2);
   var temp_div = document.getElementById("game_over_div_id");
   var text_to_change = temp_div.childNodes[0];

@@ -21,9 +21,6 @@ function save_high_score(score) {
 }
 
 function save_users_score() {
-  // var _username = document.getElementById("username_td");
-  // var _score = document.getElementById("score_td");
-  // var _highscore = document.getElementById("highscore_td");
 
   setTimeout(function () {
     var modal = document.getElementById("modal_id");
@@ -32,12 +29,12 @@ function save_users_score() {
 
     if (rows.length < 10) { // limit the user from creating too many segments
       // copy the first TR of the table
-      var newRow = rows[0].cloneNode(true);
+      var newRow = rows[1].cloneNode(true);
       // increment the last segment number and apply it to the new segment[] field
         newRow.querySelector("#username_td").innerText = localStorage.username_id;
         newRow.querySelector("#score_td").innerText = localStorage._score;
         newRow.querySelector("#highscore_td").innerText = localStorage.highScore;
-      
+
       // add the new row
       tbody.appendChild(newRow);
     } else {

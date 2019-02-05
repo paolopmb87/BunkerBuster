@@ -129,6 +129,9 @@ var canvas;
 var SCORE;
 var clock,startTime, curTime;
 
+var difficulty;
+var difficulty_val;
+
 /**
  * var to pause/play game
  */
@@ -163,10 +166,15 @@ function init() {
   destr_cann = 0;
   SCORE = 0;
   clock = new THREE.Clock();
+  difficulty = document.getElementById("ddlViewBy");
+  difficulty_val = difficulty.options[difficulty.selectedIndex].text;
+  console.log(difficulty_val);
   startTime=clock.getElapsedTime();
 
   document.getElementById('play_btn_div_id').style.display = 'none';
   document.getElementById('play_pause').style.display = 'inline-block';
+  document.getElementById('ddlViewBy').style.display = 'none';
+  document.getElementById('diff').style.display = 'none';
 
   document.getElementById('play_game_id').style.display = 'block';
 
@@ -1010,6 +1018,9 @@ function restart_game() {
 
 function game_over(par) {
   SCORE -= curTime.toFixed(2);
+  if(SCORE < 0){
+    SCORE = 0;
+  }
   var temp_div = document.getElementById("game_over_div_id");
   var text_to_change = temp_div.childNodes[0];
 

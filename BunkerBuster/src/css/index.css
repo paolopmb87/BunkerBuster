@@ -422,3 +422,30 @@ progress#berserk_pb_id::-webkit-progress-value {
 }
 
 
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  margin-left: 5%;
+}
+
+td, th {
+  border: 2px solid #dddddd;
+  text-align: center;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+#table_id{
+  width: 50rem;
+  height: 50rem;
+}
+
+.modal-body{
+  height: 70rem!important;
+  color:red;
+  text-align: center;
+}

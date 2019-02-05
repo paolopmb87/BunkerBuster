@@ -1,30 +1,49 @@
 var score = 0;
-var user_score = 0;
-var arr=[];
 
 function save_high_score(score) {
   var highScore = localStorage.getItem("highScore") || 0;
   var username = localStorage.getItem("username_id") || 0;
+  var _score = localStorage.getItem("_score") || 0;
+
   if(highScore !== null){
     if (score > highScore) {
       localStorage.setItem("username_id", username);
       localStorage.setItem("highScore", score);
+    }else{
+      localStorage.setItem("_score", score);
+      localStorage.setItem("username_id", username);
     }
   }
   else{
-    localStorage.setItem("highScore", score);
+    localStorage.setItem("_score", score);
     localStorage.setItem("username_id", username);
   }
 }
 
-function save_users_score(user_score) {
-  var _username = document.getElementById("username");
-  var _score = document.getElementById("score");
-  var _highscore = document.getElementById("highscore");
+function save_users_score() {
+  // var _username = document.getElementById("username_td");
+  // var _score = document.getElementById("score_td");
+  // var _highscore = document.getElementById("highscore_td");
 
-  // _username.value = localStorage.getItem("username_id");
-  _score.value = user_score;
-  // _highscore.value = localStorage.getItem("highScore").value;
+  setTimeout(function () {
+    var modal = document.getElementById("modal_id");
+    var tbody = modal.querySelector("#table");
+    var rows = tbody.querySelectorAll("tr");
+
+    if (rows.length < 10) { // limit the user from creating too many segments
+      // copy the first TR of the table
+      var newRow = rows[0].cloneNode(true);
+      // increment the last segment number and apply it to the new segment[] field
+        newRow.querySelector("#username_td").innerText = localStorage.username_id;
+        newRow.querySelector("#score_td").innerText = localStorage._score;
+        newRow.querySelector("#highscore_td").innerText = localStorage.highScore;
+      
+      // add the new row
+      tbody.appendChild(newRow);
+    } else {
+      alert("Maximum Number of Segments is 10.");
+    }
+  }, 10);
 
 }
 

@@ -502,8 +502,6 @@ function update() {
    curTime = clock.getElapsedTime() - startTime;
 
   document.getElementById('score').innerHTML = "Score: " + SCORE;
-  save_high_score(SCORE)
-  save_users_score(SCORE)
   document.getElementById('time').innerHTML = "Timer: " + curTime.toFixed(2);
 
 
@@ -857,11 +855,7 @@ function check_cubes() {
       power_up.play();
       console.log('Score UP');
       SCORE += 40;
-
-
     }
-
-
   }
 }
 
@@ -1045,7 +1039,10 @@ function game_over(par) {
   cann_positions = [];
   var id = requestAnimationFrame(animate);
   cancelAnimationFrame(id);
-  mute_unmute_game(2)
+  mute_unmute_game(2);
+
+  save_users_score();
+  save_high_score(SCORE);
 }
 
 function restart_game_after_gameover() {

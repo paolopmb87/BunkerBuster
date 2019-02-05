@@ -264,29 +264,23 @@ body {
 }
 
 #username_form_div{
-  padding-top: 1%;
   background: rgba(0, 0, 0, 0.4);
-  padding-left: 1%;
-  width:50%;
-  height: 17%;
-  margin-top: 5%;
-  margin-left: 25%;
+  width:38%;
+  height: 10%;
+  margin-left: 33%;
+  margin-top: 1%;
   color: red;
+  position: absolute;
 }
 
 #username_form{
-  padding-top: 1%;
-  background: rgba(0, 0, 0, 0.4);
-  width:50%;
-  height: 17%;
+  position: absolute;
   color: red;
-  font-size: 10px;
+  font-size: 14px;
   z-index: 1;
 }
 
-input[type=text] {
-  width: 65%;
-  height: 12%;
+input[type=text]{
   box-sizing: border-box;
   border: 2px solid #ccc;
   border-radius: 50px;
@@ -294,6 +288,8 @@ input[type=text] {
   color: black;
   text-align: center;
   margin-top: 10px;
+  width: 30rem;
+  height: 2rem;
 }
 
 input[type=button], input[type=submit], input[type=reset] {
@@ -301,12 +297,13 @@ input[type=button], input[type=submit], input[type=reset] {
   border: red;
   border-radius: 50px;
   color: #bf2020;
+  font-size: 14px;
   text-decoration: none;
   cursor: pointer;
-  height: 3rem;
+  height: 2rem;
   width: 10rem;
-  margin-top: 10px;
-  margin-left: 43%;
+  margin-top: 1rem;
+  margin-left: 18rem
 }
 
 
@@ -400,17 +397,6 @@ progress#berserk_pb_id::-webkit-progress-value {
   margin-bottom: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
 }
-
-/*#turret-hp{*/
-  /*display: none;*/
-  /*height: 30px;*/
-  /*width: 30px;*/
-/*}*/
-
-/*progress#turret-hp-id::-webkit-progress-value {*/
-  /*background: red;*/
-  /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;*/
-/*}*/
 
 .progresses{
   box-sizing: border-box;

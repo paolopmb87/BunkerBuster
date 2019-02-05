@@ -100,7 +100,7 @@
         <div id="username_form_div">
           <form id="username_form">
             Insert Username:
-            <input id="username_id" type="text" placeholder="username">
+            <input id="username_id" type="text" placeholder="username" onkeydown="prevent_default(event)">
             <input id="submit_id" type="submit" value="Save" onclick="saveusername()"><br>
           </form>
         </div>
@@ -129,6 +129,8 @@
 
 <footer class="footer">
   <div class="foot">
+
+
     <div class="help">
       <a href="html_struct/help.html" data-target="#theModal2" data-toggle="modal">
         <img id="HLP" src="img/HelpBTN.png"></a>

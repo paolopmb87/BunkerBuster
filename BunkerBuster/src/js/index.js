@@ -1058,3 +1058,10 @@ function saveusername() {
   var username = document.getElementById("username_id");
   localStorage.setItem("username_id", username.value);
 }
+
+function prevent_default(e) {
+  if (e.type.indexOf("key") !== -1) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+}

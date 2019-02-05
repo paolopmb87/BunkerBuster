@@ -212,7 +212,7 @@ function init() {
   cann_positions[3] = [-1000, 0, -500];
   cann_positions[4] = [300, 0, 900];
 
-  tank_life = 100;
+  tank_life = 10;
 
   init_variables();
   add_cubes();

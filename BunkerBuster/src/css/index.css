@@ -261,7 +261,6 @@ body {
 
 #game_over_restart_game_btn_id{
   float: inside;
-  margin-top: 150px!important;
 }
 
 #username_form_div{
@@ -270,19 +269,19 @@ body {
   padding-left: 1%;
   width:50%;
   height: 17%;
-  position: absolute;
   margin-top: 5%;
   margin-left: 25%;
-  float: inside;
   color: red;
 }
 
 #username_form{
-  width:100%;
-  position: absolute;
-  font-size: 20px;
-  float: inside;
-  padding-left: 10px;
+  padding-top: 1%;
+  background: rgba(0, 0, 0, 0.4);
+  width:50%;
+  height: 17%;
+  color: red;
+  font-size: 10px;
+  z-index: 1;
 }
 
 input[type=text] {

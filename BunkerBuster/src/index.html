@@ -129,26 +129,26 @@
 
 <footer class="footer">
   <div class="foot">
-
-
-    <div class="help">
+    <div class="column" id="help">
       <a href="html_struct/help.html" data-target="#theModal2" data-toggle="modal">
         <img id="HLP" src="img/HelpBTN.png"></a>
     </div>
-    <div id = "diff">DIFFICULTY</div>
 
-    <select id="ddlViewBy" >
-      <option>Easy</option>
-      <option selected>Normal</option>
-      <option >Hard</option>
-    </select>
 
-    <div>
+    <div class="column" id="diff">DIFFICULTY
+      <select id="ddlViewBy" >
+        <option>Easy</option>
+        <option selected>Normal</option>
+        <option >Hard</option>
+      </select>
+    </div>
+
+    <div class="column" id="play_pause_btn_id">
       <img id="play_pause" src="img/PauseBTN.png" style="width:100px;height:100px;"
            onclick="play_pause_game();changeImage(1)">
     </div>
 
-    <div class="chart">
+    <div class="column" id="chart_id">
       <a href="html_struct/chart.html" data-target="#theModal" data-toggle="modal">
         <img id="CHART" src="img/ChartBTN.png"  onclick="save_users_score()"></a>
     </div>

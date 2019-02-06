@@ -577,7 +577,7 @@ function update() {
     }
     CANNON_BULLETS[index].position.add(CANNON_BULLETS[index].velocity);
   }
-  
+
   if (keyboard.pressed("W")) {
     if (check_Turret_Collision(0)) {
       tank.translateZ(moveDistance);
@@ -795,7 +795,7 @@ function timeout(shell, time){
   setTimeout(function () {
     shell.geometry.dispose();
     shell.material.dispose();
-    shell.texture.dispose();
+   // shell.texture.dispose();
     shell.alive = false;
     scene.remove(shell);
   }, time);
@@ -937,8 +937,8 @@ function render(){
 
   backgroundMusic.play();
   sound_war.play();
-  requestAnimationFrame(update);
-
+  //requestAnimationFrame(update);
+  
   for(var i = 0; i< nCubes;i++){
     healthcubes[i].rotation.x += rot_x;
     healthcubes[i].rotation.y += rot_y;
@@ -963,11 +963,12 @@ function render(){
 function animate() {
   if (!isPlay) return;
 
-    setTimeout( function() {
+ /*   setTimeout( function() {
 
       requestAnimationFrame( animate );
 
-    }, 100 / 4 );   //FPS CAPPED TO 60
+    }, 100 / 4 );   //FPS CAPPED TO 60 */
+   requestAnimationFrame( animate );
     render();
     update();
 

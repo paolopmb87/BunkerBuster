@@ -25,3 +25,16 @@ tr:nth-child(even) {
   color:red;
   text-align: center;
 }
+
+
+#a #b #c{
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 50px;
+  font-size: 14px;
+  color: black;
+  text-align: center;
+  margin-top: 10px;
+  width: 14rem;
+  height: 2rem;
+}

@@ -293,10 +293,11 @@ body {
   position: absolute;
   color: red;
   font-size: 14px;
+  margin-left: 15px;
   z-index: 1;
 }
 
-input[type=text]{
+#username_id{
   box-sizing: border-box;
   border: 2px solid #ccc;
   border-radius: 50px;
@@ -304,7 +305,7 @@ input[type=text]{
   color: black;
   text-align: center;
   margin-top: 10px;
-  width: 30rem;
+  width: 33rem;
   height: 2rem;
 }
 
@@ -319,7 +320,6 @@ input[type=button], input[type=submit], input[type=reset] {
   height: 2rem;
   width: 10rem;
   margin-top: 1rem;
-  margin-left: 18rem
 }
 
 

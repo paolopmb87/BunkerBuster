@@ -578,29 +578,73 @@ function update() {
     CANNON_BULLETS[index].position.add(CANNON_BULLETS[index].velocity);
   }
 
-  if (keyboard.pressed("W")) {
-    if (check_Turret_Collision(0)) {
-      tank.translateZ(moveDistance);
-      update_cannons();
-      update_camera();
-    }
-  }
+  var onKeyDown = function(event) {
 
-  if (keyboard.pressed("S")) {
-    if (check_Turret_Collision(1)) {
-      tank.translateZ(-moveDistance / 2);
-      update_cannons();
-      update_camera();
+    switch (event.keyCode) {
+
+      case 38: // up
+        event.preventDefault();
+        if (check_Turret_Collision(0)) {
+          tank.translateZ(moveDistance);
+          update_cannons();
+          update_camera();
+        }
+        break;
+
+      case 37: // left
+        event.preventDefault();
+        tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), -rotateAngle);
+        viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
+        break;
+
+      case 40: // down
+        event.preventDefault();
+        if (check_Turret_Collision(1)) {
+          tank.translateZ(-moveDistance / 2);
+          update_cannons();
+          update_camera();
+        }
+        break;
+
+      case 39: // right
+        event.preventDefault();
+        tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), rotateAngle);
+        viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
+        break;
+
+      case 32: // space
+        break;
+
     }
-  }
-  if (keyboard.pressed("A")) {
-    tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), rotateAngle);
-    viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
-  }
-  if (keyboard.pressed("D")) {
-    tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), -rotateAngle);
-    viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
-  }
+
+  };
+
+
+  document.addEventListener('keydown', onKeyDown, false);
+
+  // if (keyboard.pressed("W")) {
+  //   if (check_Turret_Collision(0)) {
+  //     tank.translateZ(moveDistance);
+  //     update_cannons();
+  //     update_camera();
+  //   }
+  // }
+  //
+  // if (keyboard.pressed("S")) {
+  //   if (check_Turret_Collision(1)) {
+  //     tank.translateZ(-moveDistance / 2);
+  //     update_cannons();
+  //     update_camera();
+  //   }
+  // }
+  // if (keyboard.pressed("A")) {
+  //   tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), rotateAngle);
+  //   viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
+  // }
+  // if (keyboard.pressed("D")) {
+  //   tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), -rotateAngle);
+  //   viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
+  // }
   if (keyboard.pressed("Q")) {
     Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
     viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
@@ -938,6 +982,7 @@ function render(){
   backgroundMusic.play();
   sound_war.play();
   requestAnimationFrame(update);
+
   for(var i = 0; i< nCubes;i++){
     healthcubes[i].rotation.x += rot_x;
     healthcubes[i].rotation.y += rot_y;

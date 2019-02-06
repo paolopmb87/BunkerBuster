@@ -577,107 +577,30 @@ function update() {
     }
     CANNON_BULLETS[index].position.add(CANNON_BULLETS[index].velocity);
   }
-
-  var onKeyDown = function(event) {
-
-    switch (event.keyCode) {
-
-      case 38: // up
-        event.preventDefault();
-        moveforward = true;
-        if (check_Turret_Collision(0)) {
-          tank.translateZ(moveDistance);
-          update_cannons();
-          update_camera();
-        }
-        break;
-
-      case 37: // left
-        moveleft = true;
-        event.preventDefault();
-        tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), -rotateAngle);
-        viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
-        break;
-
-
-      case 40: // down;
-        movedown = true
-        event.preventDefault();
-        if (check_Turret_Collision(1)) {
-          tank.translateZ(-moveDistance / 2);
-          update_cannons();
-          update_camera();
-        }
-        break;
-
-      case 39: // right
-        moveright = true;
-        event.preventDefault();
-        tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), rotateAngle);
-        viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
-        break;
-
-      case 32: // space
-        break;
-
+  
+  if (keyboard.pressed("W")) {
+    if (check_Turret_Collision(0)) {
+      tank.translateZ(moveDistance);
+      update_cannons();
+      update_camera();
     }
+  }
 
-  };
-
-  var onKeyUp = function(event) {
-
-    switch (event.keyCode) {
-
-      case 38: // up
-      case 87: // w
-        moveforward = false;
-        break;
-
-      case 37: // left
-      case 65: // a
-        moveleft = false;
-        break;
-
-      case 40: // down
-      case 83: // s
-        movedown = false;
-        break;
-
-      case 39: // right
-      case 68: // d
-        moveright = false;
-        break;
-
+  if (keyboard.pressed("S")) {
+    if (check_Turret_Collision(1)) {
+      tank.translateZ(-moveDistance / 2);
+      update_cannons();
+      update_camera();
     }
-
-  };
-
-  document.addEventListener("keyup", onKeyUp, false);
-  document.addEventListener('keydown', onKeyDown, false);
-
-  // if (keyboard.pressed("W")) {
-  //   if (check_Turret_Collision(0)) {
-  //     tank.translateZ(moveDistance);
-  //     update_cannons();
-  //     update_camera();
-  //   }
-  // }
-  //
-  // if (keyboard.pressed("S")) {
-  //   if (check_Turret_Collision(1)) {
-  //     tank.translateZ(-moveDistance / 2);
-  //     update_cannons();
-  //     update_camera();
-  //   }
-  // }
-  // if (keyboard.pressed("A")) {
-  //   tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), rotateAngle);
-  //   viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
-  // }
-  // if (keyboard.pressed("D")) {
-  //   tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), -rotateAngle);
-  //   viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
-  // }
+  }
+  if (keyboard.pressed("A")) {
+    tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), rotateAngle);
+    viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
+  }
+  if (keyboard.pressed("D")) {
+    tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), -rotateAngle);
+    viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
+  }
   if (keyboard.pressed("Q")) {
     Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
     viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);

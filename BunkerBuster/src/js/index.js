@@ -144,7 +144,7 @@ var difficulty_val;
 
 var light_on;
 
-
+var moveforward,moveleft,movedown,moveright;
 /**
  * var to pause/play game
  */
@@ -584,6 +584,7 @@ function update() {
 
       case 38: // up
         event.preventDefault();
+        moveforward = true;
         if (check_Turret_Collision(0)) {
           tank.translateZ(moveDistance);
           update_cannons();
@@ -592,12 +593,15 @@ function update() {
         break;
 
       case 37: // left
+        moveleft = true;
         event.preventDefault();
         tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), -rotateAngle);
         viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
         break;
 
-      case 40: // down
+
+      case 40: // down;
+        movedown = true
         event.preventDefault();
         if (check_Turret_Collision(1)) {
           tank.translateZ(-moveDistance / 2);
@@ -607,6 +611,7 @@ function update() {
         break;
 
       case 39: // right
+        moveright = true;
         event.preventDefault();
         tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), rotateAngle);
         viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
@@ -619,7 +624,35 @@ function update() {
 
   };
 
+  var onKeyUp = function(event) {
 
+    switch (event.keyCode) {
+
+      case 38: // up
+      case 87: // w
+        moveforward = false;
+        break;
+
+      case 37: // left
+      case 65: // a
+        moveleft = false;
+        break;
+
+      case 40: // down
+      case 83: // s
+        movedown = false;
+        break;
+
+      case 39: // right
+      case 68: // d
+        moveright = false;
+        break;
+
+    }
+
+  };
+
+  document.addEventListener("keyup", onKeyUp, false);
   document.addEventListener('keydown', onKeyDown, false);
 
   // if (keyboard.pressed("W")) {

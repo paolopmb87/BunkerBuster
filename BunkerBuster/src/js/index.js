@@ -74,7 +74,7 @@ var Track;
 var Turret;
 var Turret_2;
 var destr_cann;
-var rate = 90;
+var rate = 60;
 var p1fireRate = rate;   //FIRE RATE
 var cannonsfireRate;
 
@@ -83,16 +83,16 @@ var cannon_rate_medium = 70;
 var cannon_rate_easy = 200;
 
 var damage;
-var damage_hard = 30;
-var damage_medium = 20;
-var damage_easy = 10;
+var damage_hard = 25;
+var damage_medium = 15;
+var damage_easy = 5;
 
 
 var cannon_rate;
 var viewfinder;
 var soundPath = "sounds/";
 var sound_tank_hit, sound_game_over,explosion,sound_war,power_up, sound_cannon,backgroundMusic,
-  sound_shot_tank, sound_reload, cann_explosion,hit_on_cannnon ;
+  sound_shot_tank, sound_reload, cann_explosion,hit_on_cannnon,alarm ;
 
 
 var health=0;
@@ -217,6 +217,7 @@ function init() {
   power_up = new sound(soundPath + "powerup.mp3");
   cann_explosion = new sound(soundPath + "cannon_explosion.mp3");
   hit_on_cannnon = new sound(soundPath+ "hit_on_cannon.mp3");
+  alarm = new sound(soundPath+ "alarm.mp3");
   sound_cannon.set_volume(0.2);
   // set up the scene
   createScene();
@@ -532,6 +533,17 @@ function generate_random() {
  * KEYBOARD - MOUSE
  */
 function update() {
+
+  if(tank_life<= 20){
+    light.color.setHex(0xff471a);
+    backgroundMusic.stop();
+    alarm.play();
+  }
+  else{
+    light.color.setHex(0xffffff);
+    alarm.stop();
+    backgroundMusic.play();
+  }
 
    var shot = false;
    curTime = clock.getElapsedTime() - startTime;
@@ -960,6 +972,7 @@ function play_pause_game() {
     sound_shot_tank.pause();
     backgroundMusic.pause();
     sound_war.pause();
+    alarm.pause();
     sound_cannon.pause();
     cancelAnimationFrame(id);
     document.getElementById("pause_div_id").style.display = "block";
@@ -1005,8 +1018,10 @@ function mute_unmute_game(val){
     power_up.set_volume(0);
     cann_explosion.set_volume(0);
     hit_on_cannnon.set_volume(0);
+    alarm.set_volume(0);
   }
   else{
+    alarm.set_volume(1);
     sound_shot_tank.set_volume(1);
     sound_tank_hit.set_volume(1);
   //  sound_game_over.set_volume(1);

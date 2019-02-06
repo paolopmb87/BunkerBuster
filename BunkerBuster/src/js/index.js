@@ -96,7 +96,6 @@ var sound_tank_hit, sound_game_over,explosion,sound_war,power_up, sound_cannon,b
 
 var health=0;
 var health_bar;
-var cube;
 var keyboard = new THREEx.KeyboardState();
 keyboard.des
 //temp
@@ -240,11 +239,7 @@ function init() {
 
   var cubegeometry = new THREE.BoxGeometry(10, 10, 10);
   var cubematerial = new THREE.MeshBasicMaterial({color: 0x00ff00});
-  cube = new THREE.Mesh(cubegeometry, cubematerial);
 
-  //cube.scale.set(5,7,9);
-  cube.position.set(50, 5, 90);
-  scene.add(cube);
   cann_positions[0] = [300, 0, 150];
   cann_positions[1] = [-300, 0, 800];
   cann_positions[2] = [1000, 0, 350];
@@ -555,6 +550,7 @@ function update() {
   else{
     light.color.setHex(0xffffff);
     alarm.stop();
+    if( isPlay)
     backgroundMusic.play();
   }
 
@@ -660,7 +656,8 @@ function shoot_controls() {
   for( var i=0;i<bullets.length;i++) {
     for (var z = 0; z < cannons.length; z++) {
       if (bullets[i].visible === true &&  cannons[z].visible && bullets[i].position.x >= cannons[z].position.x - 10 && bullets[i].position.x <= cannons[z].position.x + 10 && bullets[i].position.z >= cannons[z].position.z - 10 && bullets[i].position.z <= cannons[z].position.z + 10) {
-        bullets[i].visible = false;
+        bullets[i].geometry.dispose();
+        bullets[i].material.dispose();
     /*    bullets[i].geometry.dispose();
         bullets[i].material.dispose();
         bullets[i] = undefined;*/
@@ -795,6 +792,8 @@ function cannon_shoot(){
 function timeout(shell, time){
   time = time*1000;
   setTimeout(function () {
+    shell.geometry.dispose();
+    shell.material.dispose();
     shell.alive = false;
     scene.remove(shell);
   }, time);
@@ -975,7 +974,9 @@ function play_pause_game() {
   // Start and Pause
   if (!isPlay) {
     isPlay = true;
-    backgroundMusic.play();
+    if(tank_life>20) backgroundMusic.play();
+    else alarm.play();
+
     sound_war.play();
     sound_cannon.play();
     document.getElementById("pause_div_id").style.display = "none";
@@ -983,9 +984,11 @@ function play_pause_game() {
 
   } else {
     isPlay = false;
+    backgroundMusic.pause();
+    alarm.pause();
     var id = requestAnimationFrame(animate);
     sound_shot_tank.pause();
-    backgroundMusic.pause();
+
     sound_war.pause();
     alarm.pause();
     sound_cannon.pause();

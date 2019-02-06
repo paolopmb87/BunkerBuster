@@ -226,7 +226,7 @@ function init() {
   // set up the scene
   createScene();
   // CONTROLS
-  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls = new THREE.OrbitControls(camera);
   //controls.enabled = false;
 
   // STATS
@@ -306,13 +306,6 @@ function createScene(){
   light.shadow.mapSize.height = 1024;
   light.shadow.camera.near = 0.5;
   light.shadow.camera.far = 10000 ;
-
-  orbitControl = new THREE.OrbitControls( camera, renderer.domElement );//helper to rotate around in scene
-  //orbitControl.addEventListener( 'change', render );
-  orbitControl.enableDamping = true;
-  orbitControl.dampingFactor = 0.8;
-  orbitControl.enableZoom = false;
-  orbitControl.enabled = false;
 
   const viewfinderGeometry = new THREE.BoxBufferGeometry( 0.01, 0.01, 0.01 );
   const viewfinderMaterial = new THREE.MeshBasicMaterial( { color: 0xffff00 } );

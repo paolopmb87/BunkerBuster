@@ -18,6 +18,10 @@ body {
   font-family: "Font Title";
   src: url(../fonts/PanfletaStencil-ExtraBold.ttf) format("truetype");
 }
+@font-face {
+  font-family: "Timer";
+  src: url(../fonts/Colleged.ttf) format("truetype");
+}
 
 #title{
   display: block;
@@ -84,7 +88,7 @@ body {
   height: 100px;
   width: 100px;
   margin-right: 10px;
-  background-color: whitesmoke;
+  background-color: rgba(255, 255, 255, 0.4);
 
 }
 
@@ -138,31 +142,34 @@ body {
 
 
 #score {
+  font-family: "Timer";
   display: block;
   position: absolute;
-  font-weight: bold;
-  color: black;
+   color: black;
   font-size: 1vw;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.4);
   z-index: 100;
   float:right;
   width: 7vw;
-  height: 1.5vw;
+  height: 1.3vw;
   margin-left: 82%;
+  margin-top: 4px;
+
 }
 
 #time{
+  font-family: "Timer";
   display: block;
   position: absolute;
-  font-weight: bold;
   color: black;
   font-size: 1vw;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.4);
   z-index: 100;
   float:right;
-  width: 7vw;
-  height: 1.5vw;
+  width:9.5vw;
+  height: 1.3vw;
   margin-left: 70%;
+  margin-top: 4px;
 
 }
 
@@ -225,9 +232,36 @@ body {
   float: left;
   height: 25px;
   width: 70px;
-  left: 32%;
+
   margin-top: 0.6%;
-  margin-left: 34%;
+  margin-left: 43%;
+}
+
+#diff{
+  font-family: "Font Title";
+  color: red;
+  font-size: 25px;
+  margin-top: 1%;
+  margin-left: 43.5%;
+  margin-bottom: 0.1%;
+  float: left;
+}
+
+
+#ddlViewBy {
+   width: 250px;
+  float: left;
+  padding: 5px 35px 5px 5px;
+  margin-top: 1.5%;
+  margin-left: 41%;
+  font-family: "Font Title";
+  font-size: 20px;
+  border: 3px solid red;
+  height: 40px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* background: url(http://www.stackoverflow.com/favicon.ico) 96% / 15% no-repeat #eee;  */
 }
 
 #pause_div_id{

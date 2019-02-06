@@ -76,7 +76,19 @@ var Turret_2;
 var destr_cann;
 var rate = 90;
 var p1fireRate = rate;   //FIRE RATE
-var cannonsfireRate = 80;
+var cannonsfireRate;
+
+var cannon_rate_hard = 20;
+var cannon_rate_medium = 70;
+var cannon_rate_easy = 200;
+
+var damage;
+var damage_hard = 30;
+var damage_medium = 20;
+var damage_easy = 10;
+
+
+var cannon_rate;
 var viewfinder;
 var soundPath = "sounds/";
 var sound_tank_hit, sound_game_over,explosion,sound_war,power_up, sound_cannon,backgroundMusic,
@@ -129,6 +141,9 @@ var canvas;
 var SCORE;
 var clock,startTime, curTime;
 
+var difficulty;
+var difficulty_val;
+
 /**
  * var to pause/play game
  */
@@ -163,10 +178,29 @@ function init() {
   destr_cann = 0;
   SCORE = 0;
   clock = new THREE.Clock();
+  difficulty = document.getElementById("ddlViewBy");
+  difficulty_val = difficulty.options[difficulty.selectedIndex].text;
   startTime=clock.getElapsedTime();
+
+  if(difficulty_val === "Hard"){
+    cannon_rate = cannon_rate_hard;
+    damage = damage_hard;
+  }
+  if(difficulty_val === "Normal"){
+    cannon_rate = cannon_rate_medium;
+    damage = damage_medium;
+  }
+  if(difficulty_val === "Easy"){
+    cannon_rate = cannon_rate_easy;
+    damage = damage_easy;
+  }
+
+  cannonsfireRate = cannon_rate;
 
   document.getElementById('play_btn_div_id').style.display = 'none';
   document.getElementById('play_pause').style.display = 'inline-block';
+  document.getElementById('ddlViewBy').style.display = 'none';
+  document.getElementById('diff').style.display = 'none';
 
   document.getElementById('play_game_id').style.display = 'block';
 
@@ -585,7 +619,7 @@ function update() {
   }
   else if (p1fireRate !== rate  && keyboard.pressed("V")) sound_reload.play();*/
 
-  if (cannonsfireRate === 80) {
+  if (cannonsfireRate === cannon_rate) {
     cannon_shoot();
   }
 
@@ -643,11 +677,11 @@ function shoot_controls() {
       sound_tank_hit.play();
       if(tank_life>0) {
 
-        health_bar.value -= 10;
-        tank_life = tank_life - 10;
+        health_bar.value -= damage;
+        tank_life = tank_life - damage;
         console.log('VITA:' + tank_life);
       }
-      if (tank_life === 0){
+      if (tank_life <= 0){
         game_over(0);
 
       }
@@ -892,7 +926,7 @@ function render(){
   if (p1fireRate < rate) {
     p1fireRate++;
   }
-  if (cannonsfireRate < 80) {
+  if (cannonsfireRate < cannon_rate) {
     cannonsfireRate++;
   }
 }
@@ -1012,6 +1046,9 @@ function restart_game() {
 function game_over(par) {
   controls.enabled = false;
   SCORE -= curTime.toFixed(2);
+  if(SCORE < 0){
+    SCORE = 0;
+  }
   var temp_div = document.getElementById("game_over_div_id");
   var text_to_change = temp_div.childNodes[0];
 

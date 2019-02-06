@@ -34,7 +34,6 @@ var VIEW_ANGLE = 90, NEAR = 0.1, FAR = 1000,CAMERA_HEIGHT = 250,NUM_TURRETS = 5;
 
 var camera;
 var scene;
-var orbitControl;
 var sceneWidth;
 var sceneHeight;
 var renderer;
@@ -650,7 +649,9 @@ function update() {
   }
 
   shoot_controls();
+  controls.dispose();
   controls.update();
+
   stats.update();
 }
 
@@ -1073,6 +1074,7 @@ function restart_game() {
 }
 
 function game_over(par) {
+
   controls.enabled = false;
   SCORE -= curTime.toFixed(2);
   if(SCORE < 0){

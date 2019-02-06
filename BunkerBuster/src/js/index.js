@@ -49,7 +49,7 @@ var stats;
 var scenario_mesh = [];
 var mesh = [];
 
-var TANK_LOADED = false;
+var TREES_LOADED = false;
 var NUM_LOADED = 0;
 
 // var dom;
@@ -144,6 +144,9 @@ var clock,startTime, curTime;
 var difficulty;
 var difficulty_val;
 
+var light_on;
+
+
 /**
  * var to pause/play game
  */
@@ -172,6 +175,8 @@ function init_variables() {
   speed_cube_texture = new THREE.TextureLoader().load('img/speed.png');
   berserk_cube_texture = new THREE.TextureLoader().load('img/berserk.png');
   score_cube_texture = new THREE.TextureLoader().load('img/score.png');
+
+  light_on= false;
 }
 
 function init() {
@@ -300,7 +305,7 @@ function createScene(){
   light.shadowCameraVisible = true;
   light.castShadow = true;
   //light.shadowDarkness = 0.95;
-  scene.add(light);
+
   //Set up shadow properties for the light
   light.shadow.mapSize.width = 1024;
   light.shadow.mapSize.height = 1024;
@@ -367,7 +372,6 @@ function addTank(){
   loader.load("models/tank/tank.json",
     function (obj){
       tank = obj;
-      TANK_LOADED = true;
       NUM_LOADED++;
 
       tank.scale.set(4.5, 4.5, 4.5);
@@ -418,7 +422,9 @@ function add_scenario_mesh(){
       mesh[j].scale.set(0.8, 0.8, 0.8);
       scene.add(mesh[j]);
     }
+    TREES_LOADED = true;
   });
+
 }
 
 function add_cubes(){
@@ -439,6 +445,7 @@ function add_healthcubes(nCubes){
     healthcubes[i] = healthcube.clone();
     healthcubes[i].position.set(generate_random(),8,generate_random());
     healthcubes[i].scale.set(0.4,0.4,0.4);
+    healthcubes[i].visible=false;
     scene.add(healthcubes[i]);
   }
 
@@ -455,6 +462,7 @@ function add_speedcubes(nCubes){
     speedcubes[i] = speedcube.clone();
     speedcubes[i].position.set(generate_random(),8,generate_random());
     speedcubes[i].scale.set(0.4,0.4,0.4);
+    speedcubes[i].visible=false;
     scene.add(speedcubes[i]);
 
   }
@@ -471,6 +479,7 @@ function add_berserkcubes(nCubes){
     berserkcubes[i] = berserkcube.clone();
     berserkcubes[i].position.set(generate_random(),8,generate_random());
     berserkcubes[i].scale.set(0.4,0.4,0.4);
+    berserkcubes[i].visible=false;
     scene.add(berserkcubes[i]);
   }
 }
@@ -485,6 +494,7 @@ function add_scorecubes(nCubes){
     scorecubes[i] = scorecube.clone();
     scorecubes[i].position.set(generate_random(),8,generate_random());
     scorecubes[i].scale.set(0.4,0.4,0.4);
+    scorecubes[i].visible=false;
     scene.add(scorecubes[i]);
   }
 }
@@ -494,10 +504,6 @@ function addCannon() {
   loader.load("models/cannons/cannon.json", function (obj) {
     cannon= obj;
     for(var i=0;i<NUM_TURRETS;i++){
-      var lightArray=[];
-      light.castShadow = true;
-      lightArray.push(light);
-      scene.add( light );
 
       cannons[i] = cannon.clone();
       cannons[i].scale.set(10, 10, 10);
@@ -519,7 +525,7 @@ function addEnemyHPBar(pos) {
   enemy_health_bar[pos] = new THREE.Mesh( geometry, material );
   scene.add( enemy_health_bar[pos] );
   enemy_health_bar[pos].position.set(cannons[pos].position.x, 1, cannons[pos].position.z-20);
-
+  enemy_health_bar[pos].visible= false;
 
 }
 
@@ -533,6 +539,21 @@ function generate_random() {
  * KEYBOARD - MOUSE
  */
 function update() {
+  if(TREES_LOADED&&!light_on){
+    scene.add(light);
+    for(var t = 0; t< enemy_health_bar.length;t++){
+      enemy_health_bar[t].visible=true;}
+    for(var i = 0; i<nCubes; i++){
+      speedcubes[i].visible=true;
+      berserkcubes[i].visible=true;
+      healthcubes[i].visible=true;
+      scorecubes[i].visible=true;
+      clock = new THREE.Clock();
+      startTime=clock.getElapsedTime();
+
+    }
+    light_on = true;
+  }
 
   if(tank_life<= 20){
     light.color.setHex(0xff471a);

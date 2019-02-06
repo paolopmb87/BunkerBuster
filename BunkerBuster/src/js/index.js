@@ -237,9 +237,6 @@ function init() {
   play_game_id.appendChild(renderer.domElement);
   play_game_id.appendChild(stats.domElement);
 
-  var cubegeometry = new THREE.BoxGeometry(10, 10, 10);
-  var cubematerial = new THREE.MeshBasicMaterial({color: 0x00ff00});
-
   cann_positions[0] = [300, 0, 150];
   cann_positions[1] = [-300, 0, 800];
   cann_positions[2] = [1000, 0, 350];
@@ -656,8 +653,11 @@ function shoot_controls() {
   for( var i=0;i<bullets.length;i++) {
     for (var z = 0; z < cannons.length; z++) {
       if (bullets[i].visible === true &&  cannons[z].visible && bullets[i].position.x >= cannons[z].position.x - 10 && bullets[i].position.x <= cannons[z].position.x + 10 && bullets[i].position.z >= cannons[z].position.z - 10 && bullets[i].position.z <= cannons[z].position.z + 10) {
+        bullets[i].visible = false;
         bullets[i].geometry.dispose();
         bullets[i].material.dispose();
+        bullets[i].texture.dispose();
+
     /*    bullets[i].geometry.dispose();
         bullets[i].material.dispose();
         bullets[i] = undefined;*/
@@ -677,6 +677,7 @@ function shoot_controls() {
           scene.remove(enemy_health_bar[z]);
           enemy_health_bar[z].geometry.dispose();
           enemy_health_bar[z].material.dispose();
+          enemy_health_bar[z].texture.dispose();
           enemy_health_bar[z] = undefined;
           cannons[z].visible = false;
           cann_explosion.play();
@@ -794,6 +795,7 @@ function timeout(shell, time){
   setTimeout(function () {
     shell.geometry.dispose();
     shell.material.dispose();
+    shell.texture.dispose();
     shell.alive = false;
     scene.remove(shell);
   }, time);

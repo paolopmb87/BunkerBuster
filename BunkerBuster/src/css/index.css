@@ -212,8 +212,8 @@ body {
 #HLP{
   padding-top:1%;
   margin-left: 1%;
-  height: 6vw;
-  width: 6vw;
+  height: 8vw;
+  width: 8vw;
   float: left;
 }
 
@@ -232,8 +232,8 @@ body {
 #CHART{
   padding-top:1%;
   margin-left: 1%;
-  height: 6vw;
-  width: 6vw;
+  height: 8vw;
+  width: 8vw;
   float: right;
 }
 
@@ -241,8 +241,8 @@ body {
 #play_pause{
   display:none;
   float: left;
-  height: 6vw;
-  width: 6vw;
+  height: 8vw;
+  width: 8vw;
   margin-top: 0.6%;
   margin-left: 43%;
 }
@@ -282,9 +282,9 @@ body {
 
 #username_form_div{
   background: rgba(0, 0, 0, 0.4);
-  width:38%;
-  height: 10%;
-  margin-left: 33%;
+  width:27vw;
+  height: 10vw;
+  margin-left: 36%;
   margin-top: 1%;
   color: red;
   position: absolute;
@@ -306,8 +306,8 @@ body {
   color: black;
   text-align: center;
   margin-top: 10px;
-  width: 33rem;
-  height: 2rem;
+  width: 25vw;
+  height: 2vw;
 }
 
 input[type=button], input[type=submit], input[type=reset] {

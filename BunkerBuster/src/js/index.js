@@ -375,8 +375,8 @@ function add_scenario_mesh(){
   scenario_mesh = [dead_tree_loader, trees_loader];
   var loader =[];
   var scenario;
-  var nDeadTrees = 100;
-  var nTrees2 = 100;
+  var nDeadTrees = 70;
+  var nTrees2 = 70;
 
   for(var x = 0; x< scenario_mesh.length;x++){
     loader.push(new THREE.ObjectLoader());
@@ -519,10 +519,16 @@ function generate_random() {
   return randomN;
 }
 
+function update_camera(){
+  camera.position.set(tank.position.x,CAMERA_HEIGHT,tank.position.z);
+  controls.target.set(tank.position.x,0,tank.position.z);
+}
 
-/**
- * KEYBOARD - MOUSE
- */
+function update_cannons(){
+  for(var i =0;i<cannons.length;i++)
+    cannons[i].lookAt(tank.position.x,0,tank.position.z);
+}
+
 function update() {
   if(TREES_LOADED&&!light_on){
     scene.add(light);
@@ -588,6 +594,10 @@ function update() {
   stats.update();
 }
 
+
+/**
+ * KEYBOARD - MOUSE
+ */
 function onDocumentKeyDown(event) {
   var keyCode = event.which;
   if (keyCode === 86 && p1fireRate !== rate && shot) {
@@ -792,11 +802,6 @@ function timeout(shell, time){
 
 }
 
-function update_camera(){
-  camera.position.set(tank.position.x,CAMERA_HEIGHT,tank.position.z);
-  controls.target.set(tank.position.x,0,tank.position.z);
-
-}
 
 function check_Turret_Collision(par) {
   //var tempX,tempZ;
@@ -910,11 +915,6 @@ function check_cubes() {
       SCORE += 40;
     }
   }
-}
-
-function update_cannons(){
-  for(var i =0;i<cannons.length;i++)
-    cannons[i].lookAt(tank.position.x,0,tank.position.z);
 }
 
 /**

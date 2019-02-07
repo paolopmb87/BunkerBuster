@@ -34,12 +34,10 @@ var mesh = [];
 var TREES_LOADED = false;
 var NUM_LOADED = 0;
 
-// var dom;
-// var mouse ={ x: 0, y: 0 };
-// var clock = new THREE.Clock()
 /**
  * Variables for player tank
  */
+
 var bullets=[];
 var CANNON_BULLETS=[];
 var cannon_shells=[];
@@ -142,8 +140,13 @@ function start_game() {
 }
 
 function init_variables() {
-  shell = new THREE.Mesh(new THREE.SphereGeometry(2.5, 8, 6), new THREE.MeshLambertMaterial({color: 0x0000}));
-  cannon_shell = new THREE.Mesh(new THREE.SphereGeometry(4, 8, 6), new THREE.MeshLambertMaterial({color: 0xff0000}));
+  shell = new THREE.Mesh(
+      new THREE.SphereGeometry(2.5, 8, 6),
+        new THREE.MeshLambertMaterial({color: 0x0000}));
+  cannon_shell = new THREE.Mesh(
+      new THREE.SphereGeometry(4, 8, 6),
+        new THREE.MeshLambertMaterial({color: 0xff0000}));
+  
   health_bar = document.getElementById("health");
   speed_bar = document.getElementById("speed_pb_id");
   berserk_bar = document.getElementById("berserk_pb_id");

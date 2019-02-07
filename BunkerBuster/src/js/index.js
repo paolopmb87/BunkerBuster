@@ -175,7 +175,7 @@ function init_variables() {
   score_cube_texture = new THREE.TextureLoader().load('img/score.png');
 
   document.addEventListener("keydown", onDocumentKeyDown, false);
-  document.addEventListener("keydown", move_tank, false);
+  document.addEventListener("keypressed", move_tank, false);
 
   light_on= false;
 }
@@ -616,7 +616,7 @@ function onDocumentKeyDown(event) {
 }
 
 function move_tank(){
-  
+
   if (keyboard.pressed("W")) {
     if (check_Turret_Collision(0)) {
       tank.translateZ(moveDistance);

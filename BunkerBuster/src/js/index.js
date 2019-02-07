@@ -584,6 +584,10 @@ function update() {
       update_cannons();
       update_camera();
     }
+  }else{
+    controls.enabled = false;
+    controls.dispose();
+
   }
 
   if (keyboard.pressed("S")) {
@@ -592,22 +596,43 @@ function update() {
       update_cannons();
       update_camera();
     }
+  }else{
+    controls.enabled = false;
+    controls.dispose();
+
   }
+
   if (keyboard.pressed("A")) {
     tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), rotateAngle);
     viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
+  } else{
+    controls.enabled = false;
+    controls.dispose();
+
   }
   if (keyboard.pressed("D")) {
     tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), -rotateAngle);
     viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
+  }else{
+    controls.enabled = false;
+    controls.dispose();
+
   }
   if (keyboard.pressed("Q")) {
     Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
     viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
+  }else{
+    controls.enabled = false;
+    controls.dispose();
+
   }
   if (keyboard.pressed("E")) {
     Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
     viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
+  }else{
+    controls.enabled = false;
+    controls.dispose();
+
   }
   // rotate left/right/up/down
   rotationMatrix = new THREE.Matrix4().identity();
@@ -638,7 +663,7 @@ function update() {
   else if (p1fireRate !== rate  && keyboard.pressed("V")) sound_reload.play();*/
 
   if (cannonsfireRate === cannon_rate) {
-    cannon_shoot();
+    // cannon_shoot();
   }
 
   shoot_controls();
@@ -938,7 +963,7 @@ function render(){
   backgroundMusic.play();
   sound_war.play();
   //requestAnimationFrame(update);
-  
+
   for(var i = 0; i< nCubes;i++){
     healthcubes[i].rotation.x += rot_x;
     healthcubes[i].rotation.y += rot_y;
@@ -1083,6 +1108,8 @@ function restart_game() {
 function game_over(par) {
 
   controls.enabled = false;
+  controls.dispose();
+
   SCORE -= curTime.toFixed(2);
   if(SCORE < 0){
     SCORE = 0;

@@ -146,7 +146,7 @@ function init_variables() {
   cannon_shell = new THREE.Mesh(
       new THREE.SphereGeometry(4, 8, 6),
         new THREE.MeshLambertMaterial({color: 0xff0000}));
-  
+
   health_bar = document.getElementById("health");
   speed_bar = document.getElementById("speed_pb_id");
   berserk_bar = document.getElementById("berserk_pb_id");

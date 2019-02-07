@@ -97,11 +97,9 @@ var sound_tank_hit, sound_game_over,explosion,sound_war,power_up, sound_cannon,b
 var health=0;
 var health_bar;
 var keyboard = new THREEx.KeyboardState();
-keyboard.des
-//temp
 var trees_loader="models/trees/tree2.json";
 var dead_tree_loader="models/trees/dead_tree.json";
-//
+
 
 var healthcube;
 var healthcubes = [];
@@ -561,8 +559,6 @@ function update() {
   document.getElementById('time').innerHTML = "Timer: " + curTime.toFixed(2);
 
 
-   check_cubes();
-
   for (var index = 0; index < bullets.length; index += 1) {
     if (bullets[index] === undefined) continue;
     if (bullets[index].alive === false) {
@@ -582,20 +578,11 @@ function update() {
   }
 
 
-
-  /*
-  if( p1fireRate === rate  && keyboard.pressed("V")){
-    sound_reload.stop();
-    tank_shoot();
-  }
-  else if (p1fireRate !== rate  && keyboard.pressed("V")) sound_reload.play();*/
-
   if (cannonsfireRate === cannon_rate) {
-    // cannon_shoot();
+    cannon_shoot();
   }
 
   shoot_controls();
-  controls.dispose();
   controls.update();
 
   stats.update();
@@ -651,6 +638,8 @@ function move_tank(){
   // rotate left/right/up/down
   rotationMatrix = new THREE.Matrix4().identity();
 
+  check_cubes();
+
   shot = false;
 
 }
@@ -663,7 +652,6 @@ function shoot_controls() {
         bullets[i].visible = false;
         bullets[i].geometry.dispose();
         bullets[i].material.dispose();
-        bullets[i].texture.dispose();
 
         if (  enemy_health_life[z] === 2) {
           enemy_health_bar[z].material.color.setHex(0xffff00);   //INSERIRE GIALLO
@@ -681,7 +669,6 @@ function shoot_controls() {
           scene.remove(enemy_health_bar[z]);
           enemy_health_bar[z].geometry.dispose();
           enemy_health_bar[z].material.dispose();
-          enemy_health_bar[z].texture.dispose();
           enemy_health_bar[z] = undefined;
           cannons[z].visible = false;
           cann_explosion.play();
@@ -799,7 +786,6 @@ function timeout(shell, time){
   setTimeout(function () {
     shell.geometry.dispose();
     shell.material.dispose();
-   // shell.texture.dispose();
     shell.alive = false;
     scene.remove(shell);
   }, time);
@@ -941,7 +927,6 @@ function render(){
 
   backgroundMusic.play();
   sound_war.play();
-  //requestAnimationFrame(update);
 
   move_tank();
   for(var i = 0; i< nCubes;i++){

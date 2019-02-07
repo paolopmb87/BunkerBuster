@@ -1,21 +1,4 @@
 /**
- * Fps management
- */
-// (function(){
-//   var fps=document.createElement('fps');
-//   fps.onload=function (){
-//     var wp = new Stats();
-//     document.body.appendChild(wp.dom);
-//     requestAnimationFrame(function loop() {
-//       wp.update();
-//       requestAnimationFrame(loop)
-//     });
-//   };
-//   fps.src='//rawgit.com/mrdoob/stats.js/master/build/stats.min.js';
-//   document.head.appendChild(fps);
-// })
-
-/**
  * Management of window size
  */
 function onWindowResize() {
@@ -90,7 +73,7 @@ var damage_easy = 5;
 var cannon_rate;
 var viewfinder;
 var soundPath = "sounds/";
-var sound_tank_hit, sound_game_over,explosion,sound_war,power_up, sound_cannon,backgroundMusic,
+var sound_tank_hit, explosion,sound_war,power_up, sound_cannon,backgroundMusic,
   sound_shot_tank, sound_reload, cann_explosion,hit_on_cannnon,alarm ;
 
 
@@ -142,12 +125,12 @@ var difficulty_val;
 
 var light_on;
 
-var moveforward,moveleft,movedown,moveright;
 /**
  * var to pause/play game
  */
 var shot = false;
 var isPlay = false;
+
 /**
  * Function to start game with the play button
  */
@@ -212,7 +195,6 @@ function init() {
 
   sound_shot_tank = new sound(soundPath + "tank_shot.mp3");
   sound_tank_hit = new sound(soundPath + "tankhit.mp3");
-//  sound_game_over = new sound(soundPath + "game_over.mp3");
   explosion = new sound(soundPath+"grenade.mp3");
   backgroundMusic = new sound(soundPath + "background.mp3");
   sound_war = new sound(soundPath + "sound_war.mp3");
@@ -315,14 +297,6 @@ function createScene(){
 
 }
 
-function addObjects(){
-
-  addTank();
-  addCannon();
-  add_scenario_mesh();
-
-}
-
 function sound(src) {
   this.sound = document.createElement("audio");
   this.sound.src = src;
@@ -349,6 +323,17 @@ function sound(src) {
   }
 }
 
+
+/**
+ * Add Scenario Objects
+ */
+function addObjects(){
+
+  addTank();
+  addCannon();
+  add_scenario_mesh();
+
+}
 /**
  * Tank Mesh added to the scene
  */
@@ -436,7 +421,6 @@ function add_healthcubes(nCubes){
 
 }
 
-
 function add_speedcubes(nCubes){
   const Material = new THREE.MeshBasicMaterial( { map: speed_cube_texture } );
   const Geometry = new THREE.CubeGeometry(30, 30, 30);
@@ -519,6 +503,11 @@ function generate_random() {
   return randomN;
 }
 
+
+/**
+ * Update Controls
+ */
+
 function update_camera(){
   camera.position.set(tank.position.x,CAMERA_HEIGHT,tank.position.z);
   controls.target.set(tank.position.x,0,tank.position.z);
@@ -596,7 +585,7 @@ function update() {
 
 
 /**
- * KEYBOARD - MOUSE
+ * Tank Movement
  */
 function onDocumentKeyDown(event) {
   var keyCode = event.which;
@@ -654,6 +643,9 @@ function move_tank(){
 
 }
 
+/**
+ * Shoot controls
+ */
 function shoot_controls() {
 
   for( var i=0;i<bullets.length;i++) {
@@ -791,17 +783,9 @@ function cannon_shoot(){
 }
 
 
-function timeout(shell, time){
-  time = time*1000;
-  setTimeout(function () {
-    shell.geometry.dispose();
-    shell.material.dispose();
-    shell.alive = false;
-    scene.remove(shell);
-  }, time);
-
-}
-
+/**
+ * Collisons Check
+ */
 
 function check_Turret_Collision(par) {
   //var tempX,tempZ;
@@ -833,6 +817,7 @@ function check_Turret_Collision(par) {
   }
   return true;
 }
+
 
 function check_cubes() {
   var berserk_downloadTimer;
@@ -1128,3 +1113,14 @@ function saveusername() {
   localStorage.setItem("username_id", username.value);
 }
 
+
+function timeout(shell, time){
+  time = time*1000;
+  setTimeout(function () {
+    shell.geometry.dispose();
+    shell.material.dispose();
+    shell.alive = false;
+    scene.remove(shell);
+  }, time);
+
+}

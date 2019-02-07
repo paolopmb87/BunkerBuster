@@ -148,7 +148,7 @@ var moveforward,moveleft,movedown,moveright;
 /**
  * var to pause/play game
  */
-
+var shot = false;
 var isPlay = false;
 /**
  * Function to start game with the play button
@@ -554,8 +554,8 @@ function update() {
     backgroundMusic.play();
   }
 
-   var shot = false;
-   curTime = clock.getElapsedTime() - startTime;
+  shot = false;
+  curTime = clock.getElapsedTime() - startTime;
 
   document.getElementById('score').innerHTML = "Score: " + SCORE;
   document.getElementById('time').innerHTML = "Timer: " + curTime.toFixed(2);
@@ -582,7 +582,6 @@ function update() {
   }
 
 
-  shot = false;
 
   /*
   if( p1fireRate === rate  && keyboard.pressed("V")){
@@ -616,67 +615,43 @@ function onDocumentKeyDown(event) {
   }
 }
 
-function move_tank(event){
-
-
+function move_tank(){
+  
   if (keyboard.pressed("W")) {
     if (check_Turret_Collision(0)) {
       tank.translateZ(moveDistance);
       update_cannons();
       update_camera();
     }
-  }else{
-    controls.enabled = false;
-    controls.dispose();
-
   }
-
   if (keyboard.pressed("S")) {
     if (check_Turret_Collision(1)) {
       tank.translateZ(-moveDistance / 2);
       update_cannons();
       update_camera();
     }
-  }else{
-    controls.enabled = false;
-    controls.dispose();
-
   }
 
   if (keyboard.pressed("A")) {
     tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), rotateAngle);
     viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
-  } else{
-    controls.enabled = false;
-    controls.dispose();
-
   }
   if (keyboard.pressed("D")) {
     tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), -rotateAngle);
     viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
-  }else{
-    controls.enabled = false;
-    controls.dispose();
-
   }
   if (keyboard.pressed("Q")) {
     Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
     viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
-  }else{
-    controls.enabled = false;
-    controls.dispose();
-
   }
   if (keyboard.pressed("E")) {
     Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
     viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
-  }else{
-    controls.enabled = false;
-    controls.dispose();
-
   }
   // rotate left/right/up/down
   rotationMatrix = new THREE.Matrix4().identity();
+
+  shot = false;
 
 }
 
@@ -690,9 +665,6 @@ function shoot_controls() {
         bullets[i].material.dispose();
         bullets[i].texture.dispose();
 
-    /*    bullets[i].geometry.dispose();
-        bullets[i].material.dispose();
-        bullets[i] = undefined;*/
         if (  enemy_health_life[z] === 2) {
           enemy_health_bar[z].material.color.setHex(0xffff00);   //INSERIRE GIALLO
           hit_on_cannnon.play();
@@ -1171,9 +1143,3 @@ function saveusername() {
   localStorage.setItem("username_id", username.value);
 }
 
-function prevent_default(e) {
-  if (e.type.indexOf("key") !== -1) {
-    e.preventDefault();
-    e.stopPropagation();
-  }
-}

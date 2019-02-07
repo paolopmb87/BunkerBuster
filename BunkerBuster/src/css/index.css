@@ -198,7 +198,7 @@ body {
 }
 
 .column {
-  width: 32vw;
+  width: 31vw;
   height: auto;
   float: left;
   margin: 0 10px;
@@ -212,8 +212,8 @@ body {
 #HLP{
   padding-top:1%;
   margin-left: 1%;
-  height: 8vw;
-  width: 8vw;
+  height: 7vw;
+  width: 7vw;
   float: left;
 }
 
@@ -232,8 +232,8 @@ body {
 #CHART{
   padding-top:1%;
   margin-left: 1%;
-  height: 8vw;
-  width: 8vw;
+  height: 7vw;
+  width: 7vw;
   float: right;
 }
 
@@ -241,8 +241,8 @@ body {
 #play_pause{
   display:none;
   float: left;
-  height: 8vw;
-  width: 8vw;
+  height: 7vw;
+  width: 7vw;
   margin-top: 0.6%;
   margin-left: 43%;
 }

@@ -174,6 +174,9 @@ function init_variables() {
   berserk_cube_texture = new THREE.TextureLoader().load('img/berserk.png');
   score_cube_texture = new THREE.TextureLoader().load('img/score.png');
 
+  document.addEventListener("keydown", onDocumentKeyDown, false);
+  document.addEventListener("keydown", move_tank, false);
+
   light_on= false;
 }
 
@@ -578,6 +581,44 @@ function update() {
     CANNON_BULLETS[index].position.add(CANNON_BULLETS[index].velocity);
   }
 
+
+  shot = false;
+
+  /*
+  if( p1fireRate === rate  && keyboard.pressed("V")){
+    sound_reload.stop();
+    tank_shoot();
+  }
+  else if (p1fireRate !== rate  && keyboard.pressed("V")) sound_reload.play();*/
+
+  if (cannonsfireRate === cannon_rate) {
+    // cannon_shoot();
+  }
+
+  shoot_controls();
+  controls.dispose();
+  controls.update();
+
+  stats.update();
+}
+
+function onDocumentKeyDown(event) {
+  var keyCode = event.which;
+  if (keyCode === 86 && p1fireRate !== rate && shot) {
+    sound_reload.play();
+  }
+
+  else if (keyCode === 86 && p1fireRate === rate && !shot) {
+    //sound_reload.stop();
+    sound_reload.stop();
+    tank_shoot();
+    shot = true;
+  }
+}
+
+function move_tank(event){
+
+
   if (keyboard.pressed("W")) {
     if (check_Turret_Collision(0)) {
       tank.translateZ(moveDistance);
@@ -637,40 +678,6 @@ function update() {
   // rotate left/right/up/down
   rotationMatrix = new THREE.Matrix4().identity();
 
-  document.addEventListener("keydown", onDocumentKeyDown, false);
-
-  function onDocumentKeyDown(event) {
-    var keyCode = event.which;
-    if (keyCode === 86 && p1fireRate !== rate && shot) {
-      sound_reload.play();
-    }
-
-    else if (keyCode === 86 && p1fireRate === rate && !shot) {
-      //sound_reload.stop();
-      sound_reload.stop();
-      tank_shoot();
-      shot = true;
-    }
-  }
-
-  shot = false;
-
-  /*
-  if( p1fireRate === rate  && keyboard.pressed("V")){
-    sound_reload.stop();
-    tank_shoot();
-  }
-  else if (p1fireRate !== rate  && keyboard.pressed("V")) sound_reload.play();*/
-
-  if (cannonsfireRate === cannon_rate) {
-    // cannon_shoot();
-  }
-
-  shoot_controls();
-  controls.dispose();
-  controls.update();
-
-  stats.update();
 }
 
 function shoot_controls() {
@@ -964,6 +971,7 @@ function render(){
   sound_war.play();
   //requestAnimationFrame(update);
 
+  move_tank();
   for(var i = 0; i< nCubes;i++){
     healthcubes[i].rotation.x += rot_x;
     healthcubes[i].rotation.y += rot_y;

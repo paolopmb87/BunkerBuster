@@ -602,7 +602,6 @@ function onDocumentKeyDown(event) {
 }
 
 function move_tank(){
-
   if (keyboard.pressed("W")) {
     if (check_Turret_Collision(0)) {
       tank.translateZ(moveDistance);
@@ -679,8 +678,6 @@ function shoot_controls() {
           if(destr_cann === 5){
             game_over(1);
           }
-
-
         }
         enemy_health_life[z] -= 1;
       }
@@ -726,7 +723,6 @@ function tank_shoot() {
 
   sound_shot_tank.stop();
   sound_shot_tank.play();
-
 
   bullets.push(temp_shell);
   scene.add(temp_shell);
@@ -826,7 +822,11 @@ function check_cubes() {
   if(tank === undefined) return;
 
   for (var i = 0; i < nCubes; i++) {
-    if (healthcubes[i].visible === true && tank.position.x >= healthcubes[i].position.x - 10 && tank.position.x <= healthcubes[i].position.x + 10 && tank.position.z >= healthcubes[i].position.z - 10 && tank.position.z <= healthcubes[i].position.z + 10) {
+    if (healthcubes[i].visible === true
+        && tank.position.x >= healthcubes[i].position.x - 10
+          && tank.position.x <= healthcubes[i].position.x + 10
+            && tank.position.z >= healthcubes[i].position.z - 10
+              && tank.position.z <= healthcubes[i].position.z + 10) {
       healthcubes[i].visible = false;
       power_up.play();
       tank_life += 20;
@@ -834,7 +834,11 @@ function check_cubes() {
       console.log('HEAL-> VITA: ' + tank_life);
     }
 
-    if (speedcubes[i].visible === true && tank.position.x >= speedcubes[i].position.x - 10 && tank.position.x <= speedcubes[i].position.x + 10 && tank.position.z >= speedcubes[i].position.z - 10 && tank.position.z <= speedcubes[i].position.z + 10) {
+    if (speedcubes[i].visible === true
+        && tank.position.x >= speedcubes[i].position.x - 10
+          && tank.position.x <= speedcubes[i].position.x + 10
+            && tank.position.z >= speedcubes[i].position.z - 10
+              && tank.position.z <= speedcubes[i].position.z + 10) {
 
       if (speed_up === true) {
         speed_bar.value = 100;
@@ -865,7 +869,12 @@ function check_cubes() {
 
     }
 
-    if (berserkcubes[i].visible === true && tank.position.x >= berserkcubes[i].position.x - 10 && tank.position.x <= berserkcubes[i].position.x + 10 && tank.position.z >= berserkcubes[i].position.z - 10 && tank.position.z <= berserkcubes[i].position.z + 10) {
+    if (berserkcubes[i].visible === true
+      && tank.position.x >= berserkcubes[i].position.x - 10
+        && tank.position.x <= berserkcubes[i].position.x + 10
+          && tank.position.z >= berserkcubes[i].position.z - 10
+            && tank.position.z <= berserkcubes[i].position.z + 10) {
+
       if (berserk_up === true) {
         berserk_bar.value = 100;
         berserkcubes[i].visible = false;
@@ -892,7 +901,11 @@ function check_cubes() {
       }
     }
 
-    if (scorecubes[i].visible === true && tank.position.x >= scorecubes[i].position.x - 10 && tank.position.x <= scorecubes[i].position.x + 10 && tank.position.z >= scorecubes[i].position.z - 10 && tank.position.z <= scorecubes[i].position.z + 10){
+    if (scorecubes[i].visible === true
+      && tank.position.x >= scorecubes[i].position.x - 10
+        && tank.position.x <= scorecubes[i].position.x + 10
+          && tank.position.z >= scorecubes[i].position.z - 10
+            && tank.position.z <= scorecubes[i].position.z + 10){
 
       scorecubes[i].visible = false;
       power_up.play();
@@ -937,20 +950,15 @@ function render(){
 
 function animate() {
   if (!isPlay) return;
-
- /*   setTimeout( function() {
-
-      requestAnimationFrame( animate );
-
-    }, 100 / 4 );   //FPS CAPPED TO 60 */
-   requestAnimationFrame( animate );
+    requestAnimationFrame( animate );
     render();
     update();
-
 }
 
+/**
+ * Function to Play or Pause the game
+ */
 function play_pause_game() {
-  // Start and Pause
   if (!isPlay) {
     isPlay = true;
     if(tank_life>20) backgroundMusic.play();
@@ -977,6 +985,10 @@ function play_pause_game() {
   }
 }
 
+/**
+ * Function to change images
+ * @param ID 1 = pause/play image; 2=mute/unmute button
+ */
 function changeImage(ID){
   if(ID ===1) {
     var abs_path1 = document.getElementById("play_pause").src;
@@ -1112,7 +1124,6 @@ function saveusername() {
   var username = document.getElementById("username_id");
   localStorage.setItem("username_id", username.value);
 }
-
 
 function timeout(shell, time){
   time = time*1000;

@@ -1034,6 +1034,7 @@ function game_over(par) {
   mute_unmute_game(2);
   save_users_score();
   save_high_score(SCORE);
+  reset_global_vars();
 }
 
 function restart_game_after_gameover() {

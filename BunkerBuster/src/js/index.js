@@ -30,7 +30,7 @@ var ground;
 var rotationMatrix;
 var controls;
 var stats;
-
+var keyCode;
 /**
  * Variables for player tank
  */
@@ -546,7 +546,7 @@ function update() {
  *    down = 40
  */
 function onDocumentKeyDown(event) {
-  var keyCode = event.which;
+  keyCode = event.which;
 
   if (keyCode === 86 && p1fireRate !== rate && shot) {
     sound_reload.play();
@@ -561,23 +561,22 @@ function onDocumentKeyDown(event) {
     tank_shoot();
     shot = true;
   }
-  if (keyCode === 39) {
-    event.preventDefault();
-    Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), turretRotateAngle);
-    viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), turretRotateAngle);
-  }
-  if (keyCode === 37){
-    event.preventDefault();
-    Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), -turretRotateAngle);
-    viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -turretRotateAngle);
-  }
-  rotationMatrix = new THREE.Matrix4().identity();
 }
 
 /**
  * rotationMatrix allow rotation on left right up and down
  */
 function move_tank(){
+
+  if (keyboard.pressed("left")) {
+    Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), turretRotateAngle);
+    viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), turretRotateAngle);
+  }
+  if (keyboard.pressed("right")){
+    Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), -turretRotateAngle);
+    viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -turretRotateAngle);
+  }
+
   if (keyboard.pressed("W")) {
     if (check_Turret_Collision(0)) {
       tank.translateZ(moveDistance);
@@ -706,7 +705,6 @@ function tank_shoot() {
 }
 
 function cannon_shoot(){
-
   cannon_shell.castShadow = false;
   if (tank === undefined)
     return;
@@ -747,7 +745,6 @@ function cannon_shoot(){
   }
   cannonsfireRate = 0;
 }
-
 
 /**
  * Collisons Check

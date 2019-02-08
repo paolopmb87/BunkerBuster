@@ -542,7 +542,7 @@ function onDocumentKeyDown(event) {
     event.preventDefault();
     event.stopPropagation();
   }
-  else if (keyCode === 38 && p1fireRate === rate && !shot) {
+  else if (keyCode === 32 && p1fireRate === rate && !shot) {
     //sound_reload.stop();
     event.preventDefault();
     event.stopPropagation();
@@ -643,7 +643,10 @@ function shoot_controls() {
   }
 
   for(let y=0; y<CANNON_BULLETS.length;y++){     //TANK
-    if (CANNON_BULLETS[y].position.x>=tank.position.x-10 && CANNON_BULLETS[y].position.x<=tank.position.x+10 && CANNON_BULLETS[y].position.z>=tank.position.z-10 && CANNON_BULLETS[y].position.z<=tank.position.z+10){
+    if (CANNON_BULLETS[y].position.x>=tank.position.x-10
+        && CANNON_BULLETS[y].position.x<=tank.position.x+10
+          && CANNON_BULLETS[y].position.z>=tank.position.z-10
+            && CANNON_BULLETS[y].position.z<=tank.position.z+10){
       CANNON_BULLETS[y].visible=false;
       CANNON_BULLETS.splice(y,1);
       sound_tank_hit.stop();

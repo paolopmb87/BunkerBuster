@@ -1,16 +1,4 @@
 /**
- * Management of window size
- */
-function onWindowResize() {
-  //resize & align
-  sceneWidth = $(game_scene_div).width();
-  sceneHeight = $(game_scene_div).height();
-  renderer.setSize(sceneWidth, sceneHeight);
-  camera.aspect = sceneWidth/sceneHeight;
-  camera.updateProjectionMatrix();
-}
-
-/**
  * Variables declaration
  */
 var VIEW_ANGLE = 90, NEAR = 0.1, FAR = 1000, CAMERA_HEIGHT = 250, NUM_TURRETS = 5;
@@ -1086,4 +1074,16 @@ function timeout(shell, time){
     shell.alive = false;
     scene.remove(shell);
   }, time);
+}
+
+/**
+ * Management of window size
+ */
+function onWindowResize() {
+  //resize & align
+  sceneWidth = $(game_scene_div).width();
+  sceneHeight = $(game_scene_div).height();
+  renderer.setSize(sceneWidth, sceneHeight);
+  camera.aspect = sceneWidth/sceneHeight;
+  camera.updateProjectionMatrix();
 }

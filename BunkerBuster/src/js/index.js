@@ -1013,7 +1013,7 @@ function restart_game() {
     document.getElementById("pause_div_id").style.display = "none";
     document.getElementById("play_pause").src = 'img/PauseBTN.png';
 
-    let canvas_id = document.getElementById("canvas_id");
+    canvas_id = document.getElementById("canvas_id");
     canvas_id.remove();
     reset_global_vars();
     start_game();
@@ -1023,8 +1023,6 @@ function restart_game() {
 }
 
 function game_over(par) {
-  reset_global_vars();
-
   SCORE -= curTime.toFixed(2);
   if(SCORE < 0){
     SCORE = 0;
@@ -1045,7 +1043,6 @@ function game_over(par) {
     document.getElementById("game_over_div_id").style.display = "block";
   }
 
-
   let id = requestAnimationFrame(animate);
   cancelAnimationFrame(id);
   mute_unmute_game(2);
@@ -1055,10 +1052,11 @@ function game_over(par) {
 
 function restart_game_after_gameover() {
   document.getElementById("game_over_div_id").style.display = "none";
+
   canvas_id = document.getElementById("canvas_id");
+  canvas_id.remove();
   reset_global_vars();
   start_game();
-  mute_unmute_game(1);
 }
 
 function saveusername() {

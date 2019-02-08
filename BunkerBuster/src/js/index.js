@@ -91,6 +91,12 @@ var score_cube_texture;
 var enemy_health_bar = [];
 var enemy_health_life = [];
 
+var loader;
+var loader_array =[];
+var scenario;
+var nDeadTrees = 70;
+var nTrees2 = 70;
+
 var speed_up = false;                    //init perks values
 var berserk_up = false;
 var TREES_LOADED = false;
@@ -98,6 +104,7 @@ var shot = false;
 var isPlay = false;
 
 var canvas;
+var canvas_id;
 var SCORE;
 var clock,startTime, curTime;
 
@@ -176,29 +183,16 @@ function init() {
 
   play_game_id = document.getElementById('play_game_id');
 
-  sound_shot_tank = new sound(soundPath + "tank_shot.mp3");
-  sound_tank_hit = new sound(soundPath + "tankhit.mp3");
-  explosion = new sound(soundPath+"grenade.mp3");
-  backgroundMusic = new sound(soundPath + "background.mp3");
-  sound_war = new sound(soundPath + "sound_war.mp3");
-  sound_cannon = new sound(soundPath + "cannon_shot.mp3");
-  sound_reload = new sound(soundPath + "reload.mp3");
-  power_up = new sound(soundPath + "powerup.mp3");
-  cann_explosion = new sound(soundPath + "cannon_explosion.mp3");
-  hit_on_cannnon = new sound(soundPath+ "hit_on_cannon.mp3");
-  alarm = new sound(soundPath+ "alarm.mp3");
-  sound_cannon.set_volume(0.2);
+  setupSound();
   // set up the scene
   createScene();
   // CONTROLS
   controls = new THREE.OrbitControls(camera);
-  //controls.enabled = false;
-
+  controls.enabled = false;
   // STATS
   stats = new Stats();
   stats.domElement.style.position = 'absolute';
   stats.domElement.style.bottom = '0px';
-  // stats.domElement.style.zIndex = 100;
 
   play_game_id.appendChild(renderer.domElement);
   play_game_id.appendChild(stats.domElement);
@@ -214,6 +208,21 @@ function init() {
   init_variables();
   add_cubes();
 
+}
+
+function setupSound() {
+  sound_shot_tank = new Sound(soundPath + "tank_shot.mp3");
+  sound_tank_hit = new Sound(soundPath + "tankhit.mp3");
+  explosion = new Sound(soundPath+"grenade.mp3");
+  backgroundMusic = new Sound(soundPath + "background.mp3");
+  sound_war = new Sound(soundPath + "sound_war.mp3");
+  sound_cannon = new Sound(soundPath + "cannon_shot.mp3");
+  sound_reload = new Sound(soundPath + "reload.mp3");
+  power_up = new Sound(soundPath + "powerup.mp3");
+  cann_explosion = new Sound(soundPath + "cannon_explosion.mp3");
+  hit_on_cannnon = new Sound(soundPath+ "hit_on_cannon.mp3");
+  alarm = new Sound(soundPath+ "alarm.mp3");
+  sound_cannon.set_volume(0.2);
 }
 
 /**
@@ -278,7 +287,7 @@ function createScene(){
 
 }
 
-function sound(src) {
+function Sound(src) {
   this.sound = document.createElement("audio");
   this.sound.src = src;
   this.sound.setAttribute("preload", "auto");
@@ -319,7 +328,7 @@ function addObjects(){
  * Tank Mesh added to the scene
  */
 function addTank(){
-  var loader = new THREE.ObjectLoader();
+  loader = new THREE.ObjectLoader();
   loader.load("models/tank/tank.json",
     function (obj){
       tank = obj;
@@ -339,20 +348,16 @@ function addTank(){
 
 function add_scenario_mesh(){
   scenario_mesh = [dead_tree_loader, trees_loader];
-  var loader =[];
-  var scenario;
-  var nDeadTrees = 70;
-  var nTrees2 = 70;
 
-  for(var x = 0; x< scenario_mesh.length;x++){
-    loader.push(new THREE.ObjectLoader());
+  for(let x = 0; x< scenario_mesh.length;x++){
+    loader_array.push(new THREE.ObjectLoader());
   }
 
 //DEAD TREES
-  loader[0].load(scenario_mesh[0], function (obj) {
+  loader_array[0].load(scenario_mesh[0], function (obj) {
     scenario = obj;
 
-    for(var j=0;j<nDeadTrees;j++) {
+    for(let j=0;j<nDeadTrees;j++) {
       mesh[j] = scenario.clone();
       mesh[j].position.x = (generate_random());
       mesh[j].position.y = 0 ;
@@ -362,10 +367,10 @@ function add_scenario_mesh(){
     }
   });
 //TREES
-  loader[1].load(scenario_mesh[1], function (obj) {
+  loader_array[1].load(scenario_mesh[1], function (obj) {
     scenario = obj;
 
-    for(var j=nDeadTrees;j<nDeadTrees+nTrees2;j++) {
+    for(let j=nDeadTrees;j<nDeadTrees+nTrees2;j++) {
       mesh[j] = scenario.clone();
       mesh[j].position.x = (generate_random());
       mesh[j].position.y = 0 ;
@@ -391,15 +396,13 @@ function add_healthcubes(nCubes){
   const Geometry = new THREE.CubeGeometry(30, 30, 30);
   healthcube = new THREE.Mesh(Geometry,Material);
 
-
-  for(var i = 0; i<nCubes; i++){
+  for(let i = 0; i<nCubes; i++){
     healthcubes[i] = healthcube.clone();
     healthcubes[i].position.set(generate_random(),8,generate_random());
     healthcubes[i].scale.set(0.4,0.4,0.4);
     healthcubes[i].visible=false;
     scene.add(healthcubes[i]);
   }
-
 }
 
 function add_speedcubes(nCubes){
@@ -407,7 +410,7 @@ function add_speedcubes(nCubes){
   const Geometry = new THREE.CubeGeometry(30, 30, 30);
   speedcube = new THREE.Mesh(Geometry,Material);
 
-  for(var i = 0; i<nCubes; i++){
+  for(let i = 0; i<nCubes; i++){
     speedcubes[i] = speedcube.clone();
     speedcubes[i].position.set(generate_random(),8,generate_random());
     speedcubes[i].scale.set(0.4,0.4,0.4);
@@ -421,8 +424,7 @@ function add_berserkcubes(nCubes){
   const Geometry = new THREE.CubeGeometry(30, 30, 30);
   berserkcube = new THREE.Mesh(Geometry,Material);
 
-
-  for(var i = 0; i<nCubes; i++){
+  for(let i = 0; i<nCubes; i++){
     berserkcubes[i] = berserkcube.clone();
     berserkcubes[i].position.set(generate_random(),8,generate_random());
     berserkcubes[i].scale.set(0.4,0.4,0.4);
@@ -436,8 +438,7 @@ function add_scorecubes(nCubes){
   const Geometry = new THREE.CubeGeometry(30, 30, 30);
   scorecube = new THREE.Mesh(Geometry,Material);
 
-
-  for(var i = 0; i<nCubes; i++){
+  for(let i = 0; i<nCubes; i++){
     scorecubes[i] = scorecube.clone();
     scorecubes[i].position.set(generate_random(),8,generate_random());
     scorecubes[i].scale.set(0.4,0.4,0.4);
@@ -447,10 +448,10 @@ function add_scorecubes(nCubes){
 }
 
 function addCannon() {
-  var loader = new THREE.ObjectLoader();
+  loader = new THREE.ObjectLoader();
   loader.load("models/cannons/cannon.json", function (obj) {
     cannon= obj;
-    for(var i=0;i<NUM_TURRETS;i++){
+    for(let i=0;i<NUM_TURRETS;i++){
 
       cannons[i] = cannon.clone();
       cannons[i].scale.set(10, 10, 10);
@@ -473,46 +474,45 @@ function addEnemyHPBar(pos) {
   scene.add( enemy_health_bar[pos] );
   enemy_health_bar[pos].position.set(cannons[pos].position.x, 1, cannons[pos].position.z-20);
   enemy_health_bar[pos].visible= false;
-
 }
 
+/**
+ * numbers between -1900 and 1900, the coordinates of the terrain
+ * @returns {number}
+ */
 function generate_random() {
-  var randomN = (Math.random() * 3801) - 1900;   //numbers between -1900 and 1900, the coordinates of the terrain
-  return randomN;
+  return (Math.random() * 3801) - 1900;
 }
-
 
 /**
  * Update Controls
  */
-
 function update_camera(){
   camera.position.set(tank.position.x,CAMERA_HEIGHT,tank.position.z);
   controls.target.set(tank.position.x,0,tank.position.z);
 }
 
 function update_cannons(){
-  for(var i =0;i<cannons.length;i++)
+  for(let i =0;i<cannons.length;i++)
     cannons[i].lookAt(tank.position.x,0,tank.position.z);
 }
 
 function update() {
   if(TREES_LOADED&&!light_on){
     scene.add(light);
-    for(var t = 0; t< enemy_health_bar.length;t++){
-      enemy_health_bar[t].visible=true;}
-    for(var i = 0; i<nCubes; i++){
+    for(let t = 0; t< enemy_health_bar.length;t++){
+      enemy_health_bar[t].visible=true;
+    }
+    for(let i = 0; i<nCubes; i++){
       speedcubes[i].visible=true;
       berserkcubes[i].visible=true;
       healthcubes[i].visible=true;
       scorecubes[i].visible=true;
       clock = new THREE.Clock();
       startTime=clock.getElapsedTime();
-
     }
     light_on = true;
   }
-
   if(tank_life<= 20){
     light.color.setHex(0xff471a);
     backgroundMusic.stop();
@@ -526,13 +526,12 @@ function update() {
   }
 
   shot = false;
-  curTime = clock.getElapsedTime() - startTime;
 
+  curTime = clock.getElapsedTime() - startTime;
   document.getElementById('score').innerHTML = "Score: " + SCORE;
   document.getElementById('time').innerHTML = "Timer: " + curTime.toFixed(2);
 
-
-  for (var index = 0; index < bullets.length; index += 1) {
+  for (let index = 0; index < bullets.length; index += 1) {
     if (bullets[index] === undefined) continue;
     if (bullets[index].alive === false) {
       bullets.splice(index, 1);
@@ -541,7 +540,7 @@ function update() {
     bullets[index].position.add(bullets[index].velocity);
   }
 
-  for (var index = 0; index < CANNON_BULLETS.length; index += 1) {
+  for (let index = 0; index < CANNON_BULLETS.length; index += 1) {
     if (CANNON_BULLETS[index] === undefined) continue;
     if (CANNON_BULLETS[index].alive === false) {
       CANNON_BULLETS.splice(index, 1);
@@ -550,31 +549,31 @@ function update() {
     CANNON_BULLETS[index].position.add(CANNON_BULLETS[index].velocity);
   }
 
-
   if (cannonsfireRate === cannon_rate) {
     cannon_shoot();
   }
 
   shoot_controls();
   controls.update();
-
   stats.update();
 }
 
 
 /**
  * Tank Movement
+ *    right = 39
+ *    left =37
+ *    up = 38
+ *    down = 40
  */
-
-
 function onDocumentKeyDown(event) {
   var keyCode = event.which;
+
   if (keyCode === 86 && p1fireRate !== rate && shot) {
     sound_reload.play();
     event.preventDefault();
     event.stopPropagation();
   }
-
   else if (keyCode === 38 && p1fireRate === rate && !shot) {
     //sound_reload.stop();
     event.preventDefault();
@@ -583,11 +582,6 @@ function onDocumentKeyDown(event) {
     tank_shoot();
     shot = true;
   }
-
-  /**
-   *    left = 37
-   *    right = 39
-   */
   if (keyCode === 39) {
       event.preventDefault();
       event.stopPropagation();
@@ -599,11 +593,13 @@ function onDocumentKeyDown(event) {
     event.stopPropagation();    Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
     viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
   }
-
+  rotationMatrix = new THREE.Matrix4().identity();
 }
 
-function move_tank(event){
-
+/**
+ * rotationMatrix allow rotation on left right up and down
+ */
+function move_tank(){
   if (keyboard.pressed("W")) {
     if (check_Turret_Collision(0)) {
       tank.translateZ(moveDistance);
@@ -618,12 +614,6 @@ function move_tank(event){
       update_camera();
     }
   }
-
-  /**
-   *   up = 38
-   *   down = 40
-   **/
-
   if (keyboard.pressed("A")) {
     tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), rotateAngle);
     viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
@@ -632,14 +622,12 @@ function move_tank(event){
     tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), -rotateAngle);
     viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
   }
-
   // rotate left/right/up/down
   rotationMatrix = new THREE.Matrix4().identity();
 
   check_cubes();
 
   shot = false;
-
 }
 
 /**
@@ -647,9 +635,14 @@ function move_tank(event){
  */
 function shoot_controls() {
 
-  for( var i=0;i<bullets.length;i++) {
-    for (var z = 0; z < cannons.length; z++) {
-      if (bullets[i].visible === true &&  cannons[z].visible && bullets[i].position.x >= cannons[z].position.x - 10 && bullets[i].position.x <= cannons[z].position.x + 10 && bullets[i].position.z >= cannons[z].position.z - 10 && bullets[i].position.z <= cannons[z].position.z + 10) {
+  for( let i=0;i<bullets.length;i++) {
+    for (let z = 0; z < cannons.length; z++) {
+      if (bullets[i].visible === true
+          && cannons[z].visible
+            && bullets[i].position.x >= cannons[z].position.x - 10
+              && bullets[i].position.x <= cannons[z].position.x + 10
+                && bullets[i].position.z >= cannons[z].position.z - 10
+                  && bullets[i].position.z <= cannons[z].position.z + 10) {
         bullets[i].visible = false;
         bullets[i].geometry.dispose();
         bullets[i].material.dispose();
@@ -666,7 +659,6 @@ function shoot_controls() {
           SCORE += 10;
         }
         if ( enemy_health_life[z] === 0) {
-         // enemy_health_life[z].remove();
           scene.remove(enemy_health_bar[z]);
           enemy_health_bar[z].geometry.dispose();
           enemy_health_bar[z].material.dispose();
@@ -684,7 +676,7 @@ function shoot_controls() {
     }
   }
 
-  for(var y=0; y<CANNON_BULLETS.length;y++){     //TANK
+  for(let y=0; y<CANNON_BULLETS.length;y++){     //TANK
     if (CANNON_BULLETS[y].position.x>=tank.position.x-10 && CANNON_BULLETS[y].position.x<=tank.position.x+10 && CANNON_BULLETS[y].position.z>=tank.position.z-10 && CANNON_BULLETS[y].position.z<=tank.position.z+10){
       CANNON_BULLETS[y].visible=false;
       CANNON_BULLETS.splice(y,1);
@@ -705,7 +697,7 @@ function shoot_controls() {
 }
 
 function tank_shoot() {
-  var temp_shell = shell.clone();
+  let temp_shell = shell.clone();
   temp_shell.visible = false;
 
   setTimeout(function(){
@@ -746,7 +738,7 @@ function cannon_shoot(){
         && tank.position.z ===0)
     return;
 
-  for( var i=0;i<cannons.length;i++) {
+  for( let i=0;i<cannons.length;i++) {
     if (cannons[i].visible === true) {
       cannon_shells[i] = cannon_shell.clone();
       cannon_shells[i].visible = true;
@@ -785,7 +777,7 @@ function cannon_shoot(){
 
 function check_Turret_Collision(par) {
   //var tempX,tempZ;
-  var clone = tank.clone();
+  let clone = tank.clone();
 
   if(par === 0){
     clone.translateZ( 1 )
@@ -794,34 +786,28 @@ function check_Turret_Collision(par) {
     clone.translateZ( -1 )
   }
 
-  for (var i = 0; i < cann_positions.length; i++) {
-
+  for (let i = 0; i < cann_positions.length; i++) {
     if (cannons[i].visible === true
-      && clone.position.x >= cann_positions[i][0]-5
-      && clone.position.x <= cann_positions[i][0]+5
-      && clone.position.z >= cann_positions[i][2]-5
-      && clone.position.z <= cann_positions[i][2]+5) {
+        && clone.position.x >= cann_positions[i][0]-5
+          && clone.position.x <= cann_positions[i][0]+5
+            && clone.position.z >= cann_positions[i][2]-5
+              && clone.position.z <= cann_positions[i][2]+5) {
       return false;
     }
   }
-
-  if(clone.position.x>1900
-    ||clone.position.x<-1900
-    ||clone.position.z>1900
-    ||clone.position.z<-1900){
-    return false;
-  }
-  return true;
+  return !(clone.position.x > 1900
+    || clone.position.x < -1900
+    || clone.position.z > 1900
+    || clone.position.z < -1900);
 }
 
-
 function check_cubes() {
-  var berserk_downloadTimer;
-  var speed_downloadTimer;
+  let berserk_downloadTimer;
+  let speed_downloadTimer;
 
   if(tank === undefined) return;
 
-  for (var i = 0; i < nCubes; i++) {
+  for (let i = 0; i < nCubes; i++) {
     if (healthcubes[i].visible === true
         && tank.position.x >= healthcubes[i].position.x - 10
           && tank.position.x <= healthcubes[i].position.x + 10
@@ -862,11 +848,9 @@ function check_cubes() {
             moveDistance = moveDistance / 2;
             console.log('SPEED UP IS OVER');
             speed_up = false;
-
           }
         }, 1000);
       }
-
     }
 
     if (berserkcubes[i].visible === true
@@ -888,7 +872,6 @@ function check_cubes() {
         console.log('BERSERK UP');
         berserk_bar.value = 100;
         p1fireRate = rate;
-
         berserk_downloadTimer = setInterval(function () {
           berserk_bar.value -= 10;
           if (berserk_bar.value <= 0) {
@@ -920,14 +903,14 @@ function check_cubes() {
  */
 
 function render(){
-  var rot_x = 0.018;
-  var rot_y = 0.020;
-
+  let rot_x = 0.018;
+  let rot_y = 0.020;
   backgroundMusic.play();
   sound_war.play();
 
   move_tank();
-  for(var i = 0; i< nCubes;i++){
+
+  for(let i = 0; i< nCubes;i++){
     healthcubes[i].rotation.x += rot_x;
     healthcubes[i].rotation.y += rot_y;
     speedcubes[i].rotation.x += rot_x;
@@ -973,7 +956,7 @@ function play_pause_game() {
     isPlay = false;
     backgroundMusic.pause();
     alarm.pause();
-    var id = requestAnimationFrame(animate);
+    let id = requestAnimationFrame(animate);
     sound_shot_tank.pause();
 
     sound_war.pause();
@@ -991,8 +974,8 @@ function play_pause_game() {
  */
 function changeImage(ID){
   if(ID ===1) {
-    var abs_path1 = document.getElementById("play_pause").src;
-    var path1 = abs_path1.substring(abs_path1.lastIndexOf("/"), abs_path1.length);
+    let abs_path1 = document.getElementById("play_pause").src;
+    let path1 = abs_path1.substring(abs_path1.lastIndexOf("/"), abs_path1.length);
 
     if (path1 === '/ResumeBTN.png') {
       document.getElementById("play_pause").src = 'img/PauseBTN.png';
@@ -1003,8 +986,8 @@ function changeImage(ID){
   }
   if (ID === 2){
 
-    var abs_path2 = document.getElementById("mute_unmute").src;
-    var path2 = abs_path2.substring(abs_path2.lastIndexOf("/"), abs_path2.length);
+    let abs_path2 = document.getElementById("mute_unmute").src;
+    let path2 = abs_path2.substring(abs_path2.lastIndexOf("/"), abs_path2.length);
     if (path2 === '/UnmuteBTN.png') {
       mute_unmute_game(1);
       document.getElementById("mute_unmute").src = 'img/MuteBTN.png';
@@ -1047,44 +1030,36 @@ function mute_unmute_game(val){
 }
 
 function restart_game() {
-  var txt;
   isPlay = false;
   if (confirm("Are you sure?")) {
-    //"You pressed OK!";
-    // location.reload();
     document.getElementById("pause_div_id").style.display = "none";
     document.getElementById("play_pause").src = 'img/PauseBTN.png';
-    var canvas_id = document.getElementById("canvas_id");
+
+    let canvas_id = document.getElementById("canvas_id");
     canvas_id.remove();
-    health_bar.value = 100;
-    tank_life = 100;
-    berserk_bar.value = 0;
-    speed_bar.value=0;
+    canvas_id.dispose();
+    reset_global_vars();
     start_game();
   } else {
-    //"You pressed Cancel!";
     isPlay = true;
   }
 }
 
 function game_over(par) {
-
-  controls.enabled = false;
-  controls.dispose();
+  reset_global_vars();
 
   SCORE -= curTime.toFixed(2);
   if(SCORE < 0){
     SCORE = 0;
   }
-  var temp_div = document.getElementById("game_over_div_id");
-  var text_to_change = temp_div.childNodes[0];
+  let temp_div = document.getElementById("game_over_div_id");
+  let text_to_change = temp_div.childNodes[0];
 
   if (par === 0) {
     document.getElementById('score').innerHTML = "Score: " + Math.floor(SCORE);
     text_to_change.nodeValue = 'GAME OVER';
     document.getElementById("game_over_div_id").style.display = "block";
     explosion.play();
-
   }
   else if (par === 1) {
     SCORE += 100;
@@ -1093,36 +1068,43 @@ function game_over(par) {
     document.getElementById("game_over_div_id").style.display = "block";
   }
 
-  isPlay = false;
-  health_bar.value = 100;
-  berserk_bar.value = 0;
-  speed_bar.value = 0;
-  enemy_health_bar = [];
-  enemy_health_life = [];
-  cannons = [];
-  bullets = [];
-  CANNON_BULLETS = [];
-  cann_positions = [];
-  var id = requestAnimationFrame(animate);
+
+  let id = requestAnimationFrame(animate);
   cancelAnimationFrame(id);
   mute_unmute_game(2);
-
   save_users_score();
   save_high_score(SCORE);
 }
 
 function restart_game_after_gameover() {
   document.getElementById("game_over_div_id").style.display = "none";
-  var canvas_id = document.getElementById("canvas_id");
-  canvas_id.remove();
+  canvas_id = document.getElementById("canvas_id");
+  reset_global_vars();
   start_game();
   mute_unmute_game(1);
-
 }
 
 function saveusername() {
-  var username = document.getElementById("username_id");
+  let username = document.getElementById("username_id");
   localStorage.setItem("username_id", username.value);
+}
+
+function reset_global_vars() {
+  isPlay = false;
+  health_bar.value = 100;
+  tank_life = 100;
+  berserk_bar.value = 0;
+  speed_bar.value=0;
+  enemy_health_bar = [];
+  enemy_health_life = [];
+  cannons = [];
+  bullets = [];
+  CANNON_BULLETS = [];
+  cann_positions = [];
+
+  controls.enabled = false;
+  controls.dispose();
+  canvas_id.dispose();
 }
 
 function timeout(shell, time){
@@ -1133,5 +1115,4 @@ function timeout(shell, time){
     shell.alive = false;
     scene.remove(shell);
   }, time);
-
 }

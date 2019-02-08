@@ -566,25 +566,40 @@ function update() {
  * Tank Movement
  */
 
-function onKeyDown(event) {
-  // This function should cause all keys to do nothing.
-  // For most keys, that's exactly what it does, but 'enter' and 'backspace' still function as normal.
-  // Go on, give it a try!
-  event.preventDefault()
-}
 
 function onDocumentKeyDown(event) {
   var keyCode = event.which;
   if (keyCode === 86 && p1fireRate !== rate && shot) {
     sound_reload.play();
+    event.preventDefault();
+    event.stopPropagation();
   }
 
   else if (keyCode === 38 && p1fireRate === rate && !shot) {
     //sound_reload.stop();
+    event.preventDefault();
+    event.stopPropagation();
     sound_reload.stop();
     tank_shoot();
     shot = true;
   }
+
+  /**
+   *    left = 37
+   *    right = 39
+   */
+  if (keyCode === 39) {
+      event.preventDefault();
+      event.stopPropagation();
+      Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
+      viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
+  }
+  if (keyCode === 37){
+    event.preventDefault();
+    event.stopPropagation();    Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
+    viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
+  }
+
 }
 
 function move_tank(event){
@@ -605,11 +620,9 @@ function move_tank(event){
   }
 
   /**
-   left = 37
-   up = 38
-   right = 39
-   down = 40
-   */
+   *   up = 38
+   *   down = 40
+   **/
 
   if (keyboard.pressed("A")) {
     tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), rotateAngle);
@@ -619,16 +632,7 @@ function move_tank(event){
     tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), -rotateAngle);
     viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
   }
-  if (keyboard.pressed("37")) {
-    onKeyDown(event);
-    Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
-    viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
-  }
-  if (keyboard.pressed("39")) {
-    onKeyDown(event);
-    Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
-    viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
-  }
+
   // rotate left/right/up/down
   rotationMatrix = new THREE.Matrix4().identity();
 

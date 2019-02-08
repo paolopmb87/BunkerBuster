@@ -7,8 +7,10 @@ body {
   padding: 0px;
 }
 
+#canvas{
+  position: relative;
+}
 .wrap{
-  position:relative;
   background: url(../img/poster.jpg) no-repeat bottom left;
   background-size: 100% 100%;
   width: 100%;
@@ -60,9 +62,8 @@ body {
   margin-left: auto;
   margin-right: auto;
   width: 100%;
-  height: 84%;
+  height: 83%;
   display: none;
-  position:relative;
 
 }
 
@@ -74,11 +75,6 @@ body {
   width: auto;
   height: 88.3%;
   margin:auto;
-  position:relative;
-}
-
-canvas{
-  position: relative;
 }
 
 #mute_unmute_div_id{
@@ -182,6 +178,7 @@ canvas{
     footer div
  **/
 .footer {
+  border-top: 4px solid red;
   position: relative;
   background-color: black;
   height: 16%;
@@ -202,7 +199,7 @@ canvas{
 
 .column {
   width: 31vw;
-  height: 8vw;
+  height: 7vw;
   float: left;
   margin: 0 10px;
   text-align: center;
@@ -252,7 +249,7 @@ canvas{
 #play_pause_btn_id{
   display:none;
   float: left;
-  margin-top: 0.6%;
+  height: 7vw;
 }
 
 #play_pause{
@@ -261,7 +258,6 @@ canvas{
   margin-right: auto;
   height: 7vw;
   width: 7vw;
-  margin-top: 0.6%;
 }
 
 
@@ -282,14 +278,13 @@ canvas{
   width:100%;
   height: 100%;
   display: none;
-  position: absolute;
   background: rgba(0, 0, 0, 0.8);
+  position: absolute;
   font-family: Font Title;
   font-size: 70px;
   text-align: center;
   padding-top: 10%;
   color: red;
-  float: inside;
   padding-left: 10px;
 }
 
@@ -312,7 +307,8 @@ canvas{
   color: red;
   font-size: 14px;
   margin-left: 15px;
-  z-index: 1;
+  /*z-index: 1;*/
+
 }
 
 #username_id{

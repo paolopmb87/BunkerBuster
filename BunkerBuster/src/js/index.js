@@ -1012,6 +1012,8 @@ function restart_game() {
 }
 
 function game_over(par) {
+  reset_global_vars();
+
   SCORE -= curTime.toFixed(2);
   if(SCORE < 0){
     SCORE = 0;
@@ -1037,12 +1039,10 @@ function game_over(par) {
   mute_unmute_game(2);
   save_users_score();
   save_high_score(SCORE);
-  reset_global_vars();
 }
 
 function restart_game_after_gameover() {
   document.getElementById("game_over_div_id").style.display = "none";
-
   canvas_id = document.getElementById("canvas_id");
   canvas_id.remove();
   reset_global_vars();
@@ -1086,8 +1086,7 @@ function timeout(shell, time){
  */
 function onWindowResize() {
   //resize & align
-  // sceneWidth = $(game_scene_div).width();
-  // sceneHeight = $(game_scene_div).height();
+
   renderer.setSize(sceneWidth, sceneHeight);
   camera.aspect = sceneWidth/sceneHeight;
   camera.updateProjectionMatrix();

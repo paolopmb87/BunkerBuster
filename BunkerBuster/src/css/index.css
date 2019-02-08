@@ -178,38 +178,43 @@ body {
     footer div
  **/
 .footer {
+  position: relative;
   background-color: black;
   border-top: 2px solid red;
-  height: 9vw;
   box-sizing: border-box;
   width: auto;
   margin:auto;
+  height: 8.5vw;
   display: block;
 }
 
 .foot{
   background-color: black;
+  height: 8.5vw;
+  position: relative;
   border-top: 2px solid red;
   display: block;
   box-sizing: border-box;
-  height: 16%;
   width: auto;
   margin:auto;
 }
 
 .column {
   width: 31vw;
-  height: auto;
+  height: 8vw;
   float: left;
   margin: 0 10px;
   text-align: center;
   color: red;
   font-family: "Font Title";
   font-size: 2vw;
+  position: relative;
+
 }
 
 
 #HLP{
+  position: relative;
   padding-top:1%;
   margin-left: 1%;
   height: 7vw;
@@ -219,6 +224,7 @@ body {
 
 
 #ddlViewBy {
+  position: relative;
   height: 40px;
   width: 150px;
   font-family: "Font Title";
@@ -230,21 +236,26 @@ body {
 }
 
 #CHART{
+  position: relative;
   padding-top:1%;
-  margin-left: 1%;
   height: 7vw;
   width: 7vw;
   float: right;
 }
 
+#play_pause_btn_id{
+  display:none;
+  float: left;
+  margin-top: 0.6%;
+}
 
 #play_pause{
   display:none;
-  float: left;
+  margin-left: auto;
+  margin-right: auto;
   height: 7vw;
   width: 7vw;
   margin-top: 0.6%;
-  margin-left: 43%;
 }
 
 

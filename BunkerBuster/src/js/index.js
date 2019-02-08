@@ -144,6 +144,7 @@ function init() {
   cannonsfireRate = cannon_rate;
 
   document.getElementById('play_btn_div_id').style.display = 'none';
+  document.getElementById('play_pause_btn_id').style.display = 'inline-block';
   document.getElementById('play_pause').style.display = 'inline-block';
   document.getElementById('ddlViewBy').style.display = 'none';
   document.getElementById('diff').style.display = 'none';
@@ -1081,9 +1082,10 @@ function timeout(shell, time){
  */
 function onWindowResize() {
   //resize & align
-  sceneWidth = $(game_scene_div).width();
-  sceneHeight = $(game_scene_div).height();
+  // sceneWidth = $(game_scene_div).width();
+  // sceneHeight = $(game_scene_div).height();
   renderer.setSize(sceneWidth, sceneHeight);
   camera.aspect = sceneWidth/sceneHeight;
   camera.updateProjectionMatrix();
+
 }

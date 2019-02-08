@@ -24,30 +24,22 @@ var play_game_id;
 var light;
 var ground;
 var rotationMatrix;
-
 var controls;
 var stats;
-
 var scenario_mesh = [];
 var mesh = [];
-
-var TREES_LOADED = false;
 var NUM_LOADED = 0;
-
 /**
  * Variables for player tank
  */
-
 var bullets=[];
 var CANNON_BULLETS=[];
 var cannon_shells=[];
-
 var tank,house;
 var cannon;
 var cannons = [];
 var cann_positions =[];
 var tank_life; //DA DECIDERE
-
 var Body_1;
 var Body_2;
 var Track;
@@ -57,16 +49,13 @@ var destr_cann;
 var rate = 60;
 var p1fireRate = rate;   //FIRE RATE
 var cannonsfireRate;
-
 var cannon_rate_hard = 20;
 var cannon_rate_medium = 70;
 var cannon_rate_easy = 200;
-
 var damage;
 var damage_hard = 25;
 var damage_medium = 15;
 var damage_easy = 5;
-
 
 var cannon_rate;
 var viewfinder;
@@ -74,27 +63,18 @@ var soundPath = "sounds/";
 var sound_tank_hit, explosion,sound_war,power_up, sound_cannon,backgroundMusic,
   sound_shot_tank, sound_reload, cann_explosion,hit_on_cannnon,alarm ;
 
-
 var health=0;
-var health_bar;
-var keyboard = new THREEx.KeyboardState();
+var health_bar, speed_bar, berserk_bar;
+
 var trees_loader="models/trees/tree2.json";
 var dead_tree_loader="models/trees/dead_tree.json";
 
-
-var healthcube;
+var healthcube, speedcube,scorecube,berserkcube;
 var healthcubes = [];
-
-var speedcube;
 var speedcubes = [];
-var speed_bar;
-var berserkcube;
 var berserkcubes = [];
-var berserk_bar;
-var scorecube;
 var scorecubes = [];
 
-var timeleft = 0;
 var delta = 0.01; // seconds.
 var moveDistance = 100 * delta; //25 default
 var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
@@ -113,6 +93,9 @@ var enemy_health_life = [];
 
 var speed_up = false;                    //init perks values
 var berserk_up = false;
+var TREES_LOADED = false;
+var shot = false;
+var isPlay = false;
 
 var canvas;
 var SCORE;
@@ -123,11 +106,8 @@ var difficulty_val;
 
 var light_on;
 
-/**
- * var to pause/play game
- */
-var shot = false;
-var isPlay = false;
+var keyboard = new THREEx.KeyboardState();
+
 
 /**
  * Function to start game with the play button
@@ -281,9 +261,7 @@ function createScene(){
   light.position.set(200,1000,200);
   light.shadowCameraVisible = true;
   light.castShadow = true;
-  //light.shadowDarkness = 0.95;
 
-  //Set up shadow properties for the light
   light.shadow.mapSize.width = 1024;
   light.shadow.mapSize.height = 1024;
   light.shadow.camera.near = 0.5;
@@ -429,16 +407,13 @@ function add_speedcubes(nCubes){
   const Geometry = new THREE.CubeGeometry(30, 30, 30);
   speedcube = new THREE.Mesh(Geometry,Material);
 
-
   for(var i = 0; i<nCubes; i++){
     speedcubes[i] = speedcube.clone();
     speedcubes[i].position.set(generate_random(),8,generate_random());
     speedcubes[i].scale.set(0.4,0.4,0.4);
     speedcubes[i].visible=false;
     scene.add(speedcubes[i]);
-
   }
-
 }
 
 function add_berserkcubes(nCubes){
@@ -590,13 +565,21 @@ function update() {
 /**
  * Tank Movement
  */
+
+function onKeyDown(event) {
+  // This function should cause all keys to do nothing.
+  // For most keys, that's exactly what it does, but 'enter' and 'backspace' still function as normal.
+  // Go on, give it a try!
+  event.preventDefault()
+}
+
 function onDocumentKeyDown(event) {
   var keyCode = event.which;
   if (keyCode === 86 && p1fireRate !== rate && shot) {
     sound_reload.play();
   }
 
-  else if (keyCode === 86 && p1fireRate === rate && !shot) {
+  else if (keyCode === 38 && p1fireRate === rate && !shot) {
     //sound_reload.stop();
     sound_reload.stop();
     tank_shoot();
@@ -604,7 +587,8 @@ function onDocumentKeyDown(event) {
   }
 }
 
-function move_tank(){
+function move_tank(event){
+
   if (keyboard.pressed("W")) {
     if (check_Turret_Collision(0)) {
       tank.translateZ(moveDistance);
@@ -620,6 +604,13 @@ function move_tank(){
     }
   }
 
+  /**
+   left = 37
+   up = 38
+   right = 39
+   down = 40
+   */
+
   if (keyboard.pressed("A")) {
     tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), rotateAngle);
     viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
@@ -628,11 +619,13 @@ function move_tank(){
     tank.rotateOnAxis(new THREE.Vector3(0, 1, 0), -rotateAngle);
     viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
   }
-  if (keyboard.pressed("Q")) {
+  if (keyboard.pressed("37")) {
+    onKeyDown(event);
     Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
     viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
   }
-  if (keyboard.pressed("E")) {
+  if (keyboard.pressed("39")) {
+    onKeyDown(event);
     Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
     viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
   }

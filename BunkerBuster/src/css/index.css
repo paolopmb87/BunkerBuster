@@ -181,20 +181,15 @@ body {
   position: relative;
   background-color: black;
   border-top: 2px solid red;
-<<<<<<< HEAD
   height: 16%;
-=======
->>>>>>> 79e3178202ab9a05716c570b9e149b2fd5e28e85
   box-sizing: border-box;
   width: auto;
   margin:auto;
-  height: 8.5vw;
   display: block;
 }
 
 .foot{
   background-color: black;
-  height: 8.5vw;
   position: relative;
   border-top: 2px solid red;
   display: block;
@@ -221,8 +216,8 @@ body {
   position: relative;
   padding-top:1%;
   margin-left: 1%;
-  height: 5vw;
-  width: 5vw;
+  height: 7vw;
+  width: 7vw;
   float: left;
 }
 
@@ -246,14 +241,9 @@ body {
 #CHART{
   position: relative;
   padding-top:1%;
-<<<<<<< HEAD
   margin-left: 1%;
-  height: 5vw;
-  width: 5vw;
-=======
   height: 7vw;
   width: 7vw;
->>>>>>> 79e3178202ab9a05716c570b9e149b2fd5e28e85
   float: right;
 }
 

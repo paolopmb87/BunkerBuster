@@ -55,6 +55,7 @@ var nTrees2 = 70;
 var delta = 0.01; // seconds.
 var moveDistance = 100 * delta; //25 default
 var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
+var turretRotateAngle = Math.PI / 2 * delta ;
 
 var soundPath = "sounds/";
 var trees_loader="models/trees/tree2.json";
@@ -99,7 +100,6 @@ var difficulty;
 var difficulty_val;
 
 var keyboard = new THREEx.KeyboardState();
-
 
 /**
  * Function to start game with the play button
@@ -562,15 +562,14 @@ function onDocumentKeyDown(event) {
     shot = true;
   }
   if (keyCode === 39) {
-      event.preventDefault();
-      event.stopPropagation();
-      Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
-      viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), rotateAngle);
+    event.preventDefault();
+    Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), turretRotateAngle);
+    viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), turretRotateAngle);
   }
   if (keyCode === 37){
     event.preventDefault();
-    event.stopPropagation();    Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
-    viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -rotateAngle);
+    Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), -turretRotateAngle);
+    viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), -turretRotateAngle);
   }
   rotationMatrix = new THREE.Matrix4().identity();
 }

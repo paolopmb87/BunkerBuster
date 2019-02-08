@@ -3,8 +3,8 @@
  */
 function onWindowResize() {
   //resize & align
-  sceneWidth = $(play_game_id).width();
-  sceneHeight = $(play_game_id).height();
+  sceneWidth = $(game_scene_div).width();
+  sceneHeight = $(game_scene_div).height();
   renderer.setSize(sceneWidth, sceneHeight);
   camera.aspect = sceneWidth/sceneHeight;
   camera.updateProjectionMatrix();
@@ -13,39 +13,32 @@ function onWindowResize() {
 /**
  * Variables declaration
  */
-var VIEW_ANGLE = 90, NEAR = 0.1, FAR = 1000,CAMERA_HEIGHT = 250,NUM_TURRETS = 5;
+var VIEW_ANGLE = 90, NEAR = 0.1, FAR = 1000, CAMERA_HEIGHT = 250, NUM_TURRETS = 5;
 
 var camera;
 var scene;
 var sceneWidth;
 var sceneHeight;
 var renderer;
-var play_game_id;
+var scenario;
+var canvas;
+var canvas_id;
+var game_scene_div;
 var light;
+var light_on;
 var ground;
 var rotationMatrix;
 var controls;
 var stats;
-var scenario_mesh = [];
-var mesh = [];
-var NUM_LOADED = 0;
+
 /**
  * Variables for player tank
  */
-var bullets=[];
-var CANNON_BULLETS=[];
-var cannon_shells=[];
-var tank,house;
-var cannon;
-var cannons = [];
-var cann_positions =[];
-var tank_life; //DA DECIDERE
-var Body_1;
-var Body_2;
-var Track;
-var Turret;
-var Turret_2;
-var destr_cann;
+var house;
+var tank, tank_life, Body_1, Body_2, Track, Turret, Turret_2 ;
+var cannon,viewfinder, cannon_rate, shell, cannon_shell, destr_cann;
+
+var NUM_LOADED = 0;
 var rate = 60;
 var p1fireRate = rate;   //FIRE RATE
 var cannonsfireRate;
@@ -56,46 +49,42 @@ var damage;
 var damage_hard = 25;
 var damage_medium = 15;
 var damage_easy = 5;
-
-var cannon_rate;
-var viewfinder;
-var soundPath = "sounds/";
-var sound_tank_hit, explosion,sound_war,power_up, sound_cannon,backgroundMusic,
-  sound_shot_tank, sound_reload, cann_explosion,hit_on_cannnon,alarm ;
-
 var health=0;
-var health_bar, speed_bar, berserk_bar;
-
-var trees_loader="models/trees/tree2.json";
-var dead_tree_loader="models/trees/dead_tree.json";
-
-var healthcube, speedcube,scorecube,berserkcube;
-var healthcubes = [];
-var speedcubes = [];
-var berserkcubes = [];
-var scorecubes = [];
-
+var nDeadTrees = 70;
+var nTrees2 = 70;
 var delta = 0.01; // seconds.
 var moveDistance = 100 * delta; //25 default
 var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
 
-var shell;
-var cannon_shell;
+var soundPath = "sounds/";
+var trees_loader="models/trees/tree2.json";
+var dead_tree_loader="models/trees/dead_tree.json";
 
-var nCubes;
-var health_cube_texture;
-var speed_cube_texture;
-var berserk_cube_texture;
-var score_cube_texture;
+var sound_tank_hit, explosion,sound_war,power_up, sound_cannon,backgroundMusic,
+  sound_shot_tank, sound_reload, cann_explosion,hit_on_cannnon,alarm ;
 
-var enemy_health_bar = [];
-var enemy_health_life = [];
+var health_bar, speed_bar, berserk_bar;
+
+var healthcube, speedcube,scorecube,berserkcube;
+
+var nCubes, health_cube_texture, speed_cube_texture, berserk_cube_texture, score_cube_texture;
 
 var loader;
+
+var scenario_mesh = [];
+var mesh = [];
+var bullets=[];
+var CANNON_BULLETS=[];
+var cannon_shells=[];
+var cannons = [];
+var cann_positions =[];
+var healthcubes = [];
+var speedcubes = [];
+var berserkcubes = [];
+var scorecubes = [];
+var enemy_health_bar = [];
+var enemy_health_life = [];
 var loader_array =[];
-var scenario;
-var nDeadTrees = 70;
-var nTrees2 = 70;
 
 var speed_up = false;                    //init perks values
 var berserk_up = false;
@@ -103,15 +92,11 @@ var TREES_LOADED = false;
 var shot = false;
 var isPlay = false;
 
-var canvas;
-var canvas_id;
 var SCORE;
 var clock,startTime, curTime;
 
 var difficulty;
 var difficulty_val;
-
-var light_on;
 
 var keyboard = new THREEx.KeyboardState();
 
@@ -120,7 +105,6 @@ var keyboard = new THREEx.KeyboardState();
  * Function to start game with the play button
  */
 function start_game() {
-
   init();
   isPlay = true;
   animate();
@@ -137,14 +121,11 @@ function init_variables() {
   health_bar = document.getElementById("health");
   speed_bar = document.getElementById("speed_pb_id");
   berserk_bar = document.getElementById("berserk_pb_id");
-
   canvas = document.getElementsByTagName("canvas")[0].setAttribute("id", "canvas_id");
-
   health_cube_texture = new THREE.TextureLoader().load('img/health.png');
   speed_cube_texture = new THREE.TextureLoader().load('img/speed.png');
   berserk_cube_texture = new THREE.TextureLoader().load('img/berserk.png');
   score_cube_texture = new THREE.TextureLoader().load('img/score.png');
-
   document.addEventListener("keydown", onDocumentKeyDown, false);
   document.addEventListener("keypressed", move_tank, false);
 
@@ -181,7 +162,7 @@ function init() {
 
   document.getElementById('play_game_id').style.display = 'block';
 
-  play_game_id = document.getElementById('play_game_id');
+  game_scene_div = document.getElementById('play_game_id');
 
   setupSound();
   // set up the scene
@@ -194,8 +175,8 @@ function init() {
   stats.domElement.style.position = 'absolute';
   stats.domElement.style.bottom = '0px';
 
-  play_game_id.appendChild(renderer.domElement);
-  play_game_id.appendChild(stats.domElement);
+  game_scene_div.appendChild(renderer.domElement);
+  game_scene_div.appendChild(stats.domElement);
 
   cann_positions[0] = [300, 0, 150];
   cann_positions[1] = [-300, 0, 800];
@@ -234,20 +215,18 @@ function createScene(){
 
   scene = new THREE.Scene();//the 3d scene
 
-  sceneWidth = $(play_game_id).width();
-  sceneHeight = $(play_game_id).height();
+  sceneWidth = $(game_scene_div).width();
+  sceneHeight = $(game_scene_div).height();
 
   //scene.fog = new THREE.Fog(0x00ff00, 50, 800);//enable fog
   camera = new THREE.PerspectiveCamera( VIEW_ANGLE , sceneWidth / sceneHeight, NEAR, FAR );//perspective camera
   scene.add(camera);
-
 
   camera.lookAt(new THREE.Vector3(0,0,0));
   camera.position.set(0,CAMERA_HEIGHT,0);
   renderer = new THREE.WebGLRenderer({alpha:true});//renderer with transparent backdrop
   renderer.shadowMap.enabled = true;//enable shadow
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
   renderer.setSize( sceneWidth, sceneHeight );
 
   const groundTexture = new THREE.ImageUtils.loadTexture( 'img/grass2.jpg' );
@@ -468,8 +447,8 @@ function addCannon() {
 }
 
 function addEnemyHPBar(pos) {
-  var geometry = new THREE.BoxBufferGeometry( 40, 2, 5 );
-  var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } ); //GREEN
+  let geometry = new THREE.BoxBufferGeometry( 40, 2, 5 );
+  let material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } ); //GREEN
   enemy_health_bar[pos] = new THREE.Mesh( geometry, material );
   scene.add( enemy_health_bar[pos] );
   enemy_health_bar[pos].position.set(cannons[pos].position.x, 1, cannons[pos].position.z-20);

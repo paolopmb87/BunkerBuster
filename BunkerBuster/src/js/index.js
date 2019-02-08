@@ -1015,7 +1015,6 @@ function restart_game() {
 
     let canvas_id = document.getElementById("canvas_id");
     canvas_id.remove();
-    canvas_id.dispose();
     reset_global_vars();
     start_game();
   } else {
@@ -1082,7 +1081,6 @@ function reset_global_vars() {
 
   controls.enabled = false;
   controls.dispose();
-  canvas_id.dispose();
 }
 
 function timeout(shell, time){

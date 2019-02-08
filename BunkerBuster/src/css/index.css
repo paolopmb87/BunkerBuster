@@ -180,7 +180,7 @@ body {
 .footer {
   background-color: black;
   border-top: 2px solid red;
-  height: 9vw;
+  height: 16%;
   box-sizing: border-box;
   width: auto;
   margin:auto;
@@ -192,7 +192,6 @@ body {
   border-top: 2px solid red;
   display: block;
   box-sizing: border-box;
-  height: 16%;
   width: auto;
   margin:auto;
 }
@@ -212,9 +211,13 @@ body {
 #HLP{
   padding-top:1%;
   margin-left: 1%;
-  height: 7vw;
-  width: 7vw;
+  height: 5vw;
+  width: 5vw;
   float: left;
+}
+
+#diff{
+  font-size: 21px;
 }
 
 
@@ -232,8 +235,8 @@ body {
 #CHART{
   padding-top:1%;
   margin-left: 1%;
-  height: 7vw;
-  width: 7vw;
+  height: 5vw;
+  width: 5vw;
   float: right;
 }
 

@@ -8,6 +8,7 @@ body {
 }
 
 .wrap{
+  position:relative;
   background: url(../img/poster.jpg) no-repeat bottom left;
   background-size: 100% 100%;
   width: 100%;
@@ -62,19 +63,22 @@ body {
   height: 84%;
   display: none;
   position:relative;
-  border-top: 2px solid red;
 
 }
 
 #play_game_id {
   display: none;
   box-sizing: border-box;
-  border-top: 2px solid red;
-  height:100%;
+  border-top: 4px solid red;
+  border-bottom: 4px solid red;
   width: auto;
+  height: 88.3%;
   margin:auto;
   position:relative;
+}
 
+canvas{
+  position: relative;
 }
 
 #mute_unmute_div_id{
@@ -180,7 +184,6 @@ body {
 .footer {
   position: relative;
   background-color: black;
-  border-top: 2px solid red;
   height: 16%;
   box-sizing: border-box;
   width: auto;
@@ -191,7 +194,6 @@ body {
 .foot{
   background-color: black;
   position: relative;
-  border-top: 2px solid red;
   display: block;
   box-sizing: border-box;
   width: auto;
@@ -433,11 +435,6 @@ progress#berserk_pb_id::-webkit-progress-value {
 .progresses{
   box-sizing: border-box;
 }
-
-#canvas{
-  position: relative;
-}
-
 
 table {
   font-family: arial, sans-serif;

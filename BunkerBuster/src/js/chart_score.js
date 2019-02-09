@@ -19,26 +19,23 @@ function save_high_score(score) {
 }
 
 function save_users_score() {
+  var modal = document.getElementById("modal_id");
+  var tbody = modal.querySelector("#table");
+  var rows = tbody.querySelectorAll("tr");
 
-  setTimeout(function () {
-    var modal = document.getElementById("modal_id");
-    var tbody = modal.querySelector("#table");
-    var rows = tbody.querySelectorAll("tr");
+  if (rows.length < 10) { // limit the user from creating too many segments
+    // copy the first TR of the table
+    var newRow = rows[1].cloneNode(true);
+    // increment the last segment number and apply it to the new segment[] field
+      newRow.querySelector("#username_td").innerText = localStorage.username_id;
+      newRow.querySelector("#score_td").innerText = localStorage._score;
+      newRow.querySelector("#highscore_td").innerText = localStorage.highScore;
 
-    if (rows.length < 10) { // limit the user from creating too many segments
-      // copy the first TR of the table
-      var newRow = rows[1].cloneNode(true);
-      // increment the last segment number and apply it to the new segment[] field
-        newRow.querySelector("#username_td").innerText = localStorage.username_id;
-        newRow.querySelector("#score_td").innerText = localStorage._score;
-        newRow.querySelector("#highscore_td").innerText = localStorage.highScore;
-
-      // add the new row
-      tbody.appendChild(newRow);
-    } else {
-      alert("Maximum Number of Segments is 10.");
-    }
-  }, 10);
+    // add the new row
+    tbody.appendChild(newRow);
+  } else {
+    alert("Maximum Number of Segments is 10.");
+  }
 
 }
 

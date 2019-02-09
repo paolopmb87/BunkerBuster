@@ -1025,7 +1025,6 @@ function game_over(par) {
   let id = requestAnimationFrame(animate);
   cancelAnimationFrame(id);
   mute_unmute_game(2);
-  save_users_score();
   save_high_score(SCORE);
 }
 
@@ -1100,6 +1099,5 @@ function onWindowResize() {
   renderer.setSize(sceneWidth, sceneHeight);
   camera.aspect = sceneWidth/sceneHeight;
   camera.updateProjectionMatrix();
-
-
 }
+

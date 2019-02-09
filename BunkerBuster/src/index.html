@@ -103,7 +103,7 @@
           <form id="username_form">
             Insert Username:
             <input id="username_id" type="text" placeholder="username">
-            <input id="submit_id" type="submit" value="Save" onclick="saveusername()"><br>
+            <input id="submit_id" type="submit" value="Save" onclick="saveusername();save_users_score()"><br>
           </form>
         </div>
       </div>
@@ -117,6 +117,23 @@
   <div class="modal fade text-center" id="theModal">
     <div class="modal-dialog">
       <div class="modal-content">
+        <div class="modal-body" id="modal_id">
+          <h2 class="text-center">RECORDS</h2>
+          <div id="table_id">
+            <table id="table">
+              <tr>
+                <th>Username </th>
+                <th>Score </th>
+                <th>High Score </th>
+              </tr>
+              <tr>
+                <td id="username_td">
+                <td id="score_td">
+                <td id="highscore_td">
+              </tr>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -152,8 +169,8 @@
     </div>
 
     <div class="column" id="chart_id">
-      <a href="html_struct/chart.html" data-target="#theModal" data-toggle="modal">
-        <img id="CHART" src="img/ChartBTN.png"  onclick="save_users_score()"></a>
+      <a data-target="#theModal" data-toggle="modal">
+        <img id="CHART" src="img/ChartBTN.png"></a>
     </div>
   </footer>
   </div>

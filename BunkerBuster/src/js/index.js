@@ -178,6 +178,10 @@ function init() {
   init_variables();
   add_cubes();
 
+  window.addEventListener('resize', onWindowResize, false);//resize callback
+
+
+
 }
 
 function setupSound() {
@@ -249,7 +253,6 @@ function createScene(){
   viewfinder = new THREE.Mesh( viewfinderGeometry, viewfinderMaterial );
   scene.add( viewfinder );
 
-  window.addEventListener('resize', onWindowResize, false);//resize callback
 
   health = document.getElementById("health");
 
@@ -466,6 +469,8 @@ function update_cannons(){
 }
 
 function update() {
+  onWindowResize();
+
   if(TREES_LOADED && !light_on){
     scene.add(light);
     for(let t = 0; t< enemy_health_bar.length;t++){
@@ -1090,6 +1095,9 @@ function timeout(shell, time){
  */
 function onWindowResize() {
   //resize & align
+
+  sceneWidth = $(game_scene_div).width();
+  sceneHeight = $(game_scene_div).height();
 
   renderer.setSize(sceneWidth, sceneHeight);
   camera.aspect = sceneWidth/sceneHeight;

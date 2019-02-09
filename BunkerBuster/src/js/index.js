@@ -180,6 +180,7 @@ function init() {
   add_cubes();
 
   window.addEventListener('resize', onWindowResize, false);//resize callback
+  reset_submit_button();
 
 }
 
@@ -292,7 +293,6 @@ function addObjects(){
   addTank();
   addCannon();
   add_scenario_mesh();
-  reset_submit_button();
 
 }
 /**
@@ -1080,8 +1080,8 @@ function reset_global_vars() {
 }
 
 function reset_submit_button() {
-  document.getElementById("username_id").setAttribute("enabled","enabled");
-  document.getElementById("username_id").style.backgroundColor = "f5f5f5";
+  document.getElementById("username_id").getAttribute('disabled');
+  document.getElementById("username_id").style.background = "f5f5f5";
   document.getElementById('submit_id').setAttribute("enabled","enabled");
   document.getElementById("submit_id").style.background = "afad4c";
   document.getElementById("submit_id").style.color = "#ff0000";

@@ -34,7 +34,7 @@ function save_users_score() {
     // add the new row
     tbody.appendChild(newRow);
     document.getElementById("username_id").setAttribute("disabled","disabled");
-    document.getElementById("username_id").style.backgroundColor = "#808080";
+    document.getElementById("username_id").style.background = "#808080";
     document.getElementById('submit_id').setAttribute("disabled","disabled");
     document.getElementById("submit_id").style.background = "#808080";
     document.getElementById("submit_id").style.color = "#c0c0c0";

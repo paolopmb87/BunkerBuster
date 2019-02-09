@@ -180,8 +180,6 @@ function init() {
 
   window.addEventListener('resize', onWindowResize, false);//resize callback
 
-
-
 }
 
 function setupSound() {

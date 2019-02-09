@@ -466,7 +466,7 @@ function update_cannons(){
 }
 
 function update() {
-  if(TREES_LOADED&&!light_on){
+  if(TREES_LOADED && !light_on){
     scene.add(light);
     for(let t = 0; t< enemy_health_bar.length;t++){
       enemy_health_bar[t].visible=true;
@@ -996,20 +996,6 @@ function mute_unmute_game(val){
   }
 }
 
-function restart_game() {
-  isPlay = false;
-  if (confirm("Are you sure?")) {
-    document.getElementById("pause_div_id").style.display = "none";
-    document.getElementById("play_pause").src = 'img/PauseBTN.png';
-
-    canvas_id = document.getElementById("canvas_id");
-    canvas_id.remove();
-    reset_global_vars();
-    start_game();
-  } else {
-    isPlay = true;
-  }
-}
 
 function game_over(par) {
   reset_global_vars();
@@ -1041,6 +1027,21 @@ function game_over(par) {
   save_high_score(SCORE);
 }
 
+
+function restart_game() {
+  isPlay = false;
+  if (confirm("Are you sure?")) {
+    document.getElementById("pause_div_id").style.display = "none";
+    document.getElementById("play_pause").src = 'img/PauseBTN.png';
+    canvas_id = document.getElementById("canvas_id");
+    canvas_id.remove();
+    reset_global_vars();
+    start_game();
+  } else {
+    isPlay = true;
+  }
+}
+
 function restart_game_after_gameover() {
   document.getElementById("game_over_div_id").style.display = "none";
   canvas_id = document.getElementById("canvas_id");
@@ -1055,6 +1056,10 @@ function saveusername() {
 }
 
 function reset_global_vars() {
+  scene.remove(light);
+  TREES_LOADED = false;
+  light_on = false;
+
   isPlay = false;
   health_bar.value = 100;
   tank_life = 100;

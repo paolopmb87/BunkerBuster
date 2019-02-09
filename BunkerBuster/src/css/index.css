@@ -18,6 +18,10 @@ body {
   font-family: "Font Title";
   src: url(../fonts/PanfletaStencil-ExtraBold.ttf) format("truetype");
 }
+@font-face {
+  font-family: "Timer";
+  src: url(../fonts/Colleged.ttf) format("truetype");
+}
 
 #title{
   display: block;
@@ -26,18 +30,19 @@ body {
   padding-left:20px;
   text-align: center;
   font-family: Font Title;
-  font-size: 70px;
+  font-size: 5vw;
   color: crimson;
   font-weight: bold;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-  height: 70px;
+  height: 5%;
 }
 
 .play_btn_div{
   margin-left: auto;
   margin-right: auto;
-  width: 100%;
-  height: 84%;
+  padding-top: 7vw;
+  width: auto;
+  height: auto;
 }
 
 #playBTN{
@@ -54,21 +59,18 @@ body {
   margin-left: auto;
   margin-right: auto;
   width: 100%;
-  height: 88%;
+  height: 83%;
   display: none;
-  position:relative;
-  border-top: 2px solid red;
 
 }
 
 #play_game_id {
   display: none;
   box-sizing: border-box;
-  border-top: 2px solid red;
+  border-top: 4px solid red;
   width: auto;
+  height: 88.3%;
   margin:auto;
-  position:relative;
-
 }
 
 #mute_unmute_div_id{
@@ -83,7 +85,7 @@ body {
   height: 100px;
   width: 100px;
   margin-right: 10px;
-  background-color: whitesmoke;
+  background-color: rgba(255, 255, 255, 0.4);
 
 }
 
@@ -136,133 +138,202 @@ body {
 }
 
 
-
-
 #score {
+  font-family: "Timer";
   display: block;
   position: absolute;
-  font-weight: bold;
-  color: black;
-  font-size: 20px;
-  background-color: whitesmoke;
+   color: black;
+  font-size: 1vw;
+  background-color: rgba(255, 255, 255, 0.4);
   z-index: 100;
   float:right;
-  height: 30px;
-  width: 200px;
+  width: 7vw;
+  height: 1.3vw;
   margin-left: 82%;
+  margin-top: 4px;
+
+}
+
+#time{
+  font-family: "Timer";
+  display: block;
+  position: absolute;
+  color: black;
+  font-size: 1vw;
+  background-color: rgba(255, 255, 255, 0.4);
+  z-index: 100;
+  float:right;
+  width:9.5vw;
+  height: 1.3vw;
+  margin-left: 70%;
+  margin-top: 4px;
+
 }
 
 /**
     footer div
  **/
 .footer {
+  border-top: 4px solid red;
+  position: relative;
   background-color: black;
-  border-top: 2px solid red;
   height: 16%;
-  box-sizing: border-box;
-  width: auto;
-  margin:auto;
   display: block;
+  margin-bottom: 0px;
 }
 
 .foot{
   background-color: black;
-  border-top: 2px solid red;
+  position: relative;
   display: block;
-  box-sizing: border-box;
   height: 16%;
-  width: auto;
-  margin:auto;
+  margin-bottom: 0px;
+
 }
 
-.chart{
-  padding-top:1%;
-  margin-right: 1%;
-  height: 100px;
-  width: 100px;
-  float: right;
-}
-
-#CHART{
-  height: 100px;
-  width: 100px;
-}
-
-.help {
-  padding-top:1%;
-  margin-left: 1%;
-  height: 100px;
-  width: 100px;
+.column {
+  width: 98%;
+  height: 10%;
   float: left;
-  /*z-index:1;*/
+  margin: 0 10px;
+  text-align: center;
+  color: red;
+  font-family: "Font Title";
+  font-size: 2vw;
+  position: relative;
+
 }
 
 #HLP{
-  padding-top:1%;
+  position: relative;
+  margin-top:1.5%;
   margin-left: 1%;
-  height: 80px;
-  width: 80px;
+  height: 6vw;
+  width: 6vw;
+  float: left;
+}
+
+#diff{
+  font-size: 1.5vw;
+}
+
+
+#ddlViewBy {
+  position: relative;
+  /*height: 40px;*/
+  /*width: 150px;*/
+  font-family: "Font Title";
+  font-size: 1.5vw;
+  border: 3px solid red;
+  margin-top: 2%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+#CHART{
+  position: relative;
+  margin-top:1%;
+  margin-right: 1%;
+  height: 6vw;
+  width: 6vw;
+  float: right;
+}
+
+#play_pause_btn_id{
+  margin-top: 0.8%;
+  display:none;
+
 }
 
 #play_pause{
   display:none;
-  float: left;
-  height: 25px;
-  width: 70px;
-  left: 40%;
-  margin-top: 0.6%;
-  margin-left: 43%;
+  margin-left: auto;
+  margin-right: auto;
+  height: auto;
+  width: auto;
 }
 
 #pause_div_id{
   width:100%;
-  height: 100%;
+  height: 80%;
   display: none;
-  position: absolute;
   background: rgba(0, 0, 0, 0.8);
-  font-size: 100px;
+  position: absolute;
+  font-family: Font Title;
+  font-size: 70px;
   text-align: center;
   padding-top: 10%;
   color: red;
-  font-family: Font Title;
-
-
-
+  padding-left: 10px;
 }
 
 #game_over_div_id{
   width:100%;
   height: 100%;
   display: none;
-  position: absolute;
   background: rgba(0, 0, 0, 0.8);
+  position: absolute;
   font-family: Font Title;
-  font-size: 100px;
+  font-size: 70px;
   text-align: center;
   padding-top: 10%;
   color: red;
+  padding-left: 10px;
+}
+
+#game_over_restart_game_btn_id{
   float: inside;
+}
+
+#username_form_div{
+  background: rgba(0, 0, 0, 0.4);
+  width:27vw;
+  height: 10vw;
+  margin-left: 36%;
+  margin-top: 1%;
+  color: red;
+  position: absolute;
+}
+
+#username_form{
+  position: absolute;
+  color: red;
+  font-size: 14px;
+  margin-left: 15px;
+  /*z-index: 1;*/
 
 }
 
-game_over_restart_game_btn_id{
-  float: inside;
-  /*margin-left: 46.5%;*/
-  /*margin-top: 0.6%;*/
+#username_id{
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 50px;
+  font-size: 14px;
+  color: black;
+  text-align: center;
+  margin-top: 10px;
+  width: 25vw;
+  height: 2vw;
 }
+
+input[type=button], input[type=submit], input[type=reset] {
+  background-color: #afad4c;
+  border: red;
+  border-radius: 50px;
+  color: #bf2020;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  height: 2rem;
+  width: 10rem;
+  margin-top: 1rem;
+}
+
 
 #restart_game_btn_id{
   float: inside;
-  /*  height: 25px;
-   width: 70px;
-  margin-left: 42%;
-  margin-top: 0.6%;*/
 }
 
-/*#health{*/
-  /*position: absolute;*/
-  /*margin-left: 30px;*/
-/*}*/
 
 #hp{
   display: block;
@@ -327,6 +398,7 @@ progress#health::-webkit-progress-value {
   border-radius: 2px;
   padding-bottom: 2px;
 }
+
 progress#speed_pb_id::-webkit-progress-value {
   background: #fbff1e;
   margin-bottom: 10px;
@@ -349,22 +421,34 @@ progress#berserk_pb_id::-webkit-progress-value {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
 }
 
-/*#turret-hp{*/
-  /*display: none;*/
-  /*height: 30px;*/
-  /*width: 30px;*/
-/*}*/
-
-/*progress#turret-hp-id::-webkit-progress-value {*/
-  /*background: red;*/
-  /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;*/
-/*}*/
-
 .progresses{
   box-sizing: border-box;
 }
 
-#canvas{
-  position: relative;
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  margin-left: 5%;
 }
 
+td, th {
+  border: 2px solid #dddddd;
+  text-align: center;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+#table_id{
+  width: 50rem;
+  height: 50rem;
+}
+
+.modal-body{
+  height: 70rem!important;
+  color:red;
+  text-align: center;
+}

@@ -144,8 +144,8 @@ function init() {
   cannonsfireRate = cannon_rate;
 
   document.getElementById('play_btn_div_id').style.display = 'none';
-  document.getElementById('play_pause_btn_id').style.display = 'inline-block';
-  document.getElementById('play_pause').style.display = 'inline-block';
+  document.getElementById('play_pause_btn_id').style.display = 'block';
+  document.getElementById('play_pause').style.display = 'block';
   document.getElementById('ddlViewBy').style.display = 'none';
   document.getElementById('diff').style.display = 'none';
 

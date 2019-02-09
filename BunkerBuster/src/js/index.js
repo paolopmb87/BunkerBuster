@@ -1080,10 +1080,10 @@ function reset_global_vars() {
 }
 
 function reset_submit_button() {
-  document.getElementById("username_id").getAttribute('disabled');
-  document.getElementById("username_id").style.background = "f5f5f5";
-  document.getElementById('submit_id').setAttribute("enabled","enabled");
-  document.getElementById("submit_id").style.background = "afad4c";
+  document.getElementById("username_id").removeAttribute('disabled');
+  document.getElementById("username_id").style.background = "#f5f5f5";
+  document.getElementById('submit_id').removeAttribute('disabled');
+  document.getElementById("submit_id").style.background = "#afad4c";
   document.getElementById("submit_id").style.color = "#ff0000";
 }
 

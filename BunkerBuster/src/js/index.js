@@ -115,7 +115,7 @@ function init_variables() {
   berserk_cube_texture = new THREE.TextureLoader().load('img/berserk.png');
   score_cube_texture = new THREE.TextureLoader().load('img/score.png');
   document.addEventListener("keydown", onDocumentKeyDown, false);
-  document.addEventListener("keypressed", move_tank, false);
+  document.addEventListener("keydown", move_tank, false);
 
   light_on= false;
 }
@@ -543,7 +543,6 @@ function onDocumentKeyDown(event) {
     event.stopPropagation();
   }
   else if (keyCode === 32 && p1fireRate === rate && !shot) {
-    //sound_reload.stop();
     event.preventDefault();
     event.stopPropagation();
     sound_reload.stop();
@@ -555,7 +554,7 @@ function onDocumentKeyDown(event) {
 /**
  * rotationMatrix allow rotation on left right up and down
  */
-function move_tank(){
+function move_tank(event){
 
   if (keyboard.pressed("left")) {
     Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), turretRotateAngle);
@@ -1095,5 +1094,6 @@ function onWindowResize() {
   renderer.setSize(sceneWidth, sceneHeight);
   camera.aspect = sceneWidth/sceneHeight;
   camera.updateProjectionMatrix();
+
 
 }

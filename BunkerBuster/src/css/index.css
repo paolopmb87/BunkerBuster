@@ -7,18 +7,6 @@ body {
   padding: 0px;
 }
 
-canvas{
-  position: relative;
-  height: 100px;
-  width: 100px;
-}
-
-#canvas_id{
-  position: relative;
-  height: 100px;
-  width: 100px;
-}
-
 .wrap{
   background: url(../img/poster.jpg) no-repeat bottom left;
   background-size: 100% 100%;
@@ -42,11 +30,11 @@ canvas{
   padding-left:20px;
   text-align: center;
   font-family: Font Title;
-  font-size: 70px;
+  font-size: 5vw;
   color: crimson;
   font-weight: bold;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-  height: 70px;
+  height: 5%;
 }
 
 .play_btn_div{
@@ -190,25 +178,22 @@ canvas{
   position: relative;
   background-color: black;
   height: 16%;
-  box-sizing: border-box;
-  width: auto;
-  margin:auto;
   display: block;
+  margin-bottom: 0px;
 }
 
 .foot{
   background-color: black;
   position: relative;
   display: block;
-  box-sizing: border-box;
-  width: auto;
   height: 16%;
-  margin:auto;
+  margin-bottom: 0px;
+
 }
 
 .column {
-  width: 31vw;
-  height: 7vw;
+  width: 98%;
+  height: 10%;
   float: left;
   margin: 0 10px;
   text-align: center;
@@ -218,7 +203,6 @@ canvas{
   position: relative;
 
 }
-
 
 #HLP{
   position: relative;
@@ -230,18 +214,18 @@ canvas{
 }
 
 #diff{
-  font-size: 21px;
+  font-size: 1.5vw;
 }
 
 
 #ddlViewBy {
   position: relative;
-  height: 40px;
-  width: 150px;
+  /*height: 40px;*/
+  /*width: 150px;*/
   font-family: "Font Title";
-  font-size: 20px;
+  font-size: 1.5vw;
   border: 3px solid red;
-  margin-top: 5%;
+  margin-top: 2%;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
@@ -269,18 +253,18 @@ canvas{
   width: 7vw;
 }
 
-
 #pause_div_id{
   width:100%;
   height: 100%;
   display: none;
-  position: absolute;
   background: rgba(0, 0, 0, 0.8);
-  font-size: 100px;
+  position: absolute;
+  font-family: Font Title;
+  font-size: 70px;
   text-align: center;
   padding-top: 10%;
   color: red;
-  font-family: Font Title;
+  padding-left: 10px;
 }
 
 #game_over_div_id{

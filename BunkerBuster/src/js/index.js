@@ -80,6 +80,7 @@ var berserk_up = false;
 var TREES_LOADED = false;
 var shot = false;
 var isPlay = false;
+var username_saved = false;
 
 var SCORE;
 var clock,startTime, curTime;
@@ -291,6 +292,7 @@ function addObjects(){
   addTank();
   addCannon();
   add_scenario_mesh();
+  reset_submit_button();
 
 }
 /**
@@ -1075,6 +1077,14 @@ function reset_global_vars() {
 
   controls.enabled = false;
   controls.dispose();
+}
+
+function reset_submit_button() {
+  document.getElementById("username_id").setAttribute("enabled","enabled");
+  document.getElementById("username_id").style.backgroundColor = "f5f5f5";
+  document.getElementById('submit_id').setAttribute("enabled","enabled");
+  document.getElementById("submit_id").style.background = "afad4c";
+  document.getElementById("submit_id").style.color = "#ff0000";
 }
 
 function timeout(shell, time){

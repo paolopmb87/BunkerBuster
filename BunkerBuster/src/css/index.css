@@ -448,3 +448,38 @@ tr:nth-child(even) {
   color:red;
   text-align: center;
 }
+
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+}
+
+td, th {
+  border: 2px solid #dddddd;
+  text-align: center;
+  padding: 8px;
+  box-sizing: border-box;
+  font-size: 1vw;
+  color: black;
+  text-align: center;
+  margin-top: 1px;
+  width: 35vw;
+  height: 1vw;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+#table_id{
+  width: 50rem;
+  height: 50rem;
+}
+
+.modal-body{
+  height: 35vw!important;
+  color:red;
+  text-align: center;
+}
+

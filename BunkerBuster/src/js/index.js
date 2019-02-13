@@ -480,70 +480,6 @@ function update_cannons(){
     cannons[i].lookAt(tank.position.x,0,tank.position.z);
 }
 
-function update() {
-  onWindowResize();
-
-  if(TREES_LOADED && !light_on){
-    scene.add(light);
-    for(let t = 0; t< enemy_health_bar.length;t++){
-      enemy_health_bar[t].visible=true;
-    }
-    for(let i = 0; i<nCubes; i++){
-      speedcubes[i].visible=true;
-      berserkcubes[i].visible=true;
-      healthcubes[i].visible=true;
-      scorecubes[i].visible=true;
-      clock = new THREE.Clock();
-      startTime=clock.getElapsedTime();
-    }
-    light_on = true;
-  }
-  if(tank_life<= 20){
-    light.color.setHex(0xff471a);
-    backgroundMusic.stop();
-    alarm.play();
-  }
-  else{
-    light.color.setHex(0xffffff);
-    alarm.stop();
-    if( isPlay)
-    backgroundMusic.play();
-  }
-
-  shot = false;
-
-  curTime = clock.getElapsedTime() - startTime;
-  document.getElementById('score').innerHTML = "Score: " + SCORE;
-  document.getElementById('time').innerHTML = "Timer: " + curTime.toFixed(2);
-
-  for (let index = 0; index < bullets.length; index += 1) {
-    if (bullets[index] === undefined) continue;
-    if (bullets[index].alive === false) {
-      bullets.splice(index, 1);
-      continue;
-    }
-    bullets[index].position.add(bullets[index].velocity);
-  }
-
-  for (let index = 0; index < CANNON_BULLETS.length; index += 1) {
-    if (CANNON_BULLETS[index] === undefined) continue;
-    if (CANNON_BULLETS[index].alive === false) {
-      CANNON_BULLETS.splice(index, 1);
-      continue;
-    }
-    CANNON_BULLETS[index].position.add(CANNON_BULLETS[index].velocity);
-  }
-
-  if (cannonsfireRate === cannon_rate) {
-    cannon_shoot();
-  }
-
-  shoot_controls();
-  controls.update();
-  stats.update();
-}
-
-
 /**
  * Tank Movement
  *    right = 39
@@ -824,7 +760,9 @@ function check_cubes() {
         speed_bar.value = 100;
 
         speed_downloadTimer = setInterval(function () {
-          speed_bar.value -= 10;
+          if(isPlay === true){
+            speed_bar.value -= 10;
+          }
           if (speed_bar.value <= 0) {
             clearInterval(speed_downloadTimer);
             moveDistance = moveDistance / 2;
@@ -855,7 +793,9 @@ function check_cubes() {
         berserk_bar.value = 100;
         p1fireRate = rate;
         berserk_downloadTimer = setInterval(function () {
-          berserk_bar.value -= 10;
+          if(isPlay === true){
+            berserk_bar.value -= 10;
+          }
           if (berserk_bar.value <= 0) {
             clearInterval(berserk_downloadTimer);
             rate = rate * 2;
@@ -880,45 +820,6 @@ function check_cubes() {
   }
 }
 
-/**
- * RENDER AND ANIMATE Functions - Starts the animation on the frame and the render
- */
-
-function render(){
-  let rot_x = 0.018;
-  let rot_y = 0.020;
-  backgroundMusic.play();
-  sound_war.play();
-
-  move_tank();
-
-  for(let i = 0; i< nCubes;i++){
-    healthcubes[i].rotation.x += rot_x;
-    healthcubes[i].rotation.y += rot_y;
-    speedcubes[i].rotation.x += rot_x;
-    speedcubes[i].rotation.y += rot_y;
-    berserkcubes[i].rotation.x += rot_x;
-    berserkcubes[i].rotation.y += rot_y;
-    scorecubes[i].rotation.x += rot_x;
-    scorecubes[i].rotation.y += rot_y;
-  }
-
-  renderer.render(scene, camera);//draw
-
-  if (p1fireRate < rate) {
-    p1fireRate++;
-  }
-  if (cannonsfireRate < cannon_rate) {
-    cannonsfireRate++;
-  }
-}
-
-function animate() {
-  if (!isPlay) return;
-    requestAnimationFrame( animate );
-    render();
-    update();
-}
 
 /**
  * Function to Play or Pause the game
@@ -998,7 +899,6 @@ function mute_unmute_game(val){
     alarm.set_volume(1);
     sound_shot_tank.set_volume(1);
     sound_tank_hit.set_volume(1);
-  //  sound_game_over.set_volume(1);
     explosion.set_volume(1);
     backgroundMusic.set_volume(1);
     sound_war.set_volume(1);
@@ -1077,6 +977,7 @@ function reset_global_vars() {
   isPlay = false;
   health_bar.value = 100;
   tank_life = 100;
+  moveDistance = 100 * delta; //25 default
   berserk_bar.value = 0;
   speed_bar.value=0;
   enemy_health_bar = [];
@@ -1122,3 +1023,106 @@ function onWindowResize() {
   camera.updateProjectionMatrix();
 }
 
+function update() {
+  if(TREES_LOADED && !light_on){
+    scene.add(light);
+    for(let t = 0; t< enemy_health_bar.length;t++){
+      enemy_health_bar[t].visible=true;
+    }
+    for(let i = 0; i<nCubes; i++){
+      speedcubes[i].visible=true;
+      berserkcubes[i].visible=true;
+      healthcubes[i].visible=true;
+      scorecubes[i].visible=true;
+      clock = new THREE.Clock();
+      startTime=clock.getElapsedTime();
+    }
+    light_on = true;
+  }
+  if(tank_life<= 20){
+    light.color.setHex(0xff471a);
+    backgroundMusic.stop();
+    alarm.play();
+  }
+  else{
+    light.color.setHex(0xffffff);
+    alarm.stop();
+    if( isPlay)
+      backgroundMusic.play();
+  }
+
+  shot = false;
+
+  if(isPlay===true){
+    curTime = clock.getElapsedTime() - startTime;
+    document.getElementById('score').innerHTML = "Score: " + SCORE;
+    document.getElementById('time').innerHTML = "Timer: " + curTime.toFixed(2);
+
+  }
+
+  for (let index = 0; index < bullets.length; index += 1) {
+    if (bullets[index] === undefined) continue;
+    if (bullets[index].alive === false) {
+      bullets.splice(index, 1);
+      continue;
+    }
+    bullets[index].position.add(bullets[index].velocity);
+  }
+
+  for (let index = 0; index < CANNON_BULLETS.length; index += 1) {
+    if (CANNON_BULLETS[index] === undefined) continue;
+    if (CANNON_BULLETS[index].alive === false) {
+      CANNON_BULLETS.splice(index, 1);
+      continue;
+    }
+    CANNON_BULLETS[index].position.add(CANNON_BULLETS[index].velocity);
+  }
+
+  if (cannonsfireRate === cannon_rate) {
+    cannon_shoot();
+  }
+
+  shoot_controls();
+  controls.update();
+  stats.update();
+}
+
+/**
+ * RENDER AND ANIMATE Functions - Starts the animation on the frame and the render
+ */
+
+function render(){
+  let rot_x = 0.018;
+  let rot_y = 0.020;
+  backgroundMusic.play();
+  sound_war.play();
+
+  move_tank();
+
+  for(let i = 0; i< nCubes;i++){
+    healthcubes[i].rotation.x += rot_x;
+    healthcubes[i].rotation.y += rot_y;
+    speedcubes[i].rotation.x += rot_x;
+    speedcubes[i].rotation.y += rot_y;
+    berserkcubes[i].rotation.x += rot_x;
+    berserkcubes[i].rotation.y += rot_y;
+    scorecubes[i].rotation.x += rot_x;
+    scorecubes[i].rotation.y += rot_y;
+  }
+
+  renderer.render(scene, camera);//draw
+
+  if (p1fireRate < rate) {
+    p1fireRate++;
+  }
+  if (cannonsfireRate < cannon_rate) {
+    cannonsfireRate++;
+  }
+}
+
+function animate() {
+  if (!isPlay) return;
+  requestAnimationFrame( animate );
+  render();
+  update();
+}

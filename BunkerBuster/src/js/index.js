@@ -92,6 +92,7 @@ var keyboard = new THREEx.KeyboardState();
 
 /**
  * Function to start game with the play button
+ * isPlay is the variable that put the player in game
  */
 function start_game() {
   init();
@@ -99,6 +100,9 @@ function start_game() {
   animate();
 }
 
+/**
+ * Definition of document (or textures) variables
+ */
 function init_variables() {
   shell = new THREE.Mesh(
       new THREE.SphereGeometry(2.5, 8, 6),
@@ -184,6 +188,9 @@ function init() {
 
 }
 
+/**
+ * Loading of mp3 sound files
+ */
 function setupSound() {
   sound_shot_tank = new Sound(soundPath + "tank_shot.mp3");
   sound_tank_hit = new Sound(soundPath + "tankhit.mp3");
@@ -258,6 +265,11 @@ function createScene(){
 
 }
 
+/**
+ * Sound Gestures
+ * @param src
+ * @constructor
+ */
 function Sound(src) {
   this.sound = document.createElement("audio");
   this.sound.src = src;

@@ -116,7 +116,7 @@ function init_variables() {
   berserk_cube_texture = new THREE.TextureLoader().load('img/berserk.png');
   score_cube_texture = new THREE.TextureLoader().load('img/score.png');
   document.addEventListener("keydown", onDocumentKeyDown, false);
-  document.addEventListener("keydown", move_tank, false);
+  document.addEventListener("keyup", move_tank, false);
 
   light_on= false;
 }
@@ -560,7 +560,6 @@ function onDocumentKeyDown(event) {
  * rotationMatrix allow rotation on left right up and down
  */
 function move_tank(event){
-
   if (keyboard.pressed("left")) {
     Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), turretRotateAngle);
     viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), turretRotateAngle);

@@ -380,7 +380,7 @@ input[type=button], input[type=submit], input[type=reset] {
 
 }
 progress#health::-webkit-progress-value {
-  background: #109b8b;
+  background: #10c0b0;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
 
 }
@@ -412,7 +412,7 @@ progress#speed_pb_id::-webkit-progress-value {
 }
 
 progress#berserk_pb_id::-webkit-progress-value {
-  background: #9fa196;
+  background: #dfe1d3;
   margin-bottom: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
 }

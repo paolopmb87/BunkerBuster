@@ -89,12 +89,13 @@ var difficulty;
 var difficulty_val;
 
 var keyboard = new THREEx.KeyboardState();
-
 /**
  * Function to start game with the play button
  * isPlay is the variable that put the player in game
  */
 function start_game() {
+  var mainmanumusic = document.getElementById("menumusic_id");
+  mainmanumusic.muted = true;
   init();
   isPlay = true;
   animate();
@@ -1126,3 +1127,4 @@ function animate() {
   render();
   update();
 }
+

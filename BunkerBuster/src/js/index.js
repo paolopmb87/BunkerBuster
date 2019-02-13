@@ -559,7 +559,7 @@ function onDocumentKeyDown(event) {
 /**
  * rotationMatrix allow rotation on left right up and down
  */
-function move_tank(event){
+function move_tank(){
   if (keyboard.pressed("left")) {
     Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), turretRotateAngle);
     viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), turretRotateAngle);

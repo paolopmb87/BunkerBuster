@@ -80,6 +80,7 @@ var berserk_up = false;
 var TREES_LOADED = false;
 var shot = false;
 var isPlay = false;
+var username_saved = false;
 
 var SCORE;
 var clock,startTime, curTime;
@@ -88,16 +89,21 @@ var difficulty;
 var difficulty_val;
 
 var keyboard = new THREEx.KeyboardState();
-
 /**
  * Function to start game with the play button
+ * isPlay is the variable that put the player in game
  */
 function start_game() {
+  var mainmanumusic = document.getElementById("menumusic_id");
+  mainmanumusic.muted = true;
   init();
   isPlay = true;
   animate();
 }
 
+/**
+ * Definition of document (or textures) variables
+ */
 function init_variables() {
   shell = new THREE.Mesh(
       new THREE.SphereGeometry(2.5, 8, 6),
@@ -115,7 +121,7 @@ function init_variables() {
   berserk_cube_texture = new THREE.TextureLoader().load('img/berserk.png');
   score_cube_texture = new THREE.TextureLoader().load('img/score.png');
   document.addEventListener("keydown", onDocumentKeyDown, false);
-  document.addEventListener("keydown", move_tank, false);
+  document.addEventListener("keyup", move_tank, false);
 
   light_on= false;
 }
@@ -144,8 +150,8 @@ function init() {
   cannonsfireRate = cannon_rate;
 
   document.getElementById('play_btn_div_id').style.display = 'none';
-  document.getElementById('play_pause_btn_id').style.display = 'inline-block';
-  document.getElementById('play_pause').style.display = 'inline-block';
+  document.getElementById('play_pause_btn_id').style.display = 'block';
+  document.getElementById('play_pause').style.display = 'block';
   document.getElementById('ddlViewBy').style.display = 'none';
   document.getElementById('diff').style.display = 'none';
 
@@ -179,11 +185,13 @@ function init() {
   add_cubes();
 
   window.addEventListener('resize', onWindowResize, false);//resize callback
-
-
+  reset_submit_button();
 
 }
 
+/**
+ * Loading of mp3 sound files
+ */
 function setupSound() {
   sound_shot_tank = new Sound(soundPath + "tank_shot.mp3");
   sound_tank_hit = new Sound(soundPath + "tankhit.mp3");
@@ -258,6 +266,11 @@ function createScene(){
 
 }
 
+/**
+ * Sound Gestures
+ * @param src
+ * @constructor
+ */
 function Sound(src) {
   this.sound = document.createElement("audio");
   this.sound.src = src;
@@ -468,70 +481,6 @@ function update_cannons(){
     cannons[i].lookAt(tank.position.x,0,tank.position.z);
 }
 
-function update() {
-  onWindowResize();
-
-  if(TREES_LOADED && !light_on){
-    scene.add(light);
-    for(let t = 0; t< enemy_health_bar.length;t++){
-      enemy_health_bar[t].visible=true;
-    }
-    for(let i = 0; i<nCubes; i++){
-      speedcubes[i].visible=true;
-      berserkcubes[i].visible=true;
-      healthcubes[i].visible=true;
-      scorecubes[i].visible=true;
-      clock = new THREE.Clock();
-      startTime=clock.getElapsedTime();
-    }
-    light_on = true;
-  }
-  if(tank_life<= 20){
-    light.color.setHex(0xff471a);
-    backgroundMusic.stop();
-    alarm.play();
-  }
-  else{
-    light.color.setHex(0xffffff);
-    alarm.stop();
-    if( isPlay)
-    backgroundMusic.play();
-  }
-
-  shot = false;
-
-  curTime = clock.getElapsedTime() - startTime;
-  document.getElementById('score').innerHTML = "Score: " + SCORE;
-  document.getElementById('time').innerHTML = "Timer: " + curTime.toFixed(2);
-
-  for (let index = 0; index < bullets.length; index += 1) {
-    if (bullets[index] === undefined) continue;
-    if (bullets[index].alive === false) {
-      bullets.splice(index, 1);
-      continue;
-    }
-    bullets[index].position.add(bullets[index].velocity);
-  }
-
-  for (let index = 0; index < CANNON_BULLETS.length; index += 1) {
-    if (CANNON_BULLETS[index] === undefined) continue;
-    if (CANNON_BULLETS[index].alive === false) {
-      CANNON_BULLETS.splice(index, 1);
-      continue;
-    }
-    CANNON_BULLETS[index].position.add(CANNON_BULLETS[index].velocity);
-  }
-
-  if (cannonsfireRate === cannon_rate) {
-    cannon_shoot();
-  }
-
-  shoot_controls();
-  controls.update();
-  stats.update();
-}
-
-
 /**
  * Tank Movement
  *    right = 39
@@ -559,8 +508,7 @@ function onDocumentKeyDown(event) {
 /**
  * rotationMatrix allow rotation on left right up and down
  */
-function move_tank(event){
-
+function move_tank(){
   if (keyboard.pressed("left")) {
     Turret_2.rotateOnAxis(new THREE.Vector3(0, 0, 1), turretRotateAngle);
     viewfinder.rotateOnAxis(new THREE.Vector3(0, 0, 1), turretRotateAngle);
@@ -813,7 +761,9 @@ function check_cubes() {
         speed_bar.value = 100;
 
         speed_downloadTimer = setInterval(function () {
-          speed_bar.value -= 10;
+          if(isPlay === true){
+            speed_bar.value -= 10;
+          }
           if (speed_bar.value <= 0) {
             clearInterval(speed_downloadTimer);
             moveDistance = moveDistance / 2;
@@ -844,7 +794,9 @@ function check_cubes() {
         berserk_bar.value = 100;
         p1fireRate = rate;
         berserk_downloadTimer = setInterval(function () {
-          berserk_bar.value -= 10;
+          if(isPlay === true){
+            berserk_bar.value -= 10;
+          }
           if (berserk_bar.value <= 0) {
             clearInterval(berserk_downloadTimer);
             rate = rate * 2;
@@ -869,45 +821,6 @@ function check_cubes() {
   }
 }
 
-/**
- * RENDER AND ANIMATE Functions - Starts the animation on the frame and the render
- */
-
-function render(){
-  let rot_x = 0.018;
-  let rot_y = 0.020;
-  backgroundMusic.play();
-  sound_war.play();
-
-  move_tank();
-
-  for(let i = 0; i< nCubes;i++){
-    healthcubes[i].rotation.x += rot_x;
-    healthcubes[i].rotation.y += rot_y;
-    speedcubes[i].rotation.x += rot_x;
-    speedcubes[i].rotation.y += rot_y;
-    berserkcubes[i].rotation.x += rot_x;
-    berserkcubes[i].rotation.y += rot_y;
-    scorecubes[i].rotation.x += rot_x;
-    scorecubes[i].rotation.y += rot_y;
-  }
-
-  renderer.render(scene, camera);//draw
-
-  if (p1fireRate < rate) {
-    p1fireRate++;
-  }
-  if (cannonsfireRate < cannon_rate) {
-    cannonsfireRate++;
-  }
-}
-
-function animate() {
-  if (!isPlay) return;
-    requestAnimationFrame( animate );
-    render();
-    update();
-}
 
 /**
  * Function to Play or Pause the game
@@ -987,7 +900,6 @@ function mute_unmute_game(val){
     alarm.set_volume(1);
     sound_shot_tank.set_volume(1);
     sound_tank_hit.set_volume(1);
-  //  sound_game_over.set_volume(1);
     explosion.set_volume(1);
     backgroundMusic.set_volume(1);
     sound_war.set_volume(1);
@@ -1027,7 +939,6 @@ function game_over(par) {
   let id = requestAnimationFrame(animate);
   cancelAnimationFrame(id);
   mute_unmute_game(2);
-  save_users_score();
   save_high_score(SCORE);
 }
 
@@ -1067,6 +978,7 @@ function reset_global_vars() {
   isPlay = false;
   health_bar.value = 100;
   tank_life = 100;
+  moveDistance = 100 * delta; //25 default
   berserk_bar.value = 0;
   speed_bar.value=0;
   enemy_health_bar = [];
@@ -1078,6 +990,14 @@ function reset_global_vars() {
 
   controls.enabled = false;
   controls.dispose();
+}
+
+function reset_submit_button() {
+  document.getElementById("username_id").removeAttribute('disabled');
+  document.getElementById("username_id").style.background = "#f5f5f5";
+  document.getElementById('submit_id').removeAttribute('disabled');
+  document.getElementById("submit_id").style.background = "#afad4c";
+  document.getElementById("submit_id").style.color = "#ff0000";
 }
 
 function timeout(shell, time){
@@ -1102,6 +1022,109 @@ function onWindowResize() {
   renderer.setSize(sceneWidth, sceneHeight);
   camera.aspect = sceneWidth/sceneHeight;
   camera.updateProjectionMatrix();
-
-
 }
+
+function update() {
+  if(TREES_LOADED && !light_on){
+    scene.add(light);
+    for(let t = 0; t< enemy_health_bar.length;t++){
+      enemy_health_bar[t].visible=true;
+    }
+    for(let i = 0; i<nCubes; i++){
+      speedcubes[i].visible=true;
+      berserkcubes[i].visible=true;
+      healthcubes[i].visible=true;
+      scorecubes[i].visible=true;
+      clock = new THREE.Clock();
+      startTime=clock.getElapsedTime();
+    }
+    light_on = true;
+  }
+  if(tank_life<= 20){
+    light.color.setHex(0xff471a);
+    backgroundMusic.stop();
+    alarm.play();
+  }
+  else{
+    light.color.setHex(0xffffff);
+    alarm.stop();
+    if( isPlay)
+      backgroundMusic.play();
+  }
+
+  shot = false;
+
+  if(isPlay===true){
+    curTime = clock.getElapsedTime() - startTime;
+    document.getElementById('score').innerHTML = "Score: " + SCORE;
+    document.getElementById('time').innerHTML = "Timer: " + curTime.toFixed(2);
+
+  }
+
+  for (let index = 0; index < bullets.length; index += 1) {
+    if (bullets[index] === undefined) continue;
+    if (bullets[index].alive === false) {
+      bullets.splice(index, 1);
+      continue;
+    }
+    bullets[index].position.add(bullets[index].velocity);
+  }
+
+  for (let index = 0; index < CANNON_BULLETS.length; index += 1) {
+    if (CANNON_BULLETS[index] === undefined) continue;
+    if (CANNON_BULLETS[index].alive === false) {
+      CANNON_BULLETS.splice(index, 1);
+      continue;
+    }
+    CANNON_BULLETS[index].position.add(CANNON_BULLETS[index].velocity);
+  }
+
+  if (cannonsfireRate === cannon_rate) {
+    cannon_shoot();
+  }
+
+  shoot_controls();
+  controls.update();
+  stats.update();
+}
+
+/**
+ * RENDER AND ANIMATE Functions - Starts the animation on the frame and the render
+ */
+
+function render(){
+  let rot_x = 0.018;
+  let rot_y = 0.020;
+  backgroundMusic.play();
+  sound_war.play();
+
+  move_tank();
+
+  for(let i = 0; i< nCubes;i++){
+    healthcubes[i].rotation.x += rot_x;
+    healthcubes[i].rotation.y += rot_y;
+    speedcubes[i].rotation.x += rot_x;
+    speedcubes[i].rotation.y += rot_y;
+    berserkcubes[i].rotation.x += rot_x;
+    berserkcubes[i].rotation.y += rot_y;
+    scorecubes[i].rotation.x += rot_x;
+    scorecubes[i].rotation.y += rot_y;
+  }
+
+  renderer.render(scene, camera);//draw
+
+  if (p1fireRate < rate) {
+    p1fireRate++;
+  }
+  if (cannonsfireRate < cannon_rate) {
+    cannonsfireRate++;
+  }
+}
+
+function animate() {
+  if (!isPlay) return;
+  requestAnimationFrame( animate );
+  render();
+  update();
+}
+

@@ -13,26 +13,25 @@
   <!--SCRIPT AND LIBRARIES-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/91/three.min.js"></script>
   <script src="//threejs.org/examples/js/controls/OrbitControls.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://www.google-analytics.com/analytics.js" async defer></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="//cdn.rawgit.com/mrdoob/three.js/master/examples/js/loaders/ColladaLoader.js"></script>
   <script src="js/THREEx.KeyboardState.js"></script>
   <script src="js/Stats.js"></script>
 
 
   <!-- CSS FILES -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/index.css">
-  <link rel="stylesheet" href="css/chart.css">
-  <link rel="stylesheet" href="wcss/help.css">
+  <link rel="stylesheet" href="css/help.css">
 
 
 </head>
 
 <body id="bd">
+
+<audio id="menumusic_id" autoplay>
+  <source  src="sounds/mainmenu.mp3" type="audio/mpeg">
+</audio>
 
 <script src="js/index.js"></script>
 <script src="js/chart_score.js"></script>
@@ -103,7 +102,7 @@
           <form id="username_form">
             Insert Username:
             <input id="username_id" type="text" placeholder="username">
-            <input id="submit_id" type="submit" value="Save" onclick="saveusername()"><br>
+            <input id="submit_id" type="button" value="Save" onclick="saveusername();save_users_score();"><br>
           </form>
         </div>
       </div>
@@ -117,6 +116,23 @@
   <div class="modal fade text-center" id="theModal">
     <div class="modal-dialog">
       <div class="modal-content">
+        <div class="modal-body" id="modal_id">
+          <h2 class="text-center">RECORDS</h2>
+          <div id="table_id">
+            <table id="table">
+              <tr>
+                <th>Username </th>
+                <th>Score </th>
+                <th>High Score </th>
+              </tr>
+              <tr>
+                <td id="username_td">
+                <td id="score_td">
+                <td id="highscore_td">
+              </tr>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -124,6 +140,12 @@
   <div class="modal fade text-center" id="theModal2">
     <div class="modal-dialog">
       <div class="modal-content">
+        <div class="modal-body">
+          <h2 class="text-center">INSTRUCTIONS</h2>
+          <div id="command_image_div_id">
+            <img id="commands_id" src="img/TankCommands.jpg">
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -133,8 +155,8 @@
   <footer class="footer">
 
     <div class="column" id="help">
-      <a href="html_struct/help.html" data-target="#theModal2" data-toggle="modal">
-        <img id="HLP" src="img/HelpBTN.png"></a>
+      <a data-target="#theModal2" data-toggle="modal">
+        <img id="HLP" onclick="play_pause_game();changeImage(1);" src="img/HelpBTN.png"></a>
     </div>
 
 
@@ -152,8 +174,8 @@
     </div>
 
     <div class="column" id="chart_id">
-      <a href="html_struct/chart.html" data-target="#theModal" data-toggle="modal">
-        <img id="CHART" src="img/ChartBTN.png"  onclick="save_users_score()"></a>
+      <a data-target="#theModal" data-toggle="modal">
+        <img id="CHART" src="img/ChartBTN.png" onclick="play_pause_game();changeImage(1);" ></a>
     </div>
   </footer>
   </div>

@@ -163,7 +163,7 @@ function init() {
   // set up the scene
   createScene();
   // CONTROLS
-  controls = new THREE.OrbitControls(camera);
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.enabled = false;
   // STATS
   stats = new Stats();
